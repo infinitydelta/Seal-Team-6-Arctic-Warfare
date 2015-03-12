@@ -12,8 +12,13 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
     //internal stuff
     Entity player;
+    public Entity weapon;
+
+    PositionComponent position;
     MovementComponent movement;
     VisualComponent visual;
+
+    PositionComponent weaponPosition;
 
     public boolean up = false, down = false, left = false, right = false;
     private boolean moveX = false, moveY = false;
@@ -28,8 +33,15 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     public PlayerComponent(Entity player)
     {
         this.player = player;
+        position = player.getComponent(PositionComponent.class);
         movement = player.getComponent(MovementComponent.class); //need movement instantiated
         visual = player.getComponent(VisualComponent.class);
+    }
+
+    public void addWeapon(Entity weapon)
+    {
+        this.weapon = weapon;
+        weaponPosition = weapon.getComponent(PositionComponent.class);
     }
 
     public void update()
@@ -76,6 +88,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
         if (!moveY && !moveX) visual.setAnimation(MainGame.idleAnmation);
         else visual.setAnimation(MainGame.runAnimation);
 
+        weaponPosition.x = position.x;
+        weaponPosition.y = position.y;
 
     }
 

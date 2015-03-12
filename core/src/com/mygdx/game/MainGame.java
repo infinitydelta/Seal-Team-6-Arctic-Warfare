@@ -5,15 +5,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.actors.Cursor;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -28,34 +28,54 @@ public class MainGame extends ApplicationAdapter {
 	static final int WORLD_WIDTH = 100;
 	static final int WORLD_HEIGHT = 100;
 
+	static final int CAM_WIDTH = 20;
+
+
 	OrthographicCamera camera;
 	FitViewport viewport;
 
 	PooledEngine pooledEngine;
 	InputHandler input;
 
+	Stage stage;
+
+
 	Entity player;
+	Entity weapon;
 	Entity cursor;
 
-	Texture kenny;
-	Texture bg_tile;
-	Texture whiteball;
+	Cursor curs;
+
+	static Texture kenny;
+	static Texture bg_tile;
+	public static Texture whiteball;
+	static Texture objects;
+	public static Texture sandTiles;
 
 	public static Animation runAnimation;
 	public static Animation idleAnmation;
 
 	@Override
 	public void create () {
+
+
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		camera = new OrthographicCamera(20, 20 * (h/w) );
+		camera = new OrthographicCamera(CAM_WIDTH, CAM_WIDTH* (h/w) );
 		viewport = new FitViewport(20, 20 * (h/w), camera); // 20 world units wide
 		camera.position.set(0, 0, 0);
 		camera.update();
 
+		//stage for ui
+		stage = new Stage();
 
 		loadAssets();
 
+
+		//change mouse cursor to picture
+		Pixmap pm = new Pixmap(Gdx.files.internal("white ball.png"));
+		Gdx.input.setCursorImage(pm, pm.getWidth()/2, pm.getHeight()/2);
+		pm.dispose();
 
 		//engine
 		pooledEngine = new PooledEngine(10, 1000, 10, 5000);
@@ -67,9 +87,15 @@ public class MainGame extends ApplicationAdapter {
 		{
 			for (int j = 0; j < 50; j++)
 			{
+				int r = (int) (Math.random() * 18);
+				//System.out.println("random: " + r);
 				Entity te = pooledEngine.createEntity();
 				te.add(new PositionComponent(i, j));
-				te.add(new VisualComponent(new TextureRegion(bg_tile)));
+				int x = (r * 32) % 256;
+				int y = (r*32)/256 * 32;
+				System.out.println("x: " + x + ", y: " + y);
+				TextureRegion t = new TextureRegion(sandTiles, x, y, 32, 32);
+				te.add(new VisualComponent(t));
 				pooledEngine.addEntity(te);
 
 			}
@@ -89,21 +115,31 @@ public class MainGame extends ApplicationAdapter {
 		pooledEngine.addEntity(player);
 
 
+		//create weapon entity
+		TextureRegion weap = new TextureRegion(objects, 3 * 32, 1 * 32, 32, 32);
+		weapon = pooledEngine.createEntity();
+		weapon.add(new PositionComponent(0, 0));
+		weapon.add(new VisualComponent(weap));
+		pooledEngine.addEntity(weapon);
 
+		player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
 		Entity e = pooledEngine.createEntity();
 		e.add(new PositionComponent(0, 0));
 		e.add(new VisualComponent(tx));
 		//pooledEngine.addEntity(e);
 
-
+		//cursor
 		cursor = pooledEngine.createEntity();
 		cursor.add(new PositionComponent(0, 0));
 		cursor.add(new VisualComponent(new TextureRegion(whiteball)));
 		//pooledEngine.addEntity(cursor);
 
 
-		input = new InputHandler(player, cursor); //handle input of 1 single player
+		curs = new Cursor();
+		stage.addActor(curs);
+
+		input = new InputHandler(camera, player, curs); //handle input of 1 single player
 		Gdx.input.setInputProcessor(input);
 
 	}
@@ -118,6 +154,9 @@ public class MainGame extends ApplicationAdapter {
 
 		pooledEngine.update(Gdx.graphics.getDeltaTime());
 
+		stage.draw();
+
+
 	}
 
 	public void resize(int width, int height)
@@ -129,9 +168,12 @@ public class MainGame extends ApplicationAdapter {
 
 	private void loadAssets()
 	{
+		//textures
 		kenny = new Texture("p1_stand.png");
 		bg_tile = new Texture("blacktile.png");
 		whiteball = new Texture("white ball.png");
+		objects = new Texture("objects.png");
+		sandTiles = new Texture("map.png");
 
 		//animation
 		Texture walk = new Texture("minimalObjects_32x32Tiles.png");

@@ -25,13 +25,15 @@ public class VisualComponent extends Component implements Pool.Poolable {
         float w = sprite.getWidth()/sprite.getHeight();
         float h = sprite.getHeight()/sprite.getHeight();
         sprite.setSize(w, h); //in world units
+        sprite.setOrigin(w/2, h/2);
     }
-    public VisualComponent(Sprite sprite) {this.sprite = sprite;}
+    //public VisualComponent(Sprite sprite) {this.sprite = sprite;}
     public VisualComponent(Animation animation)
     {
         animated = true;
         this.animation = animation;
         sprite = new Sprite(animation.getKeyFrame(0));
+
 
     }
 
