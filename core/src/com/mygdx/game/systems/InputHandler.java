@@ -26,7 +26,7 @@ public class InputHandler implements InputProcessor {
 
 
     Entity player;
-    Cursor cursor;
+    //Cursor cursor;
     //player components
     MovementComponent movement;
     PlayerComponent playerComponent;
@@ -36,12 +36,12 @@ public class InputHandler implements InputProcessor {
     VisualComponent weaponSprite;
 
 
-    public InputHandler(Camera camera, Entity player, Cursor cursor)
+    public InputHandler(Camera camera, Entity player)
     {
 
         this.camera = camera;
         this.player = player;
-        this.cursor = cursor;
+        //this.cursor = cursor;
         movement = player.getComponent(MovementComponent.class);
         playerComponent = player.getComponent(PlayerComponent.class);
         playerPosition = player.getComponent(PositionComponent.class);
@@ -57,10 +57,16 @@ public class InputHandler implements InputProcessor {
         if (keycode == Input.Keys.A)
         {
             playerComponent.left = true;
+            //movement.body.setLinearVelocity(-1, movement.body.getLinearVelocity().y);
+            //movement.body.applyLinearImpulse(-1, 0, movement.body.getPosition().x + .5f, movement.body.getPosition().y + .5f, true);
         }
         if (keycode == Input.Keys.D)
         {
             playerComponent.right = true;
+            //movement.body.setLinearVelocity(1, movement.body.getLinearVelocity().y);
+
+            //movement.body.applyLinearImpulse(1, 0, movement.body.getPosition().x, movement.body.getPosition().y, true);
+
         }
         if (keycode == Input.Keys.W)
         {
@@ -103,7 +109,10 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
         System.out.println("mouse down: " + button);
+
+
         return false;
     }
 
@@ -114,14 +123,14 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        cursor.setPostion(screenX, Gdx.graphics.getHeight() - screenY);
+        //cursor.setPostion(screenX, Gdx.graphics.getHeight() - screenY);
         return false;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
 
-        cursor.setPostion(screenX, Gdx.graphics.getHeight() - screenY);
+        //cursor.setPostion(screenX, Gdx.graphics.getHeight() - screenY);
 
         //converts screen coords to world coords
         //needed for weapon rotation

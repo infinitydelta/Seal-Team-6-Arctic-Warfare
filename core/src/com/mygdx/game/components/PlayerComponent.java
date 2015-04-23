@@ -26,7 +26,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
 
     //gameplay values
-    float speed = 5;
+    float speed = .8f;
     float diagSpeed = speed/root2;
 
 
@@ -57,12 +57,15 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
             movement.xVel = -speed;
             moveX = true;
+            movement.moveX = true;
         }
         if (right)
         {
             if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
             movement.xVel = speed;
             moveX = true;
+            movement.moveX = true;
+
         }
         if (up)
         {
@@ -73,6 +76,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
             }
             else movement.yVel = speed;
             moveY = true;
+            movement.moveY = true;
+
         }
         if (down)
         {
@@ -83,6 +88,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
             }
             else movement.yVel = -speed;
             moveY = true;
+            movement.moveY = true;
+
         }
 
         if (!moveY && !moveX) visual.setAnimation(MainGame.idleAnmation);

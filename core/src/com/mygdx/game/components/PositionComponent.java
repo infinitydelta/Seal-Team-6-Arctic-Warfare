@@ -1,6 +1,7 @@
 package com.mygdx.game.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
 
 /**
@@ -13,8 +14,10 @@ public class PositionComponent extends Component implements Pool.Poolable{
 
     public PositionComponent(float x, float y)
     {
+
         this.x = x;
         this.y = y;
+
     }
 
     @Override

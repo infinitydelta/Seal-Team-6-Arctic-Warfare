@@ -26,7 +26,11 @@ public class MovementSystem extends IteratingSystem {
         PositionComponent position = pm.get(entity);
         MovementComponent movement = mm.get(entity);
 
-        position.x += movement.xVel * deltaTime;
-        position.y += movement.yVel * deltaTime;
+        position.x = movement.body.getPosition().x - .5f;
+        position.y = movement.body.getPosition().y - .5f;
+        movement.update();
+        //movement.body.applyLinearImpulse(movement.xVel, movement.yVel, movement.body.getPosition().x, movement.body.getPosition().y, true);
+        //position.x += movement.xVel * deltaTime;
+        //position.y += movement.yVel * deltaTime;
     }
 }

@@ -11,19 +11,19 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Cursor;
-import com.mygdx.game.components.MovementComponent;
-import com.mygdx.game.components.PlayerComponent;
-import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.components.*;
 import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
 import com.mygdx.game.systems.RenderingSystem;
 
 public class MainGame extends ApplicationAdapter {
+
 
 	static final int WORLD_WIDTH = 100;
 	static final int WORLD_HEIGHT = 100;
@@ -35,16 +35,18 @@ public class MainGame extends ApplicationAdapter {
 	FitViewport viewport;
 
 	PooledEngine pooledEngine;
-	InputHandler input;
-
 	Stage stage;
-
-
+	World world;
+	InputHandler input;
 	Entity player;
-	Entity weapon;
-	Entity cursor;
 
-	Cursor curs;
+	Box2DDebugRenderer debugRenderer;
+
+	Entity weapon;
+
+	//box2d
+	BodyDef bodyDef;
+
 
 	static Texture kenny;
 	static Texture bg_tile;
@@ -73,9 +75,15 @@ public class MainGame extends ApplicationAdapter {
 
 
 		//change mouse cursor to picture
-		Pixmap pm = new Pixmap(Gdx.files.internal("white ball.png"));
+		Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
 		Gdx.input.setCursorImage(pm, pm.getWidth()/2, pm.getHeight()/2);
 		pm.dispose();
+
+		//box2d
+		Box2D.init();
+		world = new World(Vector2.Zero, true);
+		debugRenderer = new Box2DDebugRenderer();
+
 
 		//engine
 		pooledEngine = new PooledEngine(10, 1000, 10, 5000);
@@ -90,12 +98,37 @@ public class MainGame extends ApplicationAdapter {
 				int r = (int) (Math.random() * 18);
 				//System.out.println("random: " + r);
 				Entity te = pooledEngine.createEntity();
-				te.add(new PositionComponent(i, j));
+				PositionComponent pos = new PositionComponent(i, j);
+				te.add(pos);
 				int x = (r * 32) % 256;
 				int y = (r*32)/256 * 32;
-				System.out.println("x: " + x + ", y: " + y);
+				//System.out.println("x: " + x + ", y: " + y);
 				TextureRegion t = new TextureRegion(sandTiles, x, y, 32, 32);
 				te.add(new VisualComponent(t));
+				if (y>= 32)
+				{
+					/*
+					BodyDef bodyDef = new BodyDef();
+					bodyDef.type = BodyDef.BodyType.StaticBody;
+					bodyDef.position.set(i + .5f, j + .5f);
+
+					Body body = world.createBody(bodyDef);
+
+					FixtureDef fixtureDef = new FixtureDef();
+					PolygonShape rectangle = new PolygonShape();
+					rectangle.setAsBox(.5f, .5f);
+
+					fixtureDef.shape = rectangle;
+					fixtureDef.density = 0f;
+					fixtureDef.friction = 0f;
+					fixtureDef.restitution = 0f;
+					Fixture fixture = body.createFixture(fixtureDef);
+					rectangle.dispose();
+					*/
+					PolygonShape rectangle = new PolygonShape();
+					rectangle.setAsBox(.5f, .5f);
+					te.add(new CollisionComponent(world, BodyDef.BodyType.StaticBody, rectangle, pos));
+				}
 				pooledEngine.addEntity(te);
 
 			}
@@ -106,8 +139,9 @@ public class MainGame extends ApplicationAdapter {
 
 		//create player entity
 		player = pooledEngine.createEntity();
-		player.add(new PositionComponent(0, 0));
-		player.add(new MovementComponent(0, 0, 0));
+		PositionComponent position = new PositionComponent(0, 0);
+		player.add(position);
+		player.add(new MovementComponent(position, world, 0, 0, 0));
 
 		TextureRegion tx = new TextureRegion(kenny);
 		player.add(new VisualComponent(runAnimation));
@@ -129,17 +163,26 @@ public class MainGame extends ApplicationAdapter {
 		e.add(new VisualComponent(tx));
 		//pooledEngine.addEntity(e);
 
-		//cursor
-		cursor = pooledEngine.createEntity();
-		cursor.add(new PositionComponent(0, 0));
-		cursor.add(new VisualComponent(new TextureRegion(whiteball)));
-		//pooledEngine.addEntity(cursor);
 
 
-		curs = new Cursor();
-		stage.addActor(curs);
+		//bullet
+		Entity bullet = pooledEngine.createEntity();
+		PositionComponent positionB = new PositionComponent(0, -5);
+		bullet.add(positionB);
+		bullet.add(new MovementComponent(position, world, 0, 0, 0));
 
-		input = new InputHandler(camera, player, curs); //handle input of 1 single player
+		PolygonShape rectangle = new PolygonShape();
+		rectangle.setAsBox(.3f, .2f);
+		bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
+
+
+		createBox2d();
+
+
+		//curs = new Cursor();
+		//stage.addActor(curs);
+
+		input = new InputHandler(camera, player); //handle input of 1 single player
 		Gdx.input.setInputProcessor(input);
 
 	}
@@ -154,9 +197,10 @@ public class MainGame extends ApplicationAdapter {
 
 		pooledEngine.update(Gdx.graphics.getDeltaTime());
 
-		stage.draw();
+		stage.draw(); //ui
 
-
+		debugRenderer.render(world, camera.combined);
+		world.step(1/60f, 6, 2); //physics
 	}
 
 	public void resize(int width, int height)
@@ -165,6 +209,26 @@ public class MainGame extends ApplicationAdapter {
 
 	}
 
+	//temporary
+	private void createBox2d()
+	{
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.StaticBody;
+		bodyDef.position.set(-1, 0);
+
+		Body body = world.createBody(bodyDef);
+
+		FixtureDef fixtureDef = new FixtureDef();
+		PolygonShape rectangle = new PolygonShape();
+		rectangle.setAsBox(.5f, .5f);
+
+		fixtureDef.shape = rectangle;
+		Fixture fixture = body.createFixture(fixtureDef);
+		//body.setLinearVelocity(0, 1/60f);
+		body.applyLinearImpulse(0, 1/60f, body.getPosition().x, body.getPosition().y, true);
+
+		rectangle.dispose();
+	}
 
 	private void loadAssets()
 	{
@@ -188,8 +252,8 @@ public class MainGame extends ApplicationAdapter {
 			{
 				if (index < 6)
 				{
-					System.out.println("index: " + index);
-					System.out.println("i: " + i + "; j: " + j);
+					//System.out.println("index: " + index);
+					//System.out.println("i: " + i + "; j: " + j);
 					walkFrames[index] = temp[i][j];
 					idleFrames[index] = temp[1][j];
 					idleFrames[index].flip(true, false);
