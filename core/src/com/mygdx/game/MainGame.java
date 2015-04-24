@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.actors.Cursor;
 import com.mygdx.game.components.*;
+import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
@@ -29,12 +30,12 @@ public class MainGame extends ApplicationAdapter {
 	static final int WORLD_HEIGHT = 100;
 
 	static final int CAM_WIDTH = 20;
-
+	static final int CAM_SIZE = 100;
 
 	OrthographicCamera camera;
 	FitViewport viewport;
 
-	PooledEngine pooledEngine;
+	public static PooledEngine pooledEngine;
 	Stage stage;
 	World world;
 	InputHandler input;
@@ -64,7 +65,7 @@ public class MainGame extends ApplicationAdapter {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera(CAM_WIDTH, CAM_WIDTH* (h/w) );
-		viewport = new FitViewport(20, 20 * (h/w), camera); // 20 world units wide
+		viewport = new FitViewport(CAM_SIZE, CAM_SIZE * (h/w), camera); // 20 world units wide
 		camera.position.set(0, 0, 0);
 		camera.update();
 
@@ -91,6 +92,7 @@ public class MainGame extends ApplicationAdapter {
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
 
+		/*
 		for (int i = 0; i < 50; i ++)
 		{
 			for (int j = 0; j < 50; j++)
@@ -124,7 +126,7 @@ public class MainGame extends ApplicationAdapter {
 					fixtureDef.restitution = 0f;
 					Fixture fixture = body.createFixture(fixtureDef);
 					rectangle.dispose();
-					*/
+
 					PolygonShape rectangle = new PolygonShape();
 					rectangle.setAsBox(.5f, .5f);
 					te.add(new CollisionComponent(world, BodyDef.BodyType.StaticBody, rectangle, pos));
@@ -134,7 +136,9 @@ public class MainGame extends ApplicationAdapter {
 			}
 
 		}
+		*/
 
+		DungeonGenerator.generateDungeon();
 
 
 		//create player entity
