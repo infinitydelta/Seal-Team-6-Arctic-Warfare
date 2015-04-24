@@ -53,7 +53,7 @@ public class MenuScreen implements Screen
 		joiniplabel = new Label("ADDRESS:", uiSkin);
 		joinportlabel = new Label("PORT:", uiSkin);
 		hostportfield = new TextField("7777", uiSkin);
-		joinipfield = new TextField("192.168.1.1", uiSkin);
+		joinipfield = new TextField("localhost", uiSkin);
 		joinportfield = new TextField("7777", uiSkin);
 		table = new Table();
 		
