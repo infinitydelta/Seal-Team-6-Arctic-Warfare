@@ -125,7 +125,6 @@ public class GameScreen implements Screen
 			
 			DungeonGenerator.generateDungeon(this);
 
-			
 			//accept connections
 			new Thread(new Runnable(){
 				public void run()
