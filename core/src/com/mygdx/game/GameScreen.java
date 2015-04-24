@@ -38,6 +38,7 @@ import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
@@ -50,12 +51,14 @@ public class GameScreen implements Screen
 	static final int WORLD_HEIGHT = 100;
 
 	static final int CAM_WIDTH = 20;
+	
+	static final int CAM_SIZE = 100;
 
 	//MainGame game;
 	OrthographicCamera camera;
 	FitViewport viewport;
 
-	PooledEngine pooledEngine;
+	public PooledEngine pooledEngine;
 	Stage stage;
 	World world;
 	InputHandler input;
@@ -120,49 +123,7 @@ public class GameScreen implements Screen
 			
 			map = new ArrayList<Entity>();
 			
-			for (int i = 0; i < 50; i ++)
-			{
-				for (int j = 0; j < 50; j++)
-				{
-					int r = (int) (Math.random() * 18);
-					//System.out.println("random: " + r);
-					Entity te = pooledEngine.createEntity();
-					PositionComponent pos = new PositionComponent(i, j);
-					te.add(pos);
-					int x = (r * 32) % 256;
-					int y = (r*32)/256 * 32;
-					//System.out.println("x: " + x + ", y: " + y);
-					TextureRegion t = new TextureRegion(MainGame.sandTiles, x, y, 32, 32);
-					te.add(new VisualComponent(t));
-					if (y>= 32)
-					{
-						/*
-						BodyDef bodyDef = new BodyDef();
-						bodyDef.type = BodyDef.BodyType.StaticBody;
-						bodyDef.position.set(i + .5f, j + .5f);
-
-						Body body = world.createBody(bodyDef);
-
-						FixtureDef fixtureDef = new FixtureDef();
-						PolygonShape rectangle = new PolygonShape();
-						rectangle.setAsBox(.5f, .5f);
-
-						fixtureDef.shape = rectangle;
-						fixtureDef.density = 0f;
-						fixtureDef.friction = 0f;
-						fixtureDef.restitution = 0f;
-						Fixture fixture = body.createFixture(fixtureDef);
-						rectangle.dispose();
-						*/
-						PolygonShape rectangle = new PolygonShape();
-						rectangle.setAsBox(.5f, .5f);
-						te.add(new CollisionComponent(world, BodyDef.BodyType.StaticBody, rectangle, pos));
-					}
-					pooledEngine.addEntity(te);
-					map.add(te);
-				}
-
-			}
+			DungeonGenerator.generateDungeon(this);
 
 			
 			//accept connections
