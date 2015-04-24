@@ -45,8 +45,6 @@ public class MainGame extends Game {
 
 	public static Animation runAnimation;
 	public static Animation idleAnmation;
-	
-	public static NetworkView networkView;
 
 	@Override
 	public void create () 
