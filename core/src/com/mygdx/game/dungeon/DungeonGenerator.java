@@ -1,8 +1,10 @@
 package com.mygdx.game.dungeon;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
@@ -28,7 +30,7 @@ public class DungeonGenerator {
 
     public static int squashTimes = 1;
 
-    public static void generateDungeon()
+    public static void generateDungeon(GameScreen gameScreen)
     {
         center = new Vector2(mapSize/2, mapSize/2);
         map = new int[mapSize][mapSize];
@@ -45,7 +47,7 @@ public class DungeonGenerator {
         createMap();
         connectAllRooms();
         addWalls();
-        createTiles();
+        createTiles(gameScreen.pooledEngine);
     }
 
     //spawns rooms randomly
@@ -439,7 +441,7 @@ public class DungeonGenerator {
         }
     }
 
-    static void createTiles()
+    static void createTiles(PooledEngine pooledEngine)
     {
         for (int x = 0; x < mapSize; x++)
         {
@@ -451,12 +453,12 @@ public class DungeonGenerator {
                     //doing it above, dont need to do it again
                     //GameObject tile = (GameObject)Instantiate(ground, new Vector3(x, y, 5), Quaternion.identity);
                     //tile.transform.parent = transform;
-                    Entity e = MainGame.pooledEngine.createEntity();
+                    Entity e = pooledEngine.createEntity();
                     PositionComponent p = new PositionComponent(x, y);
                     e.add(p);
                     TextureRegion t = new TextureRegion(MainGame.sandTiles, 0, 0, 32, 32);
                     e.add(new VisualComponent(t));
-                    MainGame.pooledEngine.addEntity(e);
+                    pooledEngine.addEntity(e);
                 }
                 //wall
                 else if (map[x][y] == 2)
