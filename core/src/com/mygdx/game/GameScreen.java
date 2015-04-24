@@ -40,8 +40,6 @@ import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
-import com.mygdx.game.networking.NetworkHost;
-import com.mygdx.game.networking.NetworkHostConnectHandler;
 import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
@@ -122,11 +120,57 @@ public class GameScreen implements Screen
 		
 		if(host)
 		{
-			
 			System.out.println("HOST");
 			//generate map
 			
-			NetworkHost networkHost = new NetworkHost(this);
+			map = new ArrayList<Entity>();
+			
+			Random rand = new Random();
+			final long mapSeed = rand.nextLong();
+			RandomInt.setSeed(mapSeed);
+			DungeonGenerator.generateDungeon(this);
+
+			
+			//accept connections
+			new Thread(new Runnable(){
+				public void run()
+				{
+					ServerSocketHints serverSocketHint = new ServerSocketHints();
+					serverSocketHint.acceptTimeout = 0; //0 = no timeout
+					
+					ServerSocket serverSocket = Gdx.net.newServerSocket(Protocol.TCP, GameScreen.this.port, serverSocketHint); //Create ServerSocket with TCP protocol on the port specified
+					
+					//FOREVER
+					while(true)
+					{
+						System.out.println("Waiting...");
+						Socket socket = serverSocket.accept(null);
+						//BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream())); //dont need anything from the other player yet
+						System.out.println("connected");
+						//Send the current state of the game as a starting point
+						System.out.println("Sending initial game state");
+						try
+						{
+							ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+							oos.writeObject(mapSeed);
+							oos.flush();
+						}
+						catch(Exception e)
+						{
+							System.out.println(e.getMessage());
+							e.printStackTrace();
+						}
+						
+					}
+				}
+			}).start();
+			
+			
+	
+	
+			
+	
+			
 		}
 		else //client
 		{
@@ -145,13 +189,18 @@ public class GameScreen implements Screen
 				{
 					o = ois.readObject();
 				}
+				/*map = (ArrayList<Entity>) o;
+				for(Entity e: map)
+				{
+					pooledEngine.addEntity(e);
+				}*/
 				long mapSeed = (Long) o;
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(this);
 			} 
 			catch (Exception e) 
 			{
-				System.out.println("Exception in client code:" + e.getMessage());
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 		}
