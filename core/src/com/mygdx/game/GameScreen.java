@@ -6,7 +6,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.rmi.server.SocketSecurityException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -32,6 +36,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Json.Serializable;
+
+import java.lang.reflect.Field;
+
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.MovementComponent;
@@ -39,10 +47,13 @@ import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
+import com.mygdx.game.networking.NetworkHost;
+import com.mygdx.game.networking.NetworkHostConnectHandler;
 import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
 import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.utility.RandomInt;
 
 public class GameScreen implements Screen
 {
@@ -77,7 +88,7 @@ public class GameScreen implements Screen
 	
 	ArrayList<Entity> map;
 
-
+	public NetworkHost networkHost;
 	
 	
 	
@@ -118,53 +129,7 @@ public class GameScreen implements Screen
 		
 		if(host)
 		{
-			System.out.println("HOST");
-			//generate map
-			
-			map = new ArrayList<Entity>();
-			
-			DungeonGenerator.generateDungeon(this);
-
-			//accept connections
-			new Thread(new Runnable(){
-				public void run()
-				{
-					ServerSocketHints serverSocketHint = new ServerSocketHints();
-					serverSocketHint.acceptTimeout = 0; //0 = no timeout
-					
-					ServerSocket serverSocket = Gdx.net.newServerSocket(Protocol.TCP, GameScreen.this.port, serverSocketHint); //Create ServerSocket with TCP protocol on the port specified
-					
-					//FOREVER
-					while(true)
-					{
-						System.out.println("Waiting...");
-						Socket socket = serverSocket.accept(null);
-						//BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream())); //dont need anything from the other player yet
-						System.out.println("connected");
-						//Send the current state of the game as a starting point
-						System.out.println("Sending initial game state");
-						try
-						{
-							ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-							oos.writeObject(map);
-							oos.flush();
-						}
-						catch(Exception e)
-						{
-							System.out.println(e.getMessage());
-							e.printStackTrace();
-						}
-						
-					}
-				}
-			}).start();
-			
-			
-	
-	
-			
-	
-			
+			networkHost = new NetworkHost(this);
 		}
 		else //client
 		{
@@ -183,15 +148,13 @@ public class GameScreen implements Screen
 				{
 					o = ois.readObject();
 				}
-				map = (ArrayList<Entity>) o;
-				for(Entity e: map)
-				{
-					pooledEngine.addEntity(e);
-				}
+				long mapSeed = (Long) o;
+				RandomInt.setSeed(mapSeed);
+				DungeonGenerator.generateDungeon(this);
 			} 
 			catch (Exception e) 
 			{
-				System.out.println(e.getMessage());
+				System.out.println("Exception in client code:" + e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -209,6 +172,48 @@ public class GameScreen implements Screen
 				player.add(new VisualComponent(MainGame.runAnimation));
 				player.add(new PlayerComponent(player));
 				pooledEngine.addEntity(player);
+				if (host) {
+					Long newEntityID = player.getId();
+					HashMap<String, Object> newEntityData = new HashMap<String, Object>();
+					try {
+						Class c = player.getClass();
+						java.lang.reflect.Field[] fields = c.getFields();
+						for (Field f : fields) {
+							try {
+								String memberName = f.getName();
+								Object memberValue = f.get(player);
+								//if (Serializable.class.isAssignableFrom(c)) {
+									newEntityData.put(memberName, memberValue);
+									System.out.println("Adding value: " + memberName + " " + memberValue);
+								//}
+							}
+							catch (Exception e) {
+								
+							}
+						}
+						networkHost.networkHostUpdateHandler.entities.put(newEntityID, newEntityData);
+						for (Map.Entry<Long, Map<String, Object>> entry : networkHost.networkHostUpdateHandler.entities.entrySet()) {
+							System.out.println("ID: " + entry.getKey().toString());
+							for(Map.Entry<String, Object> entry2 : entry.getValue().entrySet()) {
+								System.out.println("  " + entry2.getKey().toString() + ": " + entry2.getValue().toString());
+							}
+						}
+					}
+					catch (Exception e) {
+						System.out.println("Exception in entity map adder:" + e.getMessage());
+						e.printStackTrace();
+						for (Map.Entry<Long, Map<String, Object>> entry : networkHost.networkHostUpdateHandler.entities.entrySet()) {
+							System.out.println("ID: " + entry.getKey().toString());
+							for(Map.Entry<String, Object> entry2 : entry.getValue().entrySet()) {
+								System.out.println("  " + entry2.getKey().toString() + ": " + entry2.getValue().toString());
+							}
+						}
+					}
+					
+					
+					
+					//networkHost.networkHostUpdateHandler.entities.put(player.getId(), value)
+				}
 
 
 				//create weapon entity
