@@ -9,7 +9,7 @@ public class RandomInt {
 
     static Random rand = new Random();
 
-    static void setSeed(long n)
+    public static void setSeed(long n)
     {
         rand.setSeed(n);
     }

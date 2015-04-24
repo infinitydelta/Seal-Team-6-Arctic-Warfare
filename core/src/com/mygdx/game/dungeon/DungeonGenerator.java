@@ -23,7 +23,7 @@ public class DungeonGenerator {
     static Vector2 center;
     static int[][] map;
 
-    static Room[] rooms;
+    public static Room[] rooms;
     public static int numRooms = 10;
     public static int roomSizeMin = 5;
     public static int roomSizeMax = 15;

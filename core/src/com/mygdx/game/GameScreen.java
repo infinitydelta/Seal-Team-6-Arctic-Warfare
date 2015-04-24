@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.rmi.server.SocketSecurityException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
@@ -43,6 +44,7 @@ import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
 import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.utility.RandomInt;
 
 public class GameScreen implements Screen
 {
@@ -123,6 +125,9 @@ public class GameScreen implements Screen
 			
 			map = new ArrayList<Entity>();
 			
+			Random rand = new Random();
+			final long mapSeed = rand.nextLong();
+			RandomInt.setSeed(mapSeed);
 			DungeonGenerator.generateDungeon(this);
 
 			
@@ -147,7 +152,7 @@ public class GameScreen implements Screen
 						try
 						{
 							ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-							oos.writeObject(map);
+							oos.writeObject(mapSeed);
 							oos.flush();
 						}
 						catch(Exception e)
@@ -184,11 +189,14 @@ public class GameScreen implements Screen
 				{
 					o = ois.readObject();
 				}
-				map = (ArrayList<Entity>) o;
+				/*map = (ArrayList<Entity>) o;
 				for(Entity e: map)
 				{
 					pooledEngine.addEntity(e);
-				}
+				}*/
+				long mapSeed = (Long) o;
+				RandomInt.setSeed(mapSeed);
+				DungeonGenerator.generateDungeon(this);
 			} 
 			catch (Exception e) 
 			{
