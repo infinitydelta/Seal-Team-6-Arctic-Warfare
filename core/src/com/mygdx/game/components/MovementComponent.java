@@ -1,6 +1,7 @@
 package com.mygdx.game.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
 
@@ -20,6 +21,10 @@ public class MovementComponent extends Component implements Pool.Poolable {
     public float yVel = 0;
 
     public float acc = 0;
+
+
+	private Vector2 impulse;
+    
 
     public MovementComponent (PositionComponent position, World world)
     {
@@ -71,11 +76,19 @@ public class MovementComponent extends Component implements Pool.Poolable {
             moveY = true;
         }
         */
-        if (body.getLinearVelocity().x != xVel || body.getLinearVelocity().y != yVel)
+        /*if (body.getLinearVelocity().x != xVel || body.getLinearVelocity().y != yVel)
         {
             body.setLinearVelocity(xVel, yVel);
-        }
+        }*/
         //System.out.println("xvel: " + xVel + ", yvel: " + yVel);
+    	float xveldelta = xVel - body.getLinearVelocity().x;
+    	float yveldelta = yVel - body.getLinearVelocity().y;
+    	float ximpulse = body.getMass() * xveldelta;
+    	float yimpulse = body.getMass() * yveldelta;
+    	body.applyLinearImpulse(new Vector2(xveldelta, yveldelta), body.getWorldCenter(), true);
+    	
+    	
+    	
     }
 
     @Override
