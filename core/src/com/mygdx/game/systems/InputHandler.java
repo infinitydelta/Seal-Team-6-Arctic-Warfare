@@ -14,6 +14,7 @@ import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.utility.Factory;
 
 /**
  * Created by KS on 3/5/2015.
@@ -110,9 +111,14 @@ public class InputHandler implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        System.out.println("mouse down: " + button);
-
-
+        //System.out.println("mouse down: " + button);
+        Vector3 clickPos= new Vector3(screenX, screenY, 0);
+        camera.unproject(clickPos);
+        //System.out.println(clickPos);
+        float angle = (float) Math.atan2(clickPos.y- (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f));
+        float degrees = (float) Math.toDegrees(angle);
+        System.out.println("Angle: " + degrees);
+        Factory.createBullet(playerPosition.x  , playerPosition.y, angle, .1f);
         return false;
     }
 
@@ -137,7 +143,7 @@ public class InputHandler implements InputProcessor {
         Vector3 worldCoordinates = new Vector3(screenX, screenY, 0);
         camera.unproject(worldCoordinates);
         //angle between mouse and player (weapon) pos
-        float rotation = (float) Math.toDegrees(Math.atan2(worldCoordinates.y - playerPosition.y, worldCoordinates.x - playerPosition.x));
+        float rotation = (float) Math.toDegrees(Math.atan2(worldCoordinates.y - (playerPosition.y + .5f), worldCoordinates.x - (playerPosition.x + .5f)));
         weaponSprite.sprite.setRotation(rotation);
         return false;
     }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.*;
@@ -16,6 +17,12 @@ import com.mygdx.game.components.*;
  * Created by KS on 4/24/2015.
  */
 public class Factory {
+
+    //collision masks
+    final long PLAYER_COL = 0x1;
+    final long ENEMY_COL = 0x2;
+    final long PLAYER_PROJ_COL = 0x4;
+    final long ENEMY_PROJ_COL = 0x8;
 
     //textures
     static Texture kenny;
@@ -102,5 +109,25 @@ public class Factory {
 
         return weapon;
 
+    }
+
+    public static Entity createBullet(float x, float y, float angle, float vel)
+    {
+        Entity bullet = GameScreen.pooledEngine.createEntity();
+        PositionComponent p = new PositionComponent(x, y);
+        bullet.add(p);
+        PolygonShape rectangle = new PolygonShape();
+        rectangle.setAsBox(.2f, .1f);
+
+        float xVel = (float) Math.cos(angle) * vel;
+        float yVel = (float) Math.sin(angle) * vel;
+
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.KinematicBody, rectangle, p);
+        bullet.add(new MovementComponent(col, GameScreen.world, xVel, yVel, 0));
+        //add visual
+        //
+        GameScreen.pooledEngine.addEntity(bullet);
+
+        return bullet;
     }
 }
