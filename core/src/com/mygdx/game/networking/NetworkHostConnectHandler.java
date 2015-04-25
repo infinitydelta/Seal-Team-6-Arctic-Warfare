@@ -1,5 +1,6 @@
 package com.mygdx.game.networking;
 
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
@@ -31,13 +32,14 @@ public class NetworkHostConnectHandler extends Thread {
 				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 				oos.writeObject(networkHost.mapSeed);
 				oos.flush();
-				networkHost.clients.put(socket, oos);
+				oos.reset();
 			}
 			catch(Exception e)
 			{
 				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
+			NetworkHostUpdateHandler networkHostUpdateHandler = new NetworkHostUpdateHandler(networkHost, socket);
 		}
 	}
 }

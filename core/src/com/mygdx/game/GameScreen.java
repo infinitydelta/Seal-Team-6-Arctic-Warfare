@@ -38,6 +38,7 @@ import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
+import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
 import com.mygdx.game.networking.NetworkHostConnectHandler;
 import com.mygdx.game.systems.InputHandler;
@@ -46,6 +47,7 @@ import com.mygdx.game.systems.PlayerSystem;
 import com.mygdx.game.systems.RenderingSystem;
 import com.mygdx.game.utility.Factory;
 import com.mygdx.game.utility.RandomInt;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class GameScreen implements Screen
 {
@@ -81,7 +83,7 @@ public class GameScreen implements Screen
 	ArrayList<Entity> map;
 
 	NetworkHost networkHost;
-	
+	NetworkClient networkClient;
 	
 	
 	public GameScreen(boolean host, String ip, int port)
@@ -131,14 +133,14 @@ public class GameScreen implements Screen
 			player = Factory.createPlayer(0, 0);
 
 			
-			Long newEntityID = player.getId();
+			/*Long newEntityID = player.getId();
 			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
 			newEntityData.put("Type", "Player");
 			newEntityData.put("Owner", "host");
 			newEntityData.put("X", 0);
 			newEntityData.put("Y", 0);
 			newEntityData.put("Z", 0);
-			networkHost.networkHostUpdateHandler.entities.put(newEntityID, newEntityData);
+			networkHost.entities.put(newEntityID, newEntityData);*/
 			
 			
 			//create weapon entity
@@ -161,42 +163,7 @@ public class GameScreen implements Screen
 		}
 		else //client
 		{
-			System.out.println("CLIENT");
-			SocketHints socketHints = new SocketHints();
-			socketHints.connectTimeout = 10000; //10s?
-			
-			Socket socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
-			System.out.println("CONNECTED");
-			try 
-			{
-				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-				System.out.println("Retrieving map...");
-				Object o = ois.readObject();
-				while(o == null)
-				{
-					o = ois.readObject();
-				}
-				if (o.getClass() == Long.class) {
-					System.out.println("Receiving Long");
-					long mapSeed = (Long) o;
-					RandomInt.setSeed(mapSeed);
-					DungeonGenerator.generateDungeon(this);
-				}
-				else if (o.getClass() == HashMap.class) {
-					System.out.println("Receiving hashmap");
-					for (Map.Entry<Long, Map<String, Object>> entry : ((ConcurrentHashMap<Long, Map<String, Object>>) o).entrySet()) {
-					}
-				}
-				else {
-					System.out.println("Receiving other datatype");
-				}
-				
-			} 
-			catch (Exception e) 
-			{
-				System.out.println("Exception in client code:" + e.getMessage());
-				e.printStackTrace();
-			}
+			networkClient = new NetworkClient(this);
 			
 			
 			//create player entity
