@@ -27,7 +27,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
 
     //gameplay values
-    float speed = .25f;
+    float speed = 10f;
     float diagSpeed = speed/root2;
 
 

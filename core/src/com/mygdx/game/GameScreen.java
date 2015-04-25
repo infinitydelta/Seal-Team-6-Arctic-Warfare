@@ -79,7 +79,9 @@ public class GameScreen implements Screen
 
 	NetworkHost networkHost;
 
-	
+	float deltatimesink;
+	static final float physicsTimeStep = 1/60f;
+
 	public GameScreen(boolean host, String ip, int port)
 	{
 		this.host = host;
@@ -220,6 +222,7 @@ public class GameScreen implements Screen
 		
 
 		createBox2d();
+		deltatimesink = 0.0f;
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
 		
@@ -237,8 +240,22 @@ public class GameScreen implements Screen
 		stage.draw(); //ui
 
 		debugRenderer.render(world, camera.combined);
+		
+		//Find number of physics steps to simulate
+		deltatimesink += delta;
+		int numStepsToSim = 0;
+		while(deltatimesink > physicsTimeStep)
+		{
+			numStepsToSim++;
+			deltatimesink -= physicsTimeStep;
+		}
+		for(int i = 0; i < numStepsToSim; i++)
+		{
+			world.step(1/60f, 6, 2); //physics simulation of 1/60th of a second
+		}
+		//Temporal Aliasing?
+		//Spiral of death?
 
-		world.step(1/60f, 6, 2); //physics
 	}
 	public void resize(int width, int height)
 	{
