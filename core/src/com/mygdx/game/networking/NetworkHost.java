@@ -1,10 +1,9 @@
 package com.mygdx.game.networking;
 
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.net.ServerSocket;
@@ -19,18 +18,24 @@ public class NetworkHost {
 	
 	public final ServerSocketHints serverSocketHint;
 	public final ServerSocket serverSocket;
-	final ArrayList<Socket> sockets = new ArrayList<Socket>();
+	final ConcurrentHashMap<Socket, ObjectOutputStream> clients;
 	
 	final long mapSeed;
 	
+	public NetworkHostConnectHandler networkHostConnectHandler;
+	public NetworkHostUpdateHandler networkHostUpdateHandler;
+	
 	public NetworkHost(GameScreen gScreen) {
 		this.gScreen = gScreen;
+		
+		clients = new ConcurrentHashMap<Socket, ObjectOutputStream>();
 		
 		System.out.println("HOST");
 		
 		Random rand = new Random();
 		mapSeed = rand.nextLong();
 		RandomInt.setSeed(mapSeed);
+		
 		DungeonGenerator.generateDungeon(gScreen);
 
 		serverSocketHint = new ServerSocketHints();
@@ -38,6 +43,7 @@ public class NetworkHost {
 		
 		serverSocket = Gdx.net.newServerSocket(Protocol.TCP, gScreen.port, serverSocketHint); //Create ServerSocket with TCP protocol on the port specified
 		
-		NetworkHostConnectHandler networkHostConnectHandler = new NetworkHostConnectHandler(this);
+		networkHostConnectHandler = new NetworkHostConnectHandler(this);
+		networkHostUpdateHandler = new NetworkHostUpdateHandler(this);
 	}
 }

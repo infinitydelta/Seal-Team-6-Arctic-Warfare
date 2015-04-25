@@ -40,7 +40,6 @@ public class DungeonGenerator {
         for (int i = 0; i < numRooms; i++)
         {
             rooms[i] = new Room();
-            System.out.println(rooms[i].index);
         }
         initialize();
         squash(squashTimes);
@@ -95,7 +94,6 @@ public class DungeonGenerator {
                 continue;
             }
             Room check = rooms[i];
-            System.out.println(rooms[i].index);
             //de morgan's law
             //-1 +1 -1 +1
             if (!((room.x + room.width + 1< check.x ) || (room.x - 1> check.x + check.width ) || (room.y + room.height < check.y ) || (room.y > check.y + check.height))) {

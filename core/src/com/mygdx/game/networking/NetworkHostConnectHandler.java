@@ -1,6 +1,7 @@
 package com.mygdx.game.networking;
 
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.Socket;
@@ -21,8 +22,6 @@ public class NetworkHostConnectHandler extends Thread {
 			System.out.println("Waiting...");
 			Socket socket = networkHost.serverSocket.accept(null);
 			
-			networkHost.sockets.add(socket);
-			
 			//BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream())); //dont need anything from the other player yet
 			System.out.println("connected");
 			//Send the current state of the game as a starting point
@@ -32,6 +31,7 @@ public class NetworkHostConnectHandler extends Thread {
 				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 				oos.writeObject(networkHost.mapSeed);
 				oos.flush();
+				networkHost.clients.put(socket, oos);
 			}
 			catch(Exception e)
 			{

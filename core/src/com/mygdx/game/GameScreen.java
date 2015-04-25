@@ -6,8 +6,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.rmi.server.SocketSecurityException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -33,6 +37,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.MovementComponent;
@@ -81,7 +86,7 @@ public class GameScreen implements Screen
 	
 	ArrayList<Entity> map;
 
-
+	NetworkHost networkHost;
 	
 	
 	
@@ -122,11 +127,56 @@ public class GameScreen implements Screen
 		
 		if(host)
 		{
+			networkHost = new NetworkHost(this);
 			
-			System.out.println("HOST");
-			//generate map
 			
-			NetworkHost networkHost = new NetworkHost(this);
+			
+			
+			
+			//create player entity
+			player = pooledEngine.createEntity();
+			PositionComponent position = new PositionComponent(0, 0);
+			player.add(position);
+			player.add(new MovementComponent(position, world, 0, 0, 0));
+
+			TextureRegion tx = new TextureRegion(MainGame.kenny);
+			player.add(new VisualComponent(MainGame.runAnimation));
+			player.add(new PlayerComponent(player));
+			pooledEngine.addEntity(player);
+			
+			Long newEntityID = player.getId();
+			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
+			newEntityData.put("Type", "Player");
+			newEntityData.put("Owner", "host");
+			newEntityData.put("X", 0);
+			newEntityData.put("Y", 0);
+			newEntityData.put("Z", 0);
+			networkHost.networkHostUpdateHandler.entities.put(newEntityID, newEntityData);
+			
+			
+			//create weapon entity
+			TextureRegion weap = new TextureRegion(MainGame.objects, 3 * 32, 1 * 32, 32, 32);
+			weapon = pooledEngine.createEntity();
+			weapon.add(new PositionComponent(0, 0));
+			weapon.add(new VisualComponent(weap));
+			pooledEngine.addEntity(weapon);
+
+			player.getComponent(PlayerComponent.class).addWeapon(weapon);
+
+			Entity e = pooledEngine.createEntity();
+			e.add(new PositionComponent(0, 0));
+			e.add(new VisualComponent(tx));
+			//pooledEngine.addEntity(e);
+			
+			//bullet
+			Entity bullet = pooledEngine.createEntity();
+			PositionComponent positionB = new PositionComponent(0, -5);
+			bullet.add(positionB);
+			bullet.add(new MovementComponent(position, world, 0, 0, 0));
+
+			PolygonShape rectangle = new PolygonShape();
+			rectangle.setAsBox(.3f, .2f);
+			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
 		}
 		else //client
 		{
@@ -145,32 +195,69 @@ public class GameScreen implements Screen
 				{
 					o = ois.readObject();
 				}
-				long mapSeed = (Long) o;
-				RandomInt.setSeed(mapSeed);
-				DungeonGenerator.generateDungeon(this);
+				if (o.getClass() == Long.class) {
+					System.out.println("Receiving Long");
+					long mapSeed = (Long) o;
+					RandomInt.setSeed(mapSeed);
+					DungeonGenerator.generateDungeon(this);
+				}
+				else if (o.getClass() == HashMap.class) {
+					System.out.println("Receiving hashmap");
+					for (Map.Entry<Long, Map<String, Object>> entry : ((ConcurrentHashMap<Long, Map<String, Object>>) o).entrySet()) {
+					}
+				}
+				else {
+					System.out.println("Receiving other datatype");
+				}
+				
 			} 
 			catch (Exception e) 
 			{
 				System.out.println("Exception in client code:" + e.getMessage());
 				e.printStackTrace();
 			}
+			
+			
+			//create player entity
+			player = pooledEngine.createEntity();
+			PositionComponent position = new PositionComponent(0, 0);
+			player.add(position);
+			player.add(new MovementComponent(position, world, 0, 0, 0));
+
+			TextureRegion tx = new TextureRegion(MainGame.kenny);
+			player.add(new VisualComponent(MainGame.runAnimation));
+			player.add(new PlayerComponent(player));
+			pooledEngine.addEntity(player);
+			
+			
+			//create weapon entity
+			TextureRegion weap = new TextureRegion(MainGame.objects, 3 * 32, 1 * 32, 32, 32);
+			weapon = pooledEngine.createEntity();
+			weapon.add(new PositionComponent(0, 0));
+			weapon.add(new VisualComponent(weap));
+			pooledEngine.addEntity(weapon);
+
+			player.getComponent(PlayerComponent.class).addWeapon(weapon);
+
+			Entity e = pooledEngine.createEntity();
+			e.add(new PositionComponent(0, 0));
+			e.add(new VisualComponent(tx));
+			//pooledEngine.addEntity(e);
+			
+			//bullet
+			Entity bullet = pooledEngine.createEntity();
+			PositionComponent positionB = new PositionComponent(0, -5);
+			bullet.add(positionB);
+			bullet.add(new MovementComponent(position, world, 0, 0, 0));
+
+			PolygonShape rectangle = new PolygonShape();
+			rectangle.setAsBox(.3f, .2f);
+			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
 		}
 		
 		
-		
-		
-		//create player entity
-				player = pooledEngine.createEntity();
-				PositionComponent position = new PositionComponent(0, 0);
-				player.add(position);
-				player.add(new MovementComponent(position, world, 0, 0, 0));
 
-				TextureRegion tx = new TextureRegion(MainGame.kenny);
-				player.add(new VisualComponent(MainGame.runAnimation));
-				player.add(new PlayerComponent(player));
-				pooledEngine.addEntity(player);
-
-
+/*
 				//create weapon entity
 				TextureRegion weap = new TextureRegion(MainGame.objects, 3 * 32, 1 * 32, 32, 32);
 				weapon = pooledEngine.createEntity();
@@ -194,7 +281,7 @@ public class GameScreen implements Screen
 				PolygonShape rectangle = new PolygonShape();
 				rectangle.setAsBox(.3f, .2f);
 				bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
-
+*/
 
 				createBox2d();
 
