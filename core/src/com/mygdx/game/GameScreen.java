@@ -40,10 +40,7 @@ import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkHost;
 import com.mygdx.game.networking.NetworkHostConnectHandler;
-import com.mygdx.game.systems.InputHandler;
-import com.mygdx.game.systems.MovementSystem;
-import com.mygdx.game.systems.PlayerSystem;
-import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.systems.*;
 import com.mygdx.game.utility.Factory;
 import com.mygdx.game.utility.RandomInt;
 
@@ -55,7 +52,7 @@ public class GameScreen implements Screen
 
 	static final int CAM_WIDTH = 20;
 	
-	static final int CAM_SIZE = 100;
+	static final int CAM_SIZE = 50;
 
 	//MainGame game;
 	OrthographicCamera camera;
@@ -81,8 +78,7 @@ public class GameScreen implements Screen
 	ArrayList<Entity> map;
 
 	NetworkHost networkHost;
-	
-	
+
 	
 	public GameScreen(boolean host, String ip, int port)
 	{
@@ -93,7 +89,7 @@ public class GameScreen implements Screen
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera(CAM_WIDTH, CAM_WIDTH* (h/w) );
-		viewport = new FitViewport(20, 20 * (h/w), camera); // 20 world units wide
+		viewport = new FitViewport(CAM_SIZE, CAM_SIZE * (h/w), camera); // 20 world units wide
 		camera.position.set(0, 0, 0);
 		camera.update();
 
@@ -108,6 +104,7 @@ public class GameScreen implements Screen
 		//box2d
 		Box2D.init();
 		world = new World(Vector2.Zero, true);
+		world.setContactListener(new MyContactListener());
 		debugRenderer = new Box2DDebugRenderer();
 
 		//engine
@@ -208,7 +205,6 @@ public class GameScreen implements Screen
 
 			player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
-			Entity e = pooledEngine.createEntity();
 			//pooledEngine.addEntity(e);
 			
 			//bullet
@@ -224,10 +220,6 @@ public class GameScreen implements Screen
 		
 
 		createBox2d();
-
-
-		//curs = new Cursor();
-		//stage.addActor(curs);
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
 		
@@ -245,6 +237,7 @@ public class GameScreen implements Screen
 		stage.draw(); //ui
 
 		debugRenderer.render(world, camera.combined);
+
 		world.step(1/60f, 6, 2); //physics
 	}
 	public void resize(int width, int height)
@@ -284,6 +277,8 @@ public class GameScreen implements Screen
 		rectangle.setAsBox(.5f, .5f);
 
 		fixtureDef.shape = rectangle;
+		fixtureDef.filter.categoryBits = Factory.WALL;
+		//fixtureDef.filter.maskBits = Factory.PLAYER_PROJ_COL;
 		Fixture fixture = body.createFixture(fixtureDef);
 		//body.setLinearVelocity(0, 1/60f);
 		body.applyLinearImpulse(0, 1/60f, body.getPosition().x, body.getPosition().y, true);

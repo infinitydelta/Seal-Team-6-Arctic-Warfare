@@ -452,24 +452,22 @@ public class DungeonGenerator {
                     //doing it above, dont need to do it again
                     //GameObject tile = (GameObject)Instantiate(ground, new Vector3(x, y, 5), Quaternion.identity);
                     //tile.transform.parent = transform;
-                    Entity e = pooledEngine.createEntity();
-                    PositionComponent p = new PositionComponent(x, y);
-                    e.add(p);
-                    TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 0, 32, 32);
-                    e.add(new VisualComponent(t));
-                    pooledEngine.addEntity(e);
+                    Factory.createGround(x,y);
                 }
                 //wall
                 else if (map[x][y] == 2)
                 {
                     //GameObject tile = (GameObject)Instantiate(wall, new Vector3(x, y, 5), Quaternion.identity);
                     //tile.transform.parent = transform;
+                    //Factory.createWall(x,y);
                 }
 
                 else if (map[x][y] == 3)
                 {
                     //GameObject tile = (GameObject)Instantiate(pink, new Vector3(x, y, 1), Quaternion.identity);
                     //tile.transform.parent = transform;
+                    //Factory.createGround(x,y);
+
                 }
             }
         }
