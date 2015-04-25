@@ -12,7 +12,7 @@ public class NetworkHostUpdateHandler extends Thread {
 	NetworkHost networkHost;
 	
 	public ConcurrentHashMap<Long, HashMap<String, Object>> entities;
-	public long pollingRate = 200;
+	public long pollingRate = 1000;
 	
 	public NetworkHostUpdateHandler(NetworkHost networkHost) {
 		this.networkHost = networkHost;
@@ -33,6 +33,7 @@ public class NetworkHostUpdateHandler extends Thread {
 				for (Map.Entry<Socket, ObjectOutputStream> client : networkHost.clients.entrySet()) {
 					client.getValue().writeObject(entities);
 					client.getValue().flush();
+					client.getValue().reset();
 				}
 			}
 			catch(Exception e)

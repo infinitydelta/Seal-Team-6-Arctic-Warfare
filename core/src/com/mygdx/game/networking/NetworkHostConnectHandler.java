@@ -31,6 +31,7 @@ public class NetworkHostConnectHandler extends Thread {
 				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 				oos.writeObject(networkHost.mapSeed);
 				oos.flush();
+				oos.reset();
 				networkHost.clients.put(socket, oos);
 			}
 			catch(Exception e)

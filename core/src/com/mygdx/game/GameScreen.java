@@ -137,7 +137,6 @@ public class GameScreen implements Screen
 			newEntityData.put("Owner", "host");
 			newEntityData.put("X", 0);
 			newEntityData.put("Y", 0);
-			newEntityData.put("Z", 0);
 			networkHost.networkHostUpdateHandler.entities.put(newEntityID, newEntityData);
 			
 			
