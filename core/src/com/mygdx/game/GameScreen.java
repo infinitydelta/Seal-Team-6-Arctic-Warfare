@@ -24,14 +24,7 @@ import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.components.CollisionComponent;
@@ -44,6 +37,7 @@ import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
 import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.utility.Factory;
 import com.mygdx.game.utility.RandomInt;
 
 public class GameScreen implements Screen
@@ -60,9 +54,9 @@ public class GameScreen implements Screen
 	OrthographicCamera camera;
 	FitViewport viewport;
 
-	public PooledEngine pooledEngine;
+	public static PooledEngine pooledEngine;
 	Stage stage;
-	World world;
+	public static World world;
 	InputHandler input;
 	Entity player;
 
@@ -207,51 +201,62 @@ public class GameScreen implements Screen
 		
 		
 		
-		
+		/*
 		//create player entity
-				player = pooledEngine.createEntity();
-				PositionComponent position = new PositionComponent(0, 0);
-				player.add(position);
-				player.add(new MovementComponent(position, world, 0, 0, 0));
+		player = pooledEngine.createEntity();
+		PositionComponent position = new PositionComponent(0, 0);
+		player.add(position);
 
-				TextureRegion tx = new TextureRegion(MainGame.kenny);
-				player.add(new VisualComponent(MainGame.runAnimation));
-				player.add(new PlayerComponent(player));
-				pooledEngine.addEntity(player);
+		//create a body for the player
+		CircleShape circle = new CircleShape();
+		circle.setRadius(.48f);
 
+		CollisionComponent col = new CollisionComponent(world, BodyDef.BodyType.DynamicBody, circle, position);
 
-				//create weapon entity
-				TextureRegion weap = new TextureRegion(MainGame.objects, 3 * 32, 1 * 32, 32, 32);
-				weapon = pooledEngine.createEntity();
-				weapon.add(new PositionComponent(0, 0));
-				weapon.add(new VisualComponent(weap));
-				pooledEngine.addEntity(weapon);
+		player.add(new MovementComponent(col, world, 0, 0, 0));
 
-				player.getComponent(PlayerComponent.class).addWeapon(weapon);
+		TextureRegion tx = new TextureRegion(MainGame.kenny);
+		player.add(new VisualComponent(MainGame.runAnimation));
+		player.add(new PlayerComponent(player));
+		pooledEngine.addEntity(player);
+		*/
+		player = Factory.createPlayer(0, 0);
 
-				Entity e = pooledEngine.createEntity();
-				e.add(new PositionComponent(0, 0));
-				e.add(new VisualComponent(tx));
-				//pooledEngine.addEntity(e);
-				
-				//bullet
-				Entity bullet = pooledEngine.createEntity();
-				PositionComponent positionB = new PositionComponent(0, -5);
-				bullet.add(positionB);
-				bullet.add(new MovementComponent(position, world, 0, 0, 0));
-
-				PolygonShape rectangle = new PolygonShape();
-				rectangle.setAsBox(.3f, .2f);
-				bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
+		//create weapon entity
+		/*
+		TextureRegion weap = new TextureRegion(Factory.objects, 3 * 32, 1 * 32, 32, 32);
+		weapon = pooledEngine.createEntity();
+		weapon.add(new PositionComponent(0, 0));
+		weapon.add(new VisualComponent(weap));
+		pooledEngine.addEntity(weapon);
 
 
-				createBox2d();
+		Entity e = pooledEngine.createEntity();
+		e.add(new PositionComponent(0, 0));
+		*/
+		weapon = Factory.createWeapon();
+		player.getComponent(PlayerComponent.class).addWeapon(weapon);
+		//e.add(new VisualComponent(tx));
+		//pooledEngine.addEntity(e);
+
+		//bullet
+		Entity bullet = pooledEngine.createEntity();
+		PositionComponent positionB = new PositionComponent(0, -5);
+		bullet.add(positionB);
+		//bullet.add(new MovementComponent(position, world, 0, 0, 0));
+
+		PolygonShape rectangle = new PolygonShape();
+		rectangle.setAsBox(.3f, .2f);
+		bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
 
 
-				//curs = new Cursor();
-				//stage.addActor(curs);
+		createBox2d();
 
-				input = new InputHandler(camera, player); //handle input of 1 single player
+
+		//curs = new Cursor();
+		//stage.addActor(curs);
+
+		input = new InputHandler(camera, player); //handle input of 1 single player
 		
 	}
 	public void render(float delta)

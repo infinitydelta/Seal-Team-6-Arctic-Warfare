@@ -31,6 +31,7 @@ import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
 import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.utility.Factory;
 
 public class MainGame extends Game {
 
@@ -51,7 +52,8 @@ public class MainGame extends Game {
 	@Override
 	public void create () 
 	{
-		loadAssets();
+		//loadAssets();
+		Factory.loadAssets();
 		menuScreen = new MenuScreen(this);
 		//gameScreen = new GameScreen(this);
 		setScreen(menuScreen);
