@@ -22,7 +22,7 @@ public class DungeonGenerator {
 
     public static int mapSize = 64;
     static Vector2 center;
-    static int[][] map;
+    public static int[][] map;
 
     public static Room[] rooms;
     public static int numRooms = 10;
