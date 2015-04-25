@@ -47,33 +47,14 @@ public class MovementComponent extends Component implements Pool.Poolable {
         body = collision.body;
     }
 
-
-    public MovementComponent(PositionComponent position, World world, float xVel, float yVel, float acc)
+    //used for player right now
+    public MovementComponent(CollisionComponent collision, World world, float xVel, float yVel, float acc)
     {
         this.xVel = xVel;
         this.yVel = yVel;
         this.acc = acc;
+        body = collision.body;
 
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(position.x + .5f, position.y + .5f);
-
-        body = world.createBody(bodyDef);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        CircleShape circle = new CircleShape();
-        circle.setRadius(.48f);
-        PolygonShape rectangle = new PolygonShape();
-        rectangle.setAsBox(.3f, .3f);
-
-        fixtureDef.shape = circle;
-        fixtureDef.restitution = 0;
-        fixtureDef.friction = 0;
-        fixtureDef.density = 0;
-        Fixture fixture = body.createFixture(fixtureDef);
-
-        rectangle.dispose();
-        circle.dispose();
     }
 
     public void update()
@@ -90,7 +71,10 @@ public class MovementComponent extends Component implements Pool.Poolable {
             moveY = true;
         }
         */
-        body.setLinearVelocity(xVel, yVel);
+        if (body.getLinearVelocity().x != xVel || body.getLinearVelocity().y != yVel)
+        {
+            body.setLinearVelocity(xVel, yVel);
+        }
         //System.out.println("xvel: " + xVel + ", yvel: " + yVel);
     }
 
@@ -99,5 +83,6 @@ public class MovementComponent extends Component implements Pool.Poolable {
         xVel = 0;
         yVel = 0;
         acc = 0;
+        body = null;
     }
 }

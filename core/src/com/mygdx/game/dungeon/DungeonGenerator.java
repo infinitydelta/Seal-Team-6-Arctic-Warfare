@@ -8,6 +8,7 @@ import com.mygdx.game.GameScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.utility.Factory;
 import com.mygdx.game.utility.RandomInt;
 
 import java.util.ArrayList;
@@ -454,7 +455,7 @@ public class DungeonGenerator {
                     Entity e = pooledEngine.createEntity();
                     PositionComponent p = new PositionComponent(x, y);
                     e.add(p);
-                    TextureRegion t = new TextureRegion(MainGame.sandTiles, 0, 0, 32, 32);
+                    TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 0, 32, 32);
                     e.add(new VisualComponent(t));
                     pooledEngine.addEntity(e);
                 }

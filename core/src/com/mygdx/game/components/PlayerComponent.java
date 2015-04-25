@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.game.MainGame;
+import com.mygdx.game.utility.Factory;
 
 /**
  * Created by KS on 3/5/2015.
@@ -26,7 +27,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
 
     //gameplay values
-    float speed = .8f;
+    float speed = .25f;
     float diagSpeed = speed/root2;
 
 
@@ -92,8 +93,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
         }
 
-        if (!moveY && !moveX) visual.setAnimation(MainGame.idleAnmation);
-        else visual.setAnimation(MainGame.runAnimation);
+        if (!moveY && !moveX) visual.setAnimation(Factory.idleAnmation);
+        else visual.setAnimation(Factory.runAnimation);
 
         weaponPosition.x = position.x;
         weaponPosition.y = position.y;

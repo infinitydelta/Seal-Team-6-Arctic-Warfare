@@ -28,14 +28,7 @@ import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -51,6 +44,7 @@ import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
 import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.utility.Factory;
 import com.mygdx.game.utility.RandomInt;
 
 public class GameScreen implements Screen
@@ -67,9 +61,9 @@ public class GameScreen implements Screen
 	OrthographicCamera camera;
 	FitViewport viewport;
 
-	public PooledEngine pooledEngine;
+	public static PooledEngine pooledEngine;
 	Stage stage;
-	World world;
+	public static World world;
 	InputHandler input;
 	Entity player;
 
@@ -134,15 +128,8 @@ public class GameScreen implements Screen
 			
 			
 			//create player entity
-			player = pooledEngine.createEntity();
-			PositionComponent position = new PositionComponent(0, 0);
-			player.add(position);
-			player.add(new MovementComponent(position, world, 0, 0, 0));
+			player = Factory.createPlayer(0, 0);
 
-			TextureRegion tx = new TextureRegion(MainGame.kenny);
-			player.add(new VisualComponent(MainGame.runAnimation));
-			player.add(new PlayerComponent(player));
-			pooledEngine.addEntity(player);
 			
 			Long newEntityID = player.getId();
 			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
@@ -155,28 +142,22 @@ public class GameScreen implements Screen
 			
 			
 			//create weapon entity
-			TextureRegion weap = new TextureRegion(MainGame.objects, 3 * 32, 1 * 32, 32, 32);
-			weapon = pooledEngine.createEntity();
-			weapon.add(new PositionComponent(0, 0));
-			weapon.add(new VisualComponent(weap));
-			pooledEngine.addEntity(weapon);
+			weapon = Factory.createWeapon();
 
 			player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
-			Entity e = pooledEngine.createEntity();
-			e.add(new PositionComponent(0, 0));
-			e.add(new VisualComponent(tx));
-			//pooledEngine.addEntity(e);
-			
+
 			//bullet
+			/*
 			Entity bullet = pooledEngine.createEntity();
 			PositionComponent positionB = new PositionComponent(0, -5);
 			bullet.add(positionB);
-			bullet.add(new MovementComponent(position, world, 0, 0, 0));
+			//bullet.add(new MovementComponent(position, world, 0, 0, 0));
 
 			PolygonShape rectangle = new PolygonShape();
 			rectangle.setAsBox(.3f, .2f);
 			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
+			*/
 		}
 		else //client
 		{
@@ -219,77 +200,36 @@ public class GameScreen implements Screen
 			
 			
 			//create player entity
-			player = pooledEngine.createEntity();
-			PositionComponent position = new PositionComponent(0, 0);
-			player.add(position);
-			player.add(new MovementComponent(position, world, 0, 0, 0));
-
-			TextureRegion tx = new TextureRegion(MainGame.kenny);
-			player.add(new VisualComponent(MainGame.runAnimation));
-			player.add(new PlayerComponent(player));
-			pooledEngine.addEntity(player);
+			player = Factory.createPlayer(0, 0);
 			
 			
 			//create weapon entity
-			TextureRegion weap = new TextureRegion(MainGame.objects, 3 * 32, 1 * 32, 32, 32);
-			weapon = pooledEngine.createEntity();
-			weapon.add(new PositionComponent(0, 0));
-			weapon.add(new VisualComponent(weap));
-			pooledEngine.addEntity(weapon);
+			weapon = Factory.createWeapon();
 
 			player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
 			Entity e = pooledEngine.createEntity();
-			e.add(new PositionComponent(0, 0));
-			e.add(new VisualComponent(tx));
 			//pooledEngine.addEntity(e);
 			
 			//bullet
-			Entity bullet = pooledEngine.createEntity();
+			/*Entity bullet = pooledEngine.createEntity();
 			PositionComponent positionB = new PositionComponent(0, -5);
 			bullet.add(positionB);
 			bullet.add(new MovementComponent(position, world, 0, 0, 0));
 
 			PolygonShape rectangle = new PolygonShape();
 			rectangle.setAsBox(.3f, .2f);
-			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
+			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));*/
 		}
 		
-		
 
-/*
-				//create weapon entity
-				TextureRegion weap = new TextureRegion(MainGame.objects, 3 * 32, 1 * 32, 32, 32);
-				weapon = pooledEngine.createEntity();
-				weapon.add(new PositionComponent(0, 0));
-				weapon.add(new VisualComponent(weap));
-				pooledEngine.addEntity(weapon);
-
-				player.getComponent(PlayerComponent.class).addWeapon(weapon);
-
-				Entity e = pooledEngine.createEntity();
-				e.add(new PositionComponent(0, 0));
-				e.add(new VisualComponent(tx));
-				//pooledEngine.addEntity(e);
-				
-				//bullet
-				Entity bullet = pooledEngine.createEntity();
-				PositionComponent positionB = new PositionComponent(0, -5);
-				bullet.add(positionB);
-				bullet.add(new MovementComponent(position, world, 0, 0, 0));
-
-				PolygonShape rectangle = new PolygonShape();
-				rectangle.setAsBox(.3f, .2f);
-				bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
-*/
-
-				createBox2d();
+		createBox2d();
 
 
-				//curs = new Cursor();
-				//stage.addActor(curs);
+		//curs = new Cursor();
+		//stage.addActor(curs);
 
-				input = new InputHandler(camera, player); //handle input of 1 single player
+		input = new InputHandler(camera, player); //handle input of 1 single player
 		
 	}
 	public void render(float delta)

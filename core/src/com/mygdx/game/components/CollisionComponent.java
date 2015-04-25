@@ -12,6 +12,10 @@ import com.badlogic.gdx.utils.Pool;
 public class CollisionComponent extends Component implements Pool.Poolable {
 
 
+    //
+    // NOT UPDATED BY OUR OWN SYSTEMS, ONLY BOX2D
+    //
+
     Body body;
     Fixture fixture;
 
