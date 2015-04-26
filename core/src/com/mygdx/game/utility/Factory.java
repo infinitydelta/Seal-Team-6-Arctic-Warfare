@@ -178,7 +178,7 @@ public class Factory {
         return player;
     }
     
-    public static Entity createSeal(int x, int y, Integer playerNum, Long id)
+    public static Entity createSeal(float x, float y, Integer playerNum, Long id)
     {
         Entity seal = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);

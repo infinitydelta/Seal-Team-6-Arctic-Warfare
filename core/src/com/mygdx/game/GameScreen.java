@@ -160,10 +160,12 @@ public class GameScreen implements Screen
 		player = Factory.createPlayer((int)pos.x, (int) pos.y, networkPlayerNum, null);
 		
 		//create seal entity
-		/*for (int i = 0; i<30; i++) {
-			pos = DungeonGenerator.getSpawnPosition();
-			Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
-		}*/
+		if (host) {
+			for (int i = 0; i<1; i++) {
+				//pos = DungeonGenerator.getSpawnPosition();
+				Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
+			}
+		}
 		
 		//create weapon entity
 		weapon = Factory.createWeapon();

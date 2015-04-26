@@ -64,6 +64,7 @@ public class NetworkSystem extends IteratingSystem {
         			move.xVel = (Float)entity2.get("yVel");
         			pos.x = (Float)entity2.get("xPos");
         			pos.y = (Float)entity2.get("yPos");
+        			
         		}
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value

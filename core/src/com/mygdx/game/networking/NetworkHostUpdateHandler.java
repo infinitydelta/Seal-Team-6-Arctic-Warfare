@@ -69,6 +69,9 @@ public class NetworkHostUpdateHandler extends Thread {
 							else if (entity.get("type").equals("bullet")) {
 								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 							}
+							else if (entity.get("type").equals("seal")) {
+								Factory.createSeal((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
+							}
 						}
 					}
 					
