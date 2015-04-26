@@ -118,6 +118,7 @@ public class InputHandler implements InputProcessor {
         camera.unproject(clickPos);
         float angle = (float) (Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f)));
         Factory.createBullet(playerPosition.x  , playerPosition.y, angle, 50f);
+        Factory.expl19.play();
         return false;
     }
 

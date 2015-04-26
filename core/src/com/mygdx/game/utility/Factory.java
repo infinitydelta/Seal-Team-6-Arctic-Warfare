@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -47,7 +49,7 @@ public class Factory {
     public static Animation runAnimation;
     public static Animation idleAnmation;
 
-
+    public static Sound expl19;
 
 
 
@@ -63,6 +65,8 @@ public class Factory {
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
+        //sound?
+        expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
         //animation
         Texture walk = new Texture("minimalObjects_32x32Tiles.png");
         TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
