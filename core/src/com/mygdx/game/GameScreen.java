@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
@@ -97,8 +99,8 @@ public class GameScreen implements Screen
 	
 	public static int networkPlayerNum;
 	
-	public static HashSet<HashMap<String, Object>> myEntities = new HashSet<HashMap<String, Object>>();
-    public static HashSet<HashMap<String, Object>> allEntities = new HashSet<HashMap<String, Object>>();
+	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
+    public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
 
 
 	float deltatimesink;
@@ -151,8 +153,6 @@ public class GameScreen implements Screen
 		if(host)
 		{
 			networkHost = new NetworkHost(this);
-			
-			Vector2 pos = DungeonGenerator.getSpawnPosition();
 		}
 		else //client
 		{
@@ -163,7 +163,7 @@ public class GameScreen implements Screen
 		
 		//create player entity
 		Vector2 pos = DungeonGenerator.getSpawnPosition();
-		player = Factory.createPlayer((int)pos.x, (int) pos.y);
+		player = Factory.createPlayer((int)pos.x, (int) pos.y, networkPlayerNum);
 		
 		//create weapon entity
 		weapon = Factory.createWeapon();
@@ -235,9 +235,11 @@ public class GameScreen implements Screen
 		//Spiral of death?
 		
 		//remove all components scheduled for removal AFTER physics step
-		while(!toBeDeleted.isEmpty())
+		/*while(!toBeDeleted.isEmpty())
 		{
 			Entity e = toBeDeleted.remove();
+<<<<<<< HEAD
+=======
 			try
 			{
 				//e.removeAll();
@@ -250,9 +252,12 @@ public class GameScreen implements Screen
 			} finally {
 				//pooledEngine.removeEntity(e);
 			}
+>>>>>>> 84dfbf646a7b0fa883e0a1739eca9281abe542db
 
-
-		}
+			world.destroyBody(e.getComponent(MovementComponent.class).body);
+			pooledEngine.removeEntity(e);
+			
+		}*/
 
 	}
 	public void resize(int width, int height)

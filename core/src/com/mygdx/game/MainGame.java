@@ -52,10 +52,10 @@ public class MainGame extends Game {
 	{
 
 		Factory.loadAssets();
-		//menuScreen = new MenuScreen(this);
+		menuScreen = new MenuScreen(this);
 		loginScreen = new LoginScreen(this);
 		//gameScreen = new GameScreen(this);
-		setScreen(loginScreen);
+		setScreen(menuScreen);
 
 	}
 

@@ -3,6 +3,7 @@ package com.mygdx.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.GameScreen;
 import com.mygdx.game.utility.Factory;
 
 /**
@@ -76,7 +77,7 @@ public class WeaponComponent extends Component implements Pool.Poolable
     {
     	if(!reloading && firetimer > 1/fireRate)
     	{
-    		Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 50f);
+    		Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 50f, GameScreen.networkPlayerNum);
             Factory.expl19.play();
             firetimer = 0;
             currentclip--;

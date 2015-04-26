@@ -121,7 +121,9 @@ public class Factory {
 
     }
 
-    public static Entity createPlayer(float x, float y)
+
+    public static Entity createPlayer(int x, int y, Integer playerNum)
+
     {
         Entity player = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -136,7 +138,9 @@ public class Factory {
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         player.add(m);
 
+
         player.add(new VisualComponent(penguin_idle_anim));
+
         player.add(new PlayerComponent(LoginScreen.username, player));
         player.add(new NetworkComponent("player", GameScreen.networkPlayerNum, player.getId(), p, m));
 
@@ -186,7 +190,7 @@ public class Factory {
 
     }
 
-    public static Entity createBullet(float x, float y, float angle, float vel)
+    public static Entity createBullet(float x, float y, float angle, float vel, Integer playerNum)
     {
         Entity bullet = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y, angle);
@@ -210,7 +214,7 @@ public class Factory {
         bullet.add(vc);
         //
 
-        bullet.add(new NetworkComponent("bullet", GameScreen.networkPlayerNum, bullet.getId(), p, m));
+        bullet.add(new NetworkComponent("player", playerNum, bullet.getId(), p, m));
 
         GameScreen.pooledEngine.addEntity(bullet);
         return bullet;

@@ -2,6 +2,7 @@ package com.mygdx.game.systems;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -11,6 +12,7 @@ import com.mygdx.game.GameScreen;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.NetworkComponent;
 import com.mygdx.game.components.PositionComponent;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 /**
  * Created by KS on 4/25/2015.
@@ -46,20 +48,41 @@ public class NetworkSystem extends IteratingSystem {
         newEntityData.put("yVel", move.yVel);
         
         if (((Integer) newEntityData.get("playerNum")).equals(GameScreen.networkPlayerNum)) {
-        	GameScreen.myEntities.remove(newEntityData);
-        	GameScreen.myEntities.add(newEntityData);
-        }
-        else {
-        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
-        		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-        			pos.x = (Float)entity2.get("xPos");
-        			pos.y = (Float)entity2.get("yPos");
-        			move.xVel = (Float)entity2.get("xVel");
-        			move.xVel = (Float)entity2.get("yVel");
-        		}
+        	synchronized(GameScreen.myEntities) {
+        		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
+            		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
+            			GameScreen.myEntities.remove(entity2);
+            		}
+            	}
+        		GameScreen.myEntities.add(newEntityData);
+        		//Populate and replace myEntities with newEntities
         	}
         }
-        GameScreen.allEntities.remove(newEntityData);
-        GameScreen.allEntities.add(newEntityData);
+        else {
+        	synchronized(GameScreen.allEntities) {
+	        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+	        		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
+	        			System.out.println(network.type);
+	        			pos.x = (Float)entity2.get("xPos");
+	        			pos.y = (Float)entity2.get("yPos");
+	        			move.xVel = (Float)entity2.get("xVel");
+	        			move.xVel = (Float)entity2.get("yVel");
+	        		}
+	        	}
+	        	//Update each entity with networkComponent with its corresponding allEntities value
+        	}
+        }
+        synchronized(GameScreen.allEntities) {
+        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+        		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
+        			GameScreen.allEntities.remove(entity2);
+        		}
+        	}
+        	GameScreen.allEntities.add(newEntityData);
+        }
+        if (GameScreen.networkPlayerNum != 0) {
+	        //System.out.println("All ents: " + GameScreen.allEntities.toString());
+	        //System.out.println("My ents: " + GameScreen.myEntities.toString());
+        }
     }
 }

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
@@ -61,8 +63,7 @@ public class NetworkClient extends Thread {
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(gScreen);
 				
-				HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
-				oos.writeObject(sendData);
+				oos.writeObject(GameScreen.myEntities);
 				oos.flush();
 				oos.reset();
 				
@@ -83,26 +84,37 @@ public class NetworkClient extends Thread {
 				}
 				catch (Exception e) {System.out.println(e.getMessage());}
 
-				if (o.getClass() == HashSet.class) {
-					System.out.println("Receiving HashSet");
+				if (o.getClass() == CopyOnWriteArraySet.class) {
+					System.out.println("Receiving HashSet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
-					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>)o) {
-						if (GameScreen.allEntities.contains(entity)) {
+					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
+						boolean entityExists = false;
+						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
+		            			//Entity exists, so replace its values
+		            			GameScreen.allEntities.remove(entity2);
+		            			entityExists = true;
+		            		}
+		            	}
+						
+						if (entityExists) {
 							//Update the entity
 						}
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
 								//Factory.createPlayer(((Float) entity.get("xPos")).intValue(), ((Float) entity.get("yPos")).intValue());
-								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f);
+								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f, (Integer)entity.get("playerNum"));
 							}
 						}
-						GameScreen.allEntities.remove(entity);
-						GameScreen.allEntities.add(entity);
+						synchronized(GameScreen.allEntities) {
+							GameScreen.allEntities.add(entity);
+						}
 					}
-					
-					HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
-					oos.writeObject(sendData);
+					synchronized(GameScreen.myEntities) {
+						oos.writeObject(GameScreen.myEntities);
+					}
+					//oos.writeObject(GameScreen.myEntities);
 					oos.flush();
 					oos.reset();
 				}
