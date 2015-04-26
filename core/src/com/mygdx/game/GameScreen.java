@@ -28,11 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.components.HealthGUIComponent;
-import com.mygdx.game.components.PlayerComponent;
-import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.components.WeaponComponent;
-import com.mygdx.game.components.WeaponGUIComponent;
+import com.mygdx.game.components.*;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
@@ -255,28 +251,26 @@ public class GameScreen implements Screen
 		//Spiral of death?
 		
 		//remove all components scheduled for removal AFTER physics step
-		/*while(!toBeDeleted.isEmpty())
+		while(!toBeDeleted.isEmpty())
 		{
 			Entity e = toBeDeleted.remove();
-<<<<<<< HEAD
-=======
+
 			try
 			{
 				//e.removeAll();
 				//e.getComponent(MovementComponent.class).body.setActive(false);
-				//world.destroyBody(e.getComponent(MovementComponent.class).body);
+				world.destroyBody(e.getComponent(MovementComponent.class).body);
 				//e.getComponent(MovementComponent.class).body.setUserData(null);
 				//e.getComponent(MovementComponent.class).body = null;
 			} catch (Exception ex) {
 				System.out.println("deletion exception: " + ex.getMessage());
 			} finally {
-				//pooledEngine.removeEntity(e);
+				pooledEngine.removeEntity(e);
 			}
->>>>>>> 84dfbf646a7b0fa883e0a1739eca9281abe542db
-			world.destroyBody(e.getComponent(MovementComponent.class).body);
-			pooledEngine.removeEntity(e);
+			//world.destroyBody(e.getComponent(MovementComponent.class).body);
+			//pooledEngine.removeEntity(e);
 			
-		}*/
+		}
 
 	}
 	public void resize(int width, int height)
