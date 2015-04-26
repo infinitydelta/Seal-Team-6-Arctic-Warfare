@@ -169,11 +169,11 @@ public class GameScreen implements Screen
 		
 		//create player entity
 		Vector2 pos = DungeonGenerator.getSpawnPosition();
-		player = Factory.createPlayer((int)pos.x, (int) pos.y, networkPlayerNum);
+		player = Factory.createPlayer((int)pos.x, (int) pos.y, networkPlayerNum, null);
 		
 		//create seal entity
-		pos = DungeonGenerator.getSpawnPosition();
-		Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum);
+		//pos = DungeonGenerator.getSpawnPosition();
+		//Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum);
 		
 		//create weapon entity
 		weapon = Factory.createWeapon();

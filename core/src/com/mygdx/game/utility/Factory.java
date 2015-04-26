@@ -146,7 +146,7 @@ public class Factory {
     }
 
 
-    public static Entity createPlayer(float x, float y, Integer playerNum)
+    public static Entity createPlayer(float x, float y, Integer playerNum, Long id)
 
     {
         Entity player = GameScreen.pooledEngine.createEntity();
@@ -166,7 +166,11 @@ public class Factory {
         player.add(new VisualComponent(penguin_idle_anim));
 
         player.add(new PlayerComponent(LoginScreen.username, player));
-        player.add(new NetworkComponent("player", playerNum, player.getId(), p, m));
+        
+        if (id == null) {
+        	id = player.getId();
+        }
+        player.add(new NetworkComponent("player", playerNum, id, p, m));
 
 
         GameScreen.pooledEngine.addEntity(player);
@@ -174,7 +178,7 @@ public class Factory {
         return player;
     }
     
-    public static Entity createSeal(int x, int y, Integer playerNum)
+    public static Entity createSeal(int x, int y, Integer playerNum, Long id)
     {
         Entity seal = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -191,7 +195,11 @@ public class Factory {
 
         seal.add(new VisualComponent(seal_idle_anim));
         seal.add(new AIControllerComponent());
-        seal.add(new NetworkComponent("seal", playerNum, seal.getId(), p, m));
+        
+        if (id == null) {
+        	id = seal.getId();
+        }
+        seal.add(new NetworkComponent("seal", playerNum, id, p, m));
 
 
         GameScreen.pooledEngine.addEntity(seal);
@@ -199,7 +207,7 @@ public class Factory {
         return seal;
     }
 
-    public static Entity createNetworkPlayer(float x, float y, Integer playerNum)
+    public static Entity createNetworkPlayer(float x, float y, Integer playerNum, Long id)
     {
         Entity networkPlayer = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -218,7 +226,10 @@ public class Factory {
         TextureRegion b = new TextureRegion(penguin_idle, 0, 0, 32, 32);
         networkPlayer.add(new VisualComponent(b));
 
-        networkPlayer.add(new NetworkComponent("player", playerNum, networkPlayer.getId(), p, m));
+        if (id == null) {
+        	id = networkPlayer.getId();
+        }
+        networkPlayer.add(new NetworkComponent("player", playerNum, id, p, m));
 
 
 
@@ -241,7 +252,7 @@ public class Factory {
 
     }
 
-    public static Entity createBullet(float x, float y, float angle, float vel, Integer playerNum)
+    public static Entity createBullet(float x, float y, float angle, float vel, Integer playerNum, Long id)
     {
         Entity bullet = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y, angle);
@@ -265,7 +276,10 @@ public class Factory {
         bullet.add(vc);
         //
 
-        bullet.add(new NetworkComponent("bullet", playerNum, bullet.getId(), p, m));
+        if (id == null) {
+        	id = bullet.getId();
+        }
+        bullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
 
         GameScreen.pooledEngine.addEntity(bullet);
         return bullet;

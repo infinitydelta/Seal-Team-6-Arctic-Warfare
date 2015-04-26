@@ -50,17 +50,17 @@ public class NetworkSystem extends IteratingSystem {
         
         boolean myEntity = false;
         
-        if (((Integer) newEntityData.get("playerNum")).equals(GameScreen.networkPlayerNum)) {
+        if (network.playerNum.equals(GameScreen.networkPlayerNum)) {
     		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
         		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
+        			entity2 = newEntityData;
         			myEntity = true;
-        			GameScreen.myEntities.remove(entity2);
         		}
         	}
     		GameScreen.myEntities.add(newEntityData);
     		//Populate and replace myEntities with newEntities
         }
-        if (!myEntity) {
+        else {
         	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
         			network.type = (String)entity2.get("type");
@@ -80,9 +80,9 @@ public class NetworkSystem extends IteratingSystem {
     		}
     	}
     	GameScreen.allEntities.add(newEntityData);
-        if (GameScreen.networkPlayerNum != 0) {
-	        //System.out.println("All ents: " + GameScreen.allEntities.toString());
-	        //System.out.println("My ents: " + GameScreen.myEntities.toString());
-        }
+        /*if (GameScreen.networkPlayerNum != 0) {
+	        System.out.println("All ents: " + GameScreen.allEntities.toString());
+	        System.out.println("My ents: " + GameScreen.myEntities.toString());
+        }*/
     }
 }
