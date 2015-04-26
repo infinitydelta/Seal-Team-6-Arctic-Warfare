@@ -69,15 +69,10 @@ public class NetworkSystem extends IteratingSystem {
         else {
         	for (ConcurrentHashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-        			//if (GameScreen.networkPlayerNum != 0 && entity2.get("playerNum").equals(0))
-            			//System.out.println(entity2.toString());
-        			network.type = (String)entity2.get("type");
-        			network.playerNum = (Integer)entity2.get("playerNum");
-        			network.ownerID = (Long)entity2.get("ownerID");
-        			pos.x = (Float)entity2.get("xPos");
-        			pos.y = (Float)entity2.get("yPos");
         			move.xVel = (Float)entity2.get("xVel");
         			move.xVel = (Float)entity2.get("yVel");
+        			pos.x = (Float)entity2.get("xPos");
+        			pos.y = (Float)entity2.get("yPos");
         		}
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value

@@ -84,7 +84,7 @@ public class NetworkClient extends Thread {
 				try {
 					o = ois.readObject();
 				}
-				catch (Exception e) {System.out.println(e.getMessage());}
+				catch (Exception e) {System.out.println("Exception in NetworkClient line 87:" + e.getMessage());}
 
 				if (o.getClass() == CopyOnWriteArraySet.class) {
 					//System.out.println("Receiving (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());

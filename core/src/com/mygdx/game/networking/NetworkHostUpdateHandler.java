@@ -78,7 +78,7 @@ public class NetworkHostUpdateHandler extends Thread {
 					
 					//System.out.println("Sending CopyOnWriteArraySet (" + GameScreen.allEntities.size() + "):" + GameScreen.allEntities.toString());
 					while (GameScreen.allEntitiesLock) {}
-					System.out.println(GameScreen.allEntities);
+					//System.out.println(GameScreen.allEntities);
 					oos.writeObject(GameScreen.allEntities);
 					oos.flush();
 					oos.reset();
@@ -100,7 +100,7 @@ public class NetworkHostUpdateHandler extends Thread {
 			}
 			catch(Exception e)
 			{
-				System.out.println(e.getMessage());
+				System.out.println("Exception in NetworkHostUpdateHandler reading ois: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
