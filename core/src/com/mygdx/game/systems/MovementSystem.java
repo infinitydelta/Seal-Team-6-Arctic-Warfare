@@ -28,7 +28,8 @@ public class MovementSystem extends IteratingSystem {
 
         position.x = movement.body.getPosition().x - .5f;
         position.y = movement.body.getPosition().y - .5f;
-        movement.update();
+        //movement.update();
+        movement.body.setLinearVelocity(movement.xVel, movement.yVel);
         //movement.body.applyLinearImpulse(movement.xVel, movement.yVel, movement.body.getPosition().x, movement.body.getPosition().y, true);
         //position.x += movement.xVel * deltaTime;
         //position.y += movement.yVel * deltaTime;

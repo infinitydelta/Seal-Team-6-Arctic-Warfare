@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.NetworkComponent;
@@ -57,11 +58,26 @@ public class NetworkSystem extends IteratingSystem {
         else {
         	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-        			move.xVel = (Float)entity2.get("xVel");
-        			move.xVel = (Float)entity2.get("yVel");
+
+                    //move.body.setLinearVelocity(move.xVel, move.yVel);
         			pos.x = (Float)entity2.get("xPos");
         			pos.y = (Float)entity2.get("yPos");
-        			
+                    //while (GameScreen.world.isLocked()) {}
+                    //if (!GameScreen.world.isLocked())
+                    synchronized (GameScreen.world)
+                    {
+                        move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
+
+                    }
+                    move.xVel = (Float)entity2.get("xVel");
+                    move.yVel = (Float)entity2.get("yVel");
+                    //move.updatePosition(pos.x, pos.y);
+
+                    //move.body.setTransform((Float)entity2.get("xPos"), (Float)entity2.get("yPos"), 0);
+                    //move.body.getPosition().set(new Vector2(pos.x, pos.y));
+                    //System.out.println("x: " + pos.x + ", y: " + pos.y);
+                    //System.out.println("body pos: " + move.body.getPosition());
+
         		}
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value

@@ -95,6 +95,7 @@ public class GameScreen implements Screen
     
     public static NetworkSystem networkSystem = new NetworkSystem();
 
+	//public static Queue<Entity> bodyNeedsUpdating
 
 	float deltatimesink;
 	static final float physicsTimeStep = 1/60f;
@@ -134,6 +135,7 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
+		networkSystem.setProcessing(false);
 		pooledEngine.addSystem(networkSystem);
 		pooledEngine.addSystem(new WeaponSystem());
 		if (host) {
@@ -230,7 +232,11 @@ public class GameScreen implements Screen
 		stage.draw(); //ui
 
 		debugRenderer.render(world, camera.combined);
-		world.step(delta, 6, 2);
+		synchronized (GameScreen.world)
+		{
+			world.step(delta, 6, 2);
+		}
+
 		//Find number of physics steps to simulate
 		/*
 		deltatimesink += delta;

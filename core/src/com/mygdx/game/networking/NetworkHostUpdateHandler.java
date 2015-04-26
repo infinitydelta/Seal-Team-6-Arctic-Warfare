@@ -27,7 +27,7 @@ public class NetworkHostUpdateHandler extends Thread {
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
-		};
+		}
 		this.oos = oos;
 		
 		start();

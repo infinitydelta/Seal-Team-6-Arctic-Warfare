@@ -35,10 +35,6 @@ public class MovementComponent extends Component implements Pool.Poolable {
 
     }
 
-    public void update()
-    {
-
-    }
 
     @Override
     public void reset() {
