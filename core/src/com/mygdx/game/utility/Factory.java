@@ -90,10 +90,14 @@ public class Factory {
         short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
         CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, 'p');
 
-        player.add(new MovementComponent(col, GameScreen.world, 0, 0, 0));
+        MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
+        player.add(m);
 
         player.add(new VisualComponent(runAnimation));
         player.add(new PlayerComponent(player));
+        player.add(new NetworkComponent(player.getId(), p, m));
+
+
         GameScreen.pooledEngine.addEntity(player);
 
         return player;
@@ -129,9 +133,13 @@ public class Factory {
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
         CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, 'b');
-        bullet.add(new MovementComponent(col, GameScreen.world, xVel, yVel, 0));
+        MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
+        bullet.add(m);
         //add visual
         //
+
+        bullet.add(new NetworkComponent(bullet.getId(), p, m));
+
         GameScreen.pooledEngine.addEntity(bullet);
         return bullet;
         //rectangle.dispose();

@@ -122,7 +122,7 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
-		
+		pooledEngine.addSystem(new NetworkSystem());
 		
 		
 		
@@ -179,8 +179,9 @@ public class GameScreen implements Screen
 		stage.draw(); //ui
 
 		debugRenderer.render(world, camera.combined);
-		
+		world.step(delta, 6, 2);
 		//Find number of physics steps to simulate
+		/*
 		deltatimesink += delta;
 		int numStepsToSim = 0;
 		while(deltatimesink > physicsTimeStep)
@@ -192,6 +193,7 @@ public class GameScreen implements Screen
 		{
 			world.step(1/60f, 6, 2); //physics simulation of 1/60th of a second
 		}
+		*/
 		//Temporal Aliasing?
 		//Spiral of death?
 
