@@ -35,8 +35,8 @@ public class WeaponComponent extends Component implements Pool.Poolable
         automatic = false;
         reloading = false;
         this.entity = entity;
-        fireRate = 4;
-        reloadtime = .75f;
+        fireRate = 8;
+        reloadtime = 1f;
         magSize = 20;
         currentclip = magSize;
         firetimer = 0;

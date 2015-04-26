@@ -15,6 +15,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     Entity player;
     public Entity weapon;
 
+    public String name;
+
     public PositionComponent position;
     public MovementComponent movement;
     public VisualComponent visual;
@@ -34,8 +36,10 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     float diagSpeed = speed/root2;
 
 
-    public PlayerComponent(Entity player)
+    public PlayerComponent(String name, Entity player)
     {
+        this.name = name;
+        System.out.println(name);
         this.player = player;
         position = player.getComponent(PositionComponent.class);
         movement = player.getComponent(MovementComponent.class); //need movement instantiated
