@@ -19,14 +19,14 @@ public class CollisionComponent extends Component implements Pool.Poolable {
     public Body body;
     public Fixture fixture;
 
-    public CollisionComponent(World world, BodyDef.BodyType type, Shape shape, short catagoryBits, short maskBits,PositionComponent position)
+    public CollisionComponent(World world, BodyDef.BodyType type, Shape shape, short catagoryBits, short maskBits,PositionComponent position, char userData)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = type;
         bodyDef.position.set(position.x + .5f, position.y + .5f); //manual offset, will have to change; or just .5 of 1unit ie 32px
         bodyDef.angle = position.radians;
         body = world.createBody(bodyDef);
-
+        body.setUserData(userData);
         FixtureDef fixtureDef = new FixtureDef();
         //PolygonShape rectangle = new PolygonShape();
         //rectangle.setAsBox(.5f, .5f);

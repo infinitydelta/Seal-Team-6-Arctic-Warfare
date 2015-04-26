@@ -12,8 +12,13 @@ public class MyContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         System.out.println("contact began: " + contact.toString());
-        System.out.println("contact a: " + contact.getFixtureA());
-        System.out.println("contact b: " + contact.getFixtureB());
+        System.out.println("contact a: " + contact.getFixtureA().getBody().getUserData());
+        System.out.println("contact b: " + contact.getFixtureB().getBody().getUserData());
+        //contact.getFixtureA().getUserData()
+        if (contact.getFixtureB().getBody().getUserData().equals('b'))
+        {
+            //contact.getFixtureB().getBody().setActive(false);
+        }
     }
 
     @Override

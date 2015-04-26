@@ -88,7 +88,7 @@ public class Factory {
         CircleShape circle = new CircleShape();
         circle.setRadius(.4f);
         short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p);
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, 'p');
 
         player.add(new MovementComponent(col, GameScreen.world, 0, 0, 0));
 
@@ -128,7 +128,7 @@ public class Factory {
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p);
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, 'b');
         bullet.add(new MovementComponent(col, GameScreen.world, xVel, yVel, 0));
         //add visual
         //
@@ -169,7 +169,7 @@ public class Factory {
         PolygonShape square = new PolygonShape();
         square.setAsBox(.5f, .5f);
         short all = PLAYER_COL | PLAYER_PROJ_COL | ENEMY_COL | ENEMY_PROJ_COL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p);
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p, 'w');
 
         TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 1 * 32, 32, 32);
         wall.add(new VisualComponent(t));
