@@ -37,7 +37,7 @@ public class NetworkClient extends Thread {
 		} 
 		catch (Exception e) 
 		{
-			System.out.println("Exception in client code:" + e.getMessage());
+			System.out.println("Exception in client code preinitialization:" + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -52,8 +52,8 @@ public class NetworkClient extends Thread {
 			if (o.getClass() == HashMap.class) {
 				System.out.println("Receiving Hashmap");
 				
-				gScreen.networkPlayerNum = (Integer)((HashMap)o).get("playerNum");
-				long mapSeed = (Long)((HashMap)o).get("mapSeed");
+				GameScreen.networkPlayerNum = (Integer)((HashMap<String, Object>)o).get("playerNum");
+				long mapSeed = (Long)((HashMap<String, Object>)o).get("mapSeed");
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(gScreen);
 				
@@ -65,7 +65,8 @@ public class NetworkClient extends Thread {
 			}
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("Exception in client code initialization:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -87,7 +88,6 @@ public class NetworkClient extends Thread {
 					
 					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
-						boolean entityChanged = false;
 						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
 		            			//Entity received exists in allEntries, so replace its values
@@ -127,7 +127,7 @@ public class NetworkClient extends Thread {
 				}
 			}
 			catch (Exception e) {
-				System.out.println("Exception in client code:" + e.getMessage());
+				System.out.println("Exception in client code run:" + e.getMessage());
 				e.printStackTrace();
 			};
 		}
