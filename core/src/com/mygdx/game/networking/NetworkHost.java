@@ -29,10 +29,13 @@ public class NetworkHost {
 	
 	public HashSet<HashMap<String, Object>> entities;
 	
+	public int numPlayers = 1;
+	
 	public NetworkHost(GameScreen gScreen) {
 		this.gScreen = gScreen;
 				
 		System.out.println("HOST");
+		gScreen.networkPlayerNum = 0;
 		
 		Random rand = new Random();
 		mapSeed = rand.nextLong();

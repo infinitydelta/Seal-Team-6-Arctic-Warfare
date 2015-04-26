@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.badlogic.ashley.core.Engine.ComponentOperation.Type;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.math.Vector2;
@@ -31,8 +30,9 @@ public class NetworkClient extends Thread {
 		System.out.println("CLIENT");
 		SocketHints socketHints = new SocketHints();
 		socketHints.connectTimeout = 10000; //10s?
-		
+
 		Socket socket = Gdx.net.newClientSocket(Protocol.TCP, gScreen.ip, gScreen.port, socketHints);
+		
 		System.out.println("CONNECTED");
 		try 
 		{

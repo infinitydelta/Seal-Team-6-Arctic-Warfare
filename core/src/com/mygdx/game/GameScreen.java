@@ -79,11 +79,11 @@ public class GameScreen implements Screen
 	
 	ArrayList<Entity> map;
 
-	NetworkHost networkHost;
+	public NetworkHost networkHost;
 
-	NetworkClient networkClient;
+	public NetworkClient networkClient;
 	
-	
+	public int networkPlayerNum;
 
 
 	float deltatimesink;

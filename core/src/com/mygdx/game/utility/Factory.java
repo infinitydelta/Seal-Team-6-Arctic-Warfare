@@ -121,7 +121,7 @@ public class Factory {
 
         player.add(new VisualComponent(runAnimation));
         player.add(new PlayerComponent(player));
-        player.add(new NetworkComponent(player.getId(), p, m));
+        player.add(new NetworkComponent("player", player.getId(), p, m));
 
 
         GameScreen.pooledEngine.addEntity(player);
@@ -164,7 +164,7 @@ public class Factory {
         //add visual
         //
 
-        bullet.add(new NetworkComponent(bullet.getId(), p, m));
+        bullet.add(new NetworkComponent("bullet", bullet.getId(), p, m));
 
         GameScreen.pooledEngine.addEntity(bullet);
         return bullet;

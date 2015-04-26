@@ -12,15 +12,17 @@ public class NetworkComponent extends Component {
 
     public String owner;
     public Long ownerID;
+    public String type;
     public float xPos, yPos;
     public float xVel, yVel;
 
 
-    public NetworkComponent(long id, PositionComponent pos, MovementComponent move)
+    public NetworkComponent(String type, long id, PositionComponent pos, MovementComponent move)
     {
 
         owner = MenuScreen.ipaddress;
         this.ownerID = id;
+        this.type = type;
         xPos = pos.x;
         yPos = pos.y;
         xVel = move.xVel;

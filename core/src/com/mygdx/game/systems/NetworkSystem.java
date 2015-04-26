@@ -1,5 +1,8 @@
 package com.mygdx.game.systems;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -16,6 +19,8 @@ public class NetworkSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<MovementComponent> mm = ComponentMapper.getFor(MovementComponent.class);
     private ComponentMapper<NetworkComponent> nm = ComponentMapper.getFor(NetworkComponent.class);
+    public static HashSet<HashMap<String, Object>> myEntities;
+    public static HashSet<HashMap<String, Object>> allEntities;
 
     public NetworkSystem()
     {
@@ -31,5 +36,14 @@ public class NetworkSystem extends IteratingSystem {
         network.yPos = pos.y;
         network.xVel = move.xVel;
         network.yVel = move.yVel;
+        
+        HashMap<String, Object> newEntityData = new HashMap<String, Object>();
+        newEntityData.put("type", network.type);
+        newEntityData.put("owner", network.owner);
+        newEntityData.put("ownerID", network.ownerID);
+        newEntityData.put("xPos", network.xPos);
+        newEntityData.put("yPos", network.yPos);
+        newEntityData.put("xVel", network.xVel);
+        newEntityData.put("yVel", network.yVel);
     }
 }
