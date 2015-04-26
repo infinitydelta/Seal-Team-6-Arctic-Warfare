@@ -17,16 +17,16 @@ public class NetworkHostUpdateHandler extends Thread {
 	public ConcurrentHashMap<Long, HashMap<String, Object>> entities;
 	public long pollingRate = 200;
 	
-	public NetworkHostUpdateHandler(NetworkHost networkHost, Socket socket) {
+	public NetworkHostUpdateHandler(NetworkHost networkHost, Socket socket, ObjectOutputStream oos) {
 		this.networkHost = networkHost;
 		this.socket = socket;
 		try {
-			ois = new ObjectInputStream(socket.getInputStream());
-			oos = new ObjectOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.ois = new ObjectInputStream(socket.getInputStream());
 		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		};
+		this.oos = oos;
 		
 		entities = new ConcurrentHashMap<Long, HashMap<String, Object>>();
 		
@@ -42,7 +42,7 @@ public class NetworkHostUpdateHandler extends Thread {
 			{
 				Object o = ois.readObject();
 				if (o.getClass() == String.class) {
-					if ((String)o == "Ready") {
+					if (((String)o).equals("Ready")) {
 						System.out.println("Sending data to " + socket.getRemoteAddress());
 						oos.writeObject("test");
 						oos.flush();
