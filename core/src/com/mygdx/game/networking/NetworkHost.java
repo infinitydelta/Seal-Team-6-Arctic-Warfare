@@ -14,6 +14,7 @@ import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.dungeon.DungeonGenerator;
+import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.utility.RandomInt;
 
 public class NetworkHost {
@@ -22,7 +23,7 @@ public class NetworkHost {
 	public final ServerSocketHints serverSocketHint;
 	public final ServerSocket serverSocket;
 	
-	final long mapSeed;
+	public final long mapSeed;
 	
 	public NetworkHostConnectHandler networkHostConnectHandler;
 	public NetworkHostUpdateHandler networkHostUpdateHandler;
@@ -41,7 +42,9 @@ public class NetworkHost {
 		mapSeed = rand.nextLong();
 		RandomInt.setSeed(mapSeed);
 		
+		//Initialize screen host-side
 		DungeonGenerator.generateDungeon(gScreen);
+		//
 
 		serverSocketHint = new ServerSocketHints();
 		serverSocketHint.acceptTimeout = 0; //0 = no timeout
@@ -51,5 +54,7 @@ public class NetworkHost {
 		entities = new HashSet<HashMap<String, Object>>();
 		
 		networkHostConnectHandler = new NetworkHostConnectHandler(this);
+		
+		gScreen.initialized = true;
 	}
 }

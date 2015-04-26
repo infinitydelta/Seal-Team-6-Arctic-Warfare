@@ -92,7 +92,9 @@ public class GameScreen implements Screen
 	float deltatimesink;
 	static final float physicsTimeStep = 1/60f;
 
-
+	public boolean initialized = false;
+	
+	
 	public GameScreen(boolean host, String ip, int port)
 	{
 		this.host = host;
@@ -163,12 +165,12 @@ public class GameScreen implements Screen
 			networkClient = new NetworkClient(this);
 		}
 		
-
-		createBox2d();
-		deltatimesink = 0.0f;
+		while (!initialized) {}
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
 		
+		createBox2d();
+		deltatimesink = 0.0f;		
 	}
 	public void render(float delta)
 	{
@@ -260,7 +262,5 @@ public class GameScreen implements Screen
 	public static void worldViewSize(int size)
 	{
 		viewport.setWorldSize(size, size);
-	}
-
-	
+	}	
 }

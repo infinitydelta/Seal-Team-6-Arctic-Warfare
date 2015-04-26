@@ -53,24 +53,28 @@ public class NetworkClient extends Thread {
 		try {
 			Object o = null;
 			o = ois.readObject();
-			oos.writeObject("Ready");
-			oos.flush();
-			oos.reset();
-			if (o.getClass() == Long.class) {
-				System.out.println("Receiving Long");
-				long mapSeed = (Long) o;
+			if (o.getClass() == HashMap.class) {
+				System.out.println("Receiving Hashmap");
+				
+				gScreen.networkPlayerNum = (Integer)((HashMap)o).get("playerNum");
+				long mapSeed = (Long)((HashMap)o).get("mapSeed");
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(gScreen);
 				Vector2 pos = DungeonGenerator.getSpawnPosition();
-				
 				//create player entity
-				gScreen.player = Factory.createPlayer((int)pos.x, (int) pos.y);
+				gScreen.player = Factory.createPlayer((int)pos.x, (int)pos.y);
 				
 				
 				//create weapon entity
 				gScreen.weapon = Factory.createWeapon();
 	
 				gScreen.player.getComponent(PlayerComponent.class).addWeapon(gScreen.weapon);
+									
+				oos.writeObject("Ready");
+				oos.flush();
+				oos.reset();
+				
+				gScreen.initialized = true;
 			}
 		}
 		catch (Exception e) {
@@ -86,19 +90,22 @@ public class NetworkClient extends Thread {
 					o = ois.readObject();
 				}
 				catch (Exception e) {System.out.println(e.getMessage());}
-				oos.writeObject("Ready");
-				oos.flush();
-				oos.reset();
 
 				if (o.getClass() == HashSet.class) {
 					System.out.println("Receiving HashSet");
 					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>) o) {
 						for (Map.Entry<String, Object> entry : entity.entrySet()) {
-							if (entity.get("Type").equals("Player")) {
+							if (entity.get("Type").equals("Map")) {
+								
+							}
+							else if (entity.get("Type").equals("Player")) {
 								
 							}
 						}
 					}
+					oos.writeObject("ReadyForUpdate");
+					oos.flush();
+					oos.reset();
 				}
 				else if (o.getClass() == String.class) {
 					System.out.println("Receiving string: " + (String)o);
