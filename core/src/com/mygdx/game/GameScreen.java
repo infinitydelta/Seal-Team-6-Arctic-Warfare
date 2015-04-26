@@ -38,14 +38,13 @@ import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
+import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
 import com.mygdx.game.networking.NetworkHostConnectHandler;
-import com.mygdx.game.systems.InputHandler;
-import com.mygdx.game.systems.MovementSystem;
-import com.mygdx.game.systems.PlayerSystem;
-import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.systems.*;
 import com.mygdx.game.utility.Factory;
 import com.mygdx.game.utility.RandomInt;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class GameScreen implements Screen
 {
@@ -55,21 +54,21 @@ public class GameScreen implements Screen
 
 	static final int CAM_WIDTH = 20;
 	
-	static final int CAM_SIZE = 100;
+	static final int CAM_SIZE = 20;
 
 	//MainGame game;
 	OrthographicCamera camera;
-	FitViewport viewport;
+	static FitViewport viewport;
 
 	public static PooledEngine pooledEngine;
 	Stage stage;
 	public static World world;
 	InputHandler input;
-	Entity player;
+	public Entity player;
 
 	Box2DDebugRenderer debugRenderer;
 
-	Entity weapon;
+	public Entity weapon;
 
 	//box2d
 	BodyDef bodyDef;
@@ -81,9 +80,16 @@ public class GameScreen implements Screen
 	ArrayList<Entity> map;
 
 	NetworkHost networkHost;
+
+	NetworkClient networkClient;
 	
 	
-	
+
+
+	float deltatimesink;
+	static final float physicsTimeStep = 1/60f;
+
+
 	public GameScreen(boolean host, String ip, int port)
 	{
 		this.host = host;
@@ -93,7 +99,7 @@ public class GameScreen implements Screen
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera(CAM_WIDTH, CAM_WIDTH* (h/w) );
-		viewport = new FitViewport(20, 20 * (h/w), camera); // 20 world units wide
+		viewport = new FitViewport(CAM_SIZE, CAM_SIZE * (h/w), camera);
 		camera.position.set(0, 0, 0);
 		camera.update();
 
@@ -108,6 +114,7 @@ public class GameScreen implements Screen
 		//box2d
 		Box2D.init();
 		world = new World(Vector2.Zero, true);
+		world.setContactListener(new MyContactListener());
 		debugRenderer = new Box2DDebugRenderer();
 
 		//engine
@@ -115,7 +122,7 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
-		
+		pooledEngine.addSystem(new NetworkSystem());
 		
 		
 		
@@ -125,109 +132,33 @@ public class GameScreen implements Screen
 			
 			
 			
-			
-			
-			//create player entity
-			player = Factory.createPlayer(0, 0);
+			Vector2 pos = DungeonGenerator.getSpawnPosition();
 
-			
-			Long newEntityID = player.getId();
+			//create player entity
+			player = Factory.createPlayer((int)pos.x, (int) pos.y);
+
 			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
 			newEntityData.put("Type", "Player");
 			newEntityData.put("Owner", "host");
-			newEntityData.put("X", 0);
-			newEntityData.put("Y", 0);
-			newEntityData.put("Z", 0);
-			networkHost.networkHostUpdateHandler.entities.put(newEntityID, newEntityData);
+			newEntityData.put("OwnersID", player.getId());
+			newEntityData.put("X", (int)pos.x);
+			newEntityData.put("Y", (int)pos.y);
+			networkHost.entities.add(newEntityData);
 			
 			
 			//create weapon entity
 			weapon = Factory.createWeapon();
 
 			player.getComponent(PlayerComponent.class).addWeapon(weapon);
-
-
-			//bullet
-			/*
-			Entity bullet = pooledEngine.createEntity();
-			PositionComponent positionB = new PositionComponent(0, -5);
-			bullet.add(positionB);
-			//bullet.add(new MovementComponent(position, world, 0, 0, 0));
-
-			PolygonShape rectangle = new PolygonShape();
-			rectangle.setAsBox(.3f, .2f);
-			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
-			*/
 		}
 		else //client
 		{
-			System.out.println("CLIENT");
-			SocketHints socketHints = new SocketHints();
-			socketHints.connectTimeout = 10000; //10s?
-			
-			Socket socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
-			System.out.println("CONNECTED");
-			try 
-			{
-				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-				System.out.println("Retrieving map...");
-				Object o = ois.readObject();
-				while(o == null)
-				{
-					o = ois.readObject();
-				}
-				if (o.getClass() == Long.class) {
-					System.out.println("Receiving Long");
-					long mapSeed = (Long) o;
-					RandomInt.setSeed(mapSeed);
-					DungeonGenerator.generateDungeon(this);
-				}
-				else if (o.getClass() == HashMap.class) {
-					System.out.println("Receiving hashmap");
-					for (Map.Entry<Long, Map<String, Object>> entry : ((ConcurrentHashMap<Long, Map<String, Object>>) o).entrySet()) {
-					}
-				}
-				else {
-					System.out.println("Receiving other datatype");
-				}
-				
-			} 
-			catch (Exception e) 
-			{
-				System.out.println("Exception in client code:" + e.getMessage());
-				e.printStackTrace();
-			}
-			
-			
-			//create player entity
-			player = Factory.createPlayer(0, 0);
-			
-			
-			//create weapon entity
-			weapon = Factory.createWeapon();
-
-			player.getComponent(PlayerComponent.class).addWeapon(weapon);
-
-			Entity e = pooledEngine.createEntity();
-			//pooledEngine.addEntity(e);
-			
-			//bullet
-			/*Entity bullet = pooledEngine.createEntity();
-			PositionComponent positionB = new PositionComponent(0, -5);
-			bullet.add(positionB);
-			bullet.add(new MovementComponent(position, world, 0, 0, 0));
-
-			PolygonShape rectangle = new PolygonShape();
-			rectangle.setAsBox(.3f, .2f);
-			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));*/
+			networkClient = new NetworkClient(this);
 		}
 		
 
 		createBox2d();
-
-
-		//curs = new Cursor();
-		//stage.addActor(curs);
+		deltatimesink = 0.0f;
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
 		
@@ -244,8 +175,25 @@ public class GameScreen implements Screen
 
 		stage.draw(); //ui
 
-		debugRenderer.render(world, camera.combined);
-		world.step(1/60f, 6, 2); //physics
+		//debugRenderer.render(world, camera.combined);
+		world.step(delta, 6, 2);
+		//Find number of physics steps to simulate
+		/*
+		deltatimesink += delta;
+		int numStepsToSim = 0;
+		while(deltatimesink > physicsTimeStep)
+		{
+			numStepsToSim++;
+			deltatimesink -= physicsTimeStep;
+		}
+		for(int i = 0; i < numStepsToSim; i++)
+		{
+			world.step(1/60f, 6, 2); //physics simulation of 1/60th of a second
+		}
+		*/
+		//Temporal Aliasing?
+		//Spiral of death?
+
 	}
 	public void resize(int width, int height)
 	{
@@ -284,11 +232,18 @@ public class GameScreen implements Screen
 		rectangle.setAsBox(.5f, .5f);
 
 		fixtureDef.shape = rectangle;
+		fixtureDef.filter.categoryBits = Factory.WALL;
+		//fixtureDef.filter.maskBits = Factory.PLAYER_PROJ_COL;
 		Fixture fixture = body.createFixture(fixtureDef);
 		//body.setLinearVelocity(0, 1/60f);
 		body.applyLinearImpulse(0, 1/60f, body.getPosition().x, body.getPosition().y, true);
 
 		rectangle.dispose();
+	}
+
+	public static void worldViewSize(int size)
+	{
+		viewport.setWorldSize(size, size);
 	}
 
 	

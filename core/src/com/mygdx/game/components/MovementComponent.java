@@ -54,6 +54,8 @@ public class MovementComponent extends Component implements Pool.Poolable {
         this.yVel = yVel;
         this.acc = acc;
         body = collision.body;
+        body.applyLinearImpulse(xVel, yVel, 0, 0, true);
+        //body.setLinearVelocity(xVel, yVel);
 
     }
 
@@ -73,7 +75,7 @@ public class MovementComponent extends Component implements Pool.Poolable {
         */
         if (body.getLinearVelocity().x != xVel || body.getLinearVelocity().y != yVel)
         {
-            body.setLinearVelocity(xVel, yVel);
+            //body.setLinearVelocity(xVel, yVel);
         }
         //System.out.println("xvel: " + xVel + ", yvel: " + yVel);
     }

@@ -31,7 +31,9 @@ public class MenuScreen implements Screen
 	TextField joinipfield;
 	TextField joinportfield;
 	Table table;
-	
+
+	public static String ipaddress;
+
 	public MenuScreen(MainGame game)
 	{
 		this.game = game;
@@ -43,7 +45,8 @@ public class MenuScreen implements Screen
 		hostipfield = new Label("UNKNOWN", uiSkin);
 		try
 		{
-			hostipfield.setText(Inet4Address.getLocalHost().getHostAddress());
+			ipaddress = Inet4Address.getLocalHost().getHostAddress();
+			hostipfield.setText(ipaddress);
 		}
 		catch(Exception e)
 		{

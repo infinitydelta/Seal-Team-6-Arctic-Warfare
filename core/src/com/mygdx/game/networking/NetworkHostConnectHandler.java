@@ -1,5 +1,6 @@
 package com.mygdx.game.networking;
 
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
@@ -28,10 +29,12 @@ public class NetworkHostConnectHandler extends Thread {
 			System.out.println("Sending initial game state");
 			try
 			{
+				//ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 				oos.writeObject(networkHost.mapSeed);
 				oos.flush();
-				networkHost.clients.put(socket, oos);
+				oos.reset();
+				NetworkHostUpdateHandler networkHostUpdateHandler = new NetworkHostUpdateHandler(networkHost, socket, oos);
 			}
 			catch(Exception e)
 			{

@@ -16,30 +16,33 @@ public class CollisionComponent extends Component implements Pool.Poolable {
     // NOT UPDATED BY OUR OWN SYSTEMS, ONLY BOX2D
     //
 
-    Body body;
-    Fixture fixture;
+    public Body body;
+    public Fixture fixture;
 
-    public CollisionComponent(World world, BodyDef.BodyType type, Shape shape, PositionComponent position)
+    public CollisionComponent(World world, BodyDef.BodyType type, Shape shape, short catagoryBits, short maskBits,PositionComponent position, char userData)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = type;
         bodyDef.position.set(position.x + .5f, position.y + .5f); //manual offset, will have to change; or just .5 of 1unit ie 32px
-
+        bodyDef.angle = position.radians;
         body = world.createBody(bodyDef);
-
+        body.setUserData(userData);
         FixtureDef fixtureDef = new FixtureDef();
         //PolygonShape rectangle = new PolygonShape();
         //rectangle.setAsBox(.5f, .5f);
 
+        fixtureDef.filter.categoryBits = catagoryBits;
+        fixtureDef.filter.maskBits = maskBits;
         fixtureDef.shape = shape;
         fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
-        fixtureDef.restitution = 0f;
+        fixtureDef.restitution = .5f;
         fixture = body.createFixture(fixtureDef);
 
         shape.dispose();
     }
 
+    /*
     public CollisionComponent(Fixture fixture, World world)
     {
 
@@ -57,12 +60,14 @@ public class CollisionComponent extends Component implements Pool.Poolable {
         fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
+
         //Fixture fixture = body.createFixture(fixtureDef);
         rectangle.dispose();
     }
-
+    */
     @Override
     public void reset() {
-
+        body = null;
+        fixture = null;
     }
 }
