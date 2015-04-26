@@ -86,7 +86,7 @@ public class LoginScreen implements Screen{
 		guestButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
 				guest=true;
-				username = "Guest";
+				username = "ayy lmao";
 				game.setScreen(new MenuScreen(game));
 			}
 		});

@@ -121,7 +121,7 @@ public class Factory {
 
     }
 
-    public static Entity createPlayer(int x, int y)
+    public static Entity createPlayer(float x, float y)
     {
         Entity player = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -136,7 +136,7 @@ public class Factory {
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         player.add(m);
 
-        player.add(new VisualComponent(runAnimation));
+        player.add(new VisualComponent(penguin_idle_anim));
         player.add(new PlayerComponent(LoginScreen.username, player));
         player.add(new NetworkComponent("player", GameScreen.networkPlayerNum, player.getId(), p, m));
 
@@ -144,6 +144,30 @@ public class Factory {
         GameScreen.pooledEngine.addEntity(player);
 
         return player;
+    }
+
+    public static Entity createNetworkPlayer(float x, float y)
+    {
+        Entity networkPlayer = GameScreen.pooledEngine.createEntity();
+        PositionComponent p = new PositionComponent(x, y);
+        networkPlayer.add(p);
+
+        //create a body for the player
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.4f);
+        short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, networkPlayer, 'p');
+
+        MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
+        networkPlayer.add(m);
+
+        networkPlayer.add(new VisualComponent(penguin_idle_anim));
+
+        networkPlayer.add(new NetworkComponent("player", GameScreen.networkPlayerNum, networkPlayer.getId(), p, m));
+
+
+
+        return networkPlayer;
     }
 
     public static Entity createWeapon()

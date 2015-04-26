@@ -240,7 +240,8 @@ public class GameScreen implements Screen
 			Entity e = toBeDeleted.remove();
 			try
 			{
-				e.getComponent(MovementComponent.class).body.setActive(false);
+				//e.removeAll();
+				//e.getComponent(MovementComponent.class).body.setActive(false);
 				//world.destroyBody(e.getComponent(MovementComponent.class).body);
 				//e.getComponent(MovementComponent.class).body.setUserData(null);
 				//e.getComponent(MovementComponent.class).body = null;
