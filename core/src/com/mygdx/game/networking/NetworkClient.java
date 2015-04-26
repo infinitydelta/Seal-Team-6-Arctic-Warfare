@@ -49,7 +49,6 @@ public class NetworkClient extends Thread {
 		try {
 			Object o = null;
 			o = ois.readObject();
-			System.out.println("Receiving data");
 			oos.writeObject("Ready");
 			oos.flush();
 			oos.reset();
