@@ -99,8 +99,8 @@ public class GameScreen implements Screen
 	
 	public static int networkPlayerNum;
 	
-	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
-    public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
+	public static CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> myEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
+    public static CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> allEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
     public static boolean myEntitiesLock = false;
     public static boolean allEntitiesLock = false;
 
@@ -172,8 +172,10 @@ public class GameScreen implements Screen
 		player = Factory.createPlayer((int)pos.x, (int) pos.y, networkPlayerNum, null);
 		
 		//create seal entity
-		//pos = DungeonGenerator.getSpawnPosition();
-		//Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum);
+		/*for (int i = 0; i<30; i++) {
+			pos = DungeonGenerator.getSpawnPosition();
+			Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
+		}*/
 		
 		//create weapon entity
 		weapon = Factory.createWeapon();

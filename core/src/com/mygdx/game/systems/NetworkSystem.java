@@ -2,6 +2,8 @@ package com.mygdx.game.systems;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -13,6 +15,7 @@ import com.mygdx.game.MainGame;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.NetworkComponent;
 import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.utility.RandomInt;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 /**
@@ -39,7 +42,7 @@ public class NetworkSystem extends IteratingSystem {
         network.xVel = move.xVel;
         network.yVel = move.yVel;
         */
-        HashMap<String, Object> newEntityData = new HashMap<String, Object>();
+        ConcurrentHashMap<String, Object> newEntityData = new ConcurrentHashMap<String, Object>();
         newEntityData.put("type", network.type);
         newEntityData.put("playerNum", network.playerNum);
         newEntityData.put("ownerID", network.ownerID);
@@ -48,21 +51,26 @@ public class NetworkSystem extends IteratingSystem {
         newEntityData.put("xVel", move.xVel);
         newEntityData.put("yVel", move.yVel);
         
-        boolean myEntity = false;
+        boolean myEntityFound = false;
         
         if (network.playerNum.equals(GameScreen.networkPlayerNum)) {
-    		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
+    		for (ConcurrentHashMap<String, Object> entity2 : GameScreen.myEntities) {
         		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-        			entity2 = newEntityData;
-        			myEntity = true;
+        			GameScreen.myEntitiesLock = true;
+        			GameScreen.myEntities.remove(entity2);
+        			GameScreen.myEntities.add(newEntityData);
+        			myEntityFound = true;
         		}
         	}
     		GameScreen.myEntities.add(newEntityData);
+			GameScreen.myEntitiesLock = false;
     		//Populate and replace myEntities with newEntities
         }
         else {
-        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+        	for (ConcurrentHashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
+        			//if (GameScreen.networkPlayerNum != 0 && entity2.get("playerNum").equals(0))
+            			//System.out.println(entity2.toString());
         			network.type = (String)entity2.get("type");
         			network.playerNum = (Integer)entity2.get("playerNum");
         			network.ownerID = (Long)entity2.get("ownerID");
@@ -70,19 +78,24 @@ public class NetworkSystem extends IteratingSystem {
         			pos.y = (Float)entity2.get("yPos");
         			move.xVel = (Float)entity2.get("xVel");
         			move.xVel = (Float)entity2.get("yVel");
+        			pos.x += (float)RandomInt.Range(0, 50)/50f;
+        			pos.y += (float)RandomInt.Range(0, 50)/50f;
         		}
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value
         }
-    	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+    	for (ConcurrentHashMap<String, Object> entity2 : GameScreen.allEntities) {
     		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
+    			GameScreen.allEntitiesLock = true;
     			GameScreen.allEntities.remove(entity2);
+    			GameScreen.allEntities.add(newEntityData);
     		}
     	}
     	GameScreen.allEntities.add(newEntityData);
-        /*if (GameScreen.networkPlayerNum != 0) {
-	        System.out.println("All ents: " + GameScreen.allEntities.toString());
-	        System.out.println("My ents: " + GameScreen.myEntities.toString());
+    	GameScreen.allEntitiesLock = false;
+        /*if (GameScreen.networkPlayerNum == 0) {
+	        System.out.println("All ents: " + GameScreen.allEntities.size());
+	        System.out.println("My ents: " + GameScreen.myEntities.size());
         }*/
     }
 }

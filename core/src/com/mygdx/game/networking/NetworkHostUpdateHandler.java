@@ -44,14 +44,16 @@ public class NetworkHostUpdateHandler extends Thread {
 			{
 				Object o = ois.readObject();
 				if (o.getClass() == CopyOnWriteArraySet.class) {
-					System.out.println("Receiving CopyOnWriteArraySet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
+					//System.out.println("Receiving CopyOnWriteArraySet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
-					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
+					for (ConcurrentHashMap<String, Object> entity : (CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>)o) {
 						boolean entityExists = false;
 						
-						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+						for (ConcurrentHashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
-		            			entity2 = entity;
+		            			//Entity received exists in allEntries, so replace its values
+		            			GameScreen.allEntities.remove(entity2);
+		            			GameScreen.allEntities.add(entity);
 		            			entityExists = true;
 		            		}
 		            	}
@@ -61,7 +63,6 @@ public class NetworkHostUpdateHandler extends Thread {
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
-								System.out.println("PENGUIN TIME");
 								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 							}
 							else if (entity.get("type").equals("bullet")) {
@@ -69,6 +70,9 @@ public class NetworkHostUpdateHandler extends Thread {
 							}
 						}
 					}
+					//System.out.println("Sending CopyOnWriteArraySet (" + GameScreen.allEntities.size() + "):" + GameScreen.allEntities.toString());
+					while (GameScreen.allEntitiesLock) {}
+					System.out.println(GameScreen.allEntities);
 					oos.writeObject(GameScreen.allEntities);
 					oos.flush();
 					oos.reset();
