@@ -47,7 +47,7 @@ public class DungeonGenerator {
         createMap();
         connectAllRooms();
         addWalls();
-        createTiles(gameScreen.pooledEngine);
+        //createTiles(gameScreen.pooledEngine);
     }
 
     //spawns rooms randomly
@@ -418,29 +418,110 @@ public class DungeonGenerator {
         //draw wall tiles around rooms by looping through each tile of map and seeing if it's ground
         //if it is, surround with walls
         //can instantiate here and add to room gameobject if want to
-        for (int x = 1; x < mapSize; x++)
+        for (int x = 1; x < mapSize-1; x++)
         {
-            for (int y = 1; y < mapSize; y++)
+            for (int y = 1; y < mapSize-1; y++)
             {
-                if (map[x][y] == 1)
+                if (map[x][y] == 1) //ground
                 {
-                    for (int xx = x - 1; xx <= x + 1; xx++)
+                	int type = 0;
+                    if(map[x][y+1] == 0)
                     {
-                        for (int yy = y - 1; yy <= y + 1; yy++)
-                        {
-                            if (map[xx][yy] == 0 && map[xx][yy] != 3)
-                            {
-                                map[xx][yy] = 2;
-
-                            }
-                        }
+                    	if(map[x+1][y+1]==0)
+                    	{
+                    		if(map[x-1][y+1]==0)
+                    		{
+                    			type = 2;
+                    		}
+                    		else
+                    		{
+                    			type = 1;
+							}
+                    	}
+                    	else
+                    	{
+                    		if(map[x-1][y+1]==0)
+                    		{
+                    			type = 3;
+                    		}
+                    		else
+                    		{
+                    			type = 4;
+							}
+						}
                     }
+                    Factory.createGround(x, y, type);
                 }
+                else //this is wall
+                {
+					int type = 0;
+					if(map[x][y-1] == 1 && map[x][y+1] == 0 && map[x-1][y] == 1 && map[x+1][y]==0)
+					{
+						type = 1;
+					}
+					if(map[x][y-1] == 1 && map[x][y+1] == 0 && map[x-1][y] == 0 && map[x+1][y]==0)
+					{
+						type = 2;
+					}
+					if(map[x][y-1] == 1 && map[x][y+1] == 0 && map[x-1][y] == 0 && map[x+1][y]==1)
+					{
+						type = 3;
+					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 0 && map[x-1][y] == 1 && map[x+1][y]==0)
+					{
+						type = 4;
+					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 0 && map[x-1][y] == 0 && map[x+1][y]==0)
+					{
+						type = 5;
+					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 0 && map[x-1][y] == 0 && map[x+1][y]==1)
+					{
+						type = 6;
+					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 1 && map[x-1][y] == 1 && map[x+1][y]==0)
+					{
+						type = 7;
+					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 1 && map[x-1][y] == 0 && map[x+1][y]==0)
+					{
+						type = 8;
+					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 1 && map[x-1][y] == 0 && map[x+1][y]==1)
+					{
+						type = 9;
+					}
+					if(map[x][y-1] == 1 && map[x][y+1] == 0 && map[x-1][y] == 1 && map[x+1][y]==1)
+					{
+						type = 10;
+					}
+					if(map[x][y-1] == 1 && map[x][y+1] == 1 && map[x-1][y] == 1 && map[x+1][y]==0)
+					{
+						type = 11;
+					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 1 && map[x-1][y] == 1 && map[x+1][y]==1)
+					{
+						type = 12;
+					}
+					if(map[x][y-1] == 1 && map[x][y+1] == 1 && map[x-1][y] == 0 && map[x+1][y]==1)
+					{
+						type = 13;
+					}
+					
+					if(type == 5)
+					{
+						Factory.createFakeWall(x, y);
+					}
+					else 
+					{
+						Factory.createWall(x, y, type);
+					}
+				}
             }
         }
     }
 
-    static void createTiles(PooledEngine pooledEngine)
+    /*static void createTiles(PooledEngine pooledEngine)
     {
         for (int x = 0; x < mapSize; x++)
         {
@@ -463,7 +544,7 @@ public class DungeonGenerator {
                 }
             }
         }
-    }
+    }*/
 
     public static Vector2 getSpawnPosition()
     {

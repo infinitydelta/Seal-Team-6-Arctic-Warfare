@@ -32,7 +32,7 @@ public class Factory {
     static Texture bg_tile;
     public static Texture whiteball;
     public static Texture objects;
-    public static Texture sandTiles;
+    public static Texture worldTiles;
 
     public static Animation runAnimation;
     public static Animation idleAnmation;
@@ -48,7 +48,7 @@ public class Factory {
         bg_tile = new Texture("blacktile.png");
         whiteball = new Texture("white ball.png");
         objects = new Texture("objects.png");
-        sandTiles = new Texture("map.png");
+        worldTiles = new Texture("map2.png");
 
         //animation
         Texture walk = new Texture("minimalObjects_32x32Tiles.png");
@@ -138,12 +138,33 @@ public class Factory {
         //circle.dispose();
     }
 
-    public static Entity createGround(float x, float y)
+    public static Entity createGround(float x, float y, int type)
     {
         Entity e = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
         e.add(p);
-        TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 0, 32, 32);
+        TextureRegion t;
+        switch(type)
+        {
+        case 0:
+        	t = new TextureRegion(Factory.worldTiles, 0, 0, 32, 32);
+        	break;
+        case 1:
+        	t = new TextureRegion(Factory.worldTiles, 1*32, 0, 32, 32);
+        	break;
+        case 2:
+        	t = new TextureRegion(Factory.worldTiles, 2*32, 0, 32, 32);
+        	break;
+        case 3:
+        	t = new TextureRegion(Factory.worldTiles, 3*32, 0, 32, 32);
+        	break;
+        case 4:
+        	t = new TextureRegion(Factory.worldTiles, 0, 1*32, 32, 32);
+        	break;
+        default:
+        	t = new TextureRegion(Factory.worldTiles, 0, 0, 32, 32);
+        	break;
+        }
         e.add(new VisualComponent(t));
         GameScreen.pooledEngine.addEntity(e);
         return e;
@@ -154,13 +175,13 @@ public class Factory {
         Entity e = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
         e.add(p);
-        TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 1 * 32, 32, 32);
+        TextureRegion t = new TextureRegion(Factory.worldTiles, 6*32, 1 * 32, 32, 32);
         e.add(new VisualComponent(t));
         GameScreen.pooledEngine.addEntity(e);
         return e;
     }
 
-    public static Entity createWall(float x, float y)
+    public static Entity createWall(float x, float y, int type)
     {
         Entity wall = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -171,7 +192,50 @@ public class Factory {
         short all = PLAYER_COL | PLAYER_PROJ_COL | ENEMY_COL | ENEMY_PROJ_COL;
         CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p, 'w');
 
-        TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 1 * 32, 32, 32);
+        TextureRegion t;
+        switch(type)
+        {
+        case 0:
+        	break;
+        case 1:
+        	t = new TextureRegion(Factory.worldTiles, 5*32, 2 * 32, 32, 32);
+        	break;
+        case 2:
+        	t = new TextureRegion(Factory.worldTiles, 6*32, 2 * 32, 32, 32);
+        	break;
+        case 3:
+        	t = new TextureRegion(Factory.worldTiles, 7*32, 2 * 32, 32, 32);
+        	break;
+        case 4:
+        	t = new TextureRegion(Factory.worldTiles, 5*32, 1 * 32, 32, 32);
+        	break;
+        case 5:
+        	t = new TextureRegion(Factory.worldTiles, 6*32, 1 * 32, 32, 32);
+        	break;
+        case 6:
+        	t = new TextureRegion(Factory.worldTiles, 7*32, 1 * 32, 32, 32);
+        	break;
+        case 7:
+        	t = new TextureRegion(Factory.worldTiles, 5*32, 0 * 32, 32, 32);
+        	break;
+        case 8:
+        	t = new TextureRegion(Factory.worldTiles, 6*32, 0 * 32, 32, 32);
+        	break;
+        case 9:
+        	t = new TextureRegion(Factory.worldTiles, 7*32, 0 * 32, 32, 32);
+        	break;
+        case 10:
+        	break;
+        case 11:
+        	break;
+        case 12:
+        	break;
+        case 13:
+        	break;
+        default:
+        	t = new TextureRegion(Factory.worldTiles, 4*32, 2 * 32, 32, 32);
+        	break;
+        }
         wall.add(new VisualComponent(t));
         GameScreen.pooledEngine.addEntity(wall);
 
