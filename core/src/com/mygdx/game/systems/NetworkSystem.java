@@ -57,7 +57,7 @@ public class NetworkSystem extends IteratingSystem {
     		//Populate and replace myEntities with newEntities
         }
         else {
-        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+        	/*for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
 
                     //move.body.setLinearVelocity(move.xVel, move.yVel);
@@ -65,11 +65,11 @@ public class NetworkSystem extends IteratingSystem {
         			pos.y = (Float)entity2.get("yPos");
                     //while (GameScreen.world.isLocked()) {}
                     //if (!GameScreen.world.isLocked())
-                   /* synchronized (GameScreen.world)
+        			synchronized (GameScreen.world)
                     {
                         move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
 
-                    }*/
+                    }
                     move.xVel = (Float)entity2.get("xVel");
                     move.yVel = (Float)entity2.get("yVel");
                     //move.updatePosition(pos.x, pos.y);
@@ -80,7 +80,7 @@ public class NetworkSystem extends IteratingSystem {
                     //System.out.println("body pos: " + move.body.getPosition());
 
         		}
-        	}
+        	}*/
         	//Update each entity with networkComponent with its corresponding allEntities value
         }
     	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
