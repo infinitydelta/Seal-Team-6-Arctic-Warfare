@@ -196,6 +196,7 @@ public class Factory {
         switch(type)
         {
         case 0:
+        	t = new TextureRegion(Factory.worldTiles, 0*32, 2 * 32, 32, 32);
         	break;
         case 1:
         	t = new TextureRegion(Factory.worldTiles, 5*32, 2 * 32, 32, 32);
@@ -225,12 +226,16 @@ public class Factory {
         	t = new TextureRegion(Factory.worldTiles, 7*32, 0 * 32, 32, 32);
         	break;
         case 10:
+        	t = new TextureRegion(Factory.worldTiles, 1*32, 2 * 32, 32, 32);
         	break;
         case 11:
+        	t = new TextureRegion(Factory.worldTiles, 2*32, 2 * 32, 32, 32);
         	break;
         case 12:
+        	t = new TextureRegion(Factory.worldTiles, 3*32, 2 * 32, 32, 32);
         	break;
         case 13:
+        	t = new TextureRegion(Factory.worldTiles, 4*32, 2 * 32, 32, 32);
         	break;
         default:
         	t = new TextureRegion(Factory.worldTiles, 4*32, 2 * 32, 32, 32);
