@@ -205,9 +205,9 @@ public class GameScreen implements Screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		PositionComponent position = player.getComponent(PositionComponent.class);
 		Vector2 pos = camPos();
-		camera.position.set(pos.x, pos.y, 0);
-		float x = MathUtils.lerp(camera.position.x, pos.x, 1f);
-		float y = MathUtils.lerp(camera.position.y, pos.y, 1f);
+		float x = MathUtils.lerp(camera.position.x, pos.x, 7f * delta);
+		float y = MathUtils.lerp(camera.position.y, pos.y, 7f * delta);
+		camera.position.set(x, y, 0);
 
 		camera.update();
 

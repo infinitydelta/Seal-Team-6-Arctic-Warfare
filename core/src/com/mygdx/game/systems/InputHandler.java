@@ -121,7 +121,6 @@ public class InputHandler implements InputProcessor {
         //Factory.createBullet(playerPosition.x  , playerPosition.y, angle, 30f);
 
         float angle = (float) (Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f)));
-
         playerComponent.weaponComponent.fire(angle);
 
         return false;
