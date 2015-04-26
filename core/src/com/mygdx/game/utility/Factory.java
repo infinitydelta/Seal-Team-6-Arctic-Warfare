@@ -237,6 +237,12 @@ public class Factory {
         case 13:
         	t = new TextureRegion(Factory.worldTiles, 4*32, 2 * 32, 32, 32);
         	break;
+        case 14:
+        	t = new TextureRegion(Factory.worldTiles, 3*32, 1 * 32, 32, 32);
+        	break;
+        case 15:
+        	t = new TextureRegion(Factory.worldTiles, 4*32, 1 * 32, 32, 32);
+        	break;
         default:
         	t = new TextureRegion(Factory.worldTiles, 4*32, 2 * 32, 32, 32);
         	break;

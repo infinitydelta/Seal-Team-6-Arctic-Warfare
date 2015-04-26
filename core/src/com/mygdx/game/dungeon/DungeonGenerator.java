@@ -507,6 +507,14 @@ public class DungeonGenerator {
 					{
 						type = 13;
 					}
+					if(map[x][y-1] == 0 && map[x][y+1] == 0 && map[x-1][y] == 1 && map[x+1][y]==1)
+					{
+						type = 14;
+					}
+					if(map[x][y-1] == 1 && map[x][y+1] == 1 && map[x-1][y] == 0 && map[x+1][y]==0)
+					{
+						type = 15;
+					}
 					
 					if(type == 5)
 					{

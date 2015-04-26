@@ -26,7 +26,6 @@ import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
-import com.mygdx.game.networking.NetworkView;
 import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.PlayerSystem;
