@@ -35,6 +35,7 @@ import com.mygdx.game.utility.Factory;
 public class MainGame extends Game {
 
 	MenuScreen menuScreen;
+	LoginScreen loginScreen;
 	//GameScreen gameScreen;
 	
 	static Texture kenny;
@@ -52,6 +53,7 @@ public class MainGame extends Game {
 
 		Factory.loadAssets();
 		menuScreen = new MenuScreen(this);
+		loginScreen = new LoginScreen(this);
 		//gameScreen = new GameScreen(this);
 		setScreen(menuScreen);
 

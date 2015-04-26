@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -47,7 +49,7 @@ public class Factory {
     public static Animation runAnimation;
     public static Animation idleAnmation;
 
-
+    public static Sound expl19;
 
 
 
@@ -63,6 +65,8 @@ public class Factory {
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
+        //sound?
+        expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
         //animation
         Texture walk = new Texture("minimalObjects_32x32Tiles.png");
         TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
@@ -118,7 +122,7 @@ public class Factory {
         CircleShape circle = new CircleShape();
         circle.setRadius(.4f);
         short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, 'p');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, player, 'p');
 
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         player.add(m);
@@ -162,7 +166,7 @@ public class Factory {
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, 'b');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');
         MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
         bullet.add(m);
         //add visual
@@ -233,7 +237,7 @@ public class Factory {
         PolygonShape square = new PolygonShape();
         square.setAsBox(.5f, .5f);
         short all = PLAYER_COL | PLAYER_PROJ_COL | ENEMY_COL | ENEMY_PROJ_COL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p, 'w');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p, wall, 'w');
 
         TextureRegion t;
         switch(type)

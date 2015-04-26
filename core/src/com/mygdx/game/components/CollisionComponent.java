@@ -1,8 +1,10 @@
 package com.mygdx.game.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.utility.EntityType;
 
 /**
  * Created by KS on 3/12/2015.
@@ -19,14 +21,15 @@ public class CollisionComponent extends Component implements Pool.Poolable {
     public Body body;
     public Fixture fixture;
 
-    public CollisionComponent(World world, BodyDef.BodyType type, Shape shape, short catagoryBits, short maskBits,PositionComponent position, char userData)
+    public CollisionComponent(World world, BodyDef.BodyType type, Shape shape, short catagoryBits, short maskBits,PositionComponent position, Entity e, char entityType)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = type;
         bodyDef.position.set(position.x + .5f, position.y + .5f); //manual offset, will have to change; or just .5 of 1unit ie 32px
         bodyDef.angle = position.radians;
         body = world.createBody(bodyDef);
-        body.setUserData(userData);
+
+        body.setUserData(new EntityType(e, entityType));
         FixtureDef fixtureDef = new FixtureDef();
         
         //PolygonShape rectangle = new PolygonShape();
@@ -38,6 +41,7 @@ public class CollisionComponent extends Component implements Pool.Poolable {
         fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = .5f;
+
         fixture = body.createFixture(fixtureDef);
 
         shape.dispose();
