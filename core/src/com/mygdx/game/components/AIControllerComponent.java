@@ -7,14 +7,11 @@ import com.badlogic.gdx.utils.Pool;
  * Created by McLean on 4/24/2015.
  */
 public class AIControllerComponent extends Component implements Pool.Poolable {
-    static public int h[][];
-    public Integer xIndex; //position indices
-    public Integer yIndex;
-    public Integer xTarIndex; //target position indices
-    public Integer yTarIndex;
 
-    public int radius;
-    public boolean active = false;
+    public Integer xIndex = new Integer(0); //position indices
+    public Integer yIndex = new Integer(0);
+    public Integer xTarIndex = new Integer(30); //target position indices
+    public Integer yTarIndex = new Integer(30);
 
     @Override
     public void reset() {

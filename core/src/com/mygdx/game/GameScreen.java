@@ -108,7 +108,7 @@ public class GameScreen implements Screen
 		
 		//change mouse cursor to picture
 		Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
-		Gdx.input.setCursorImage(pm, pm.getWidth()/2, pm.getHeight()/2);
+		Gdx.input.setCursorImage(pm, pm.getWidth() / 2, pm.getHeight() / 2);
 		pm.dispose();
 		
 		//box2d
@@ -123,7 +123,10 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
 		pooledEngine.addSystem(new NetworkSystem());
-		
+		if(host) { //add ai only if host
+			pooledEngine.addSystem(new AISystem());
+			pooledEngine.getSystem(AISystem.class).setPlayers(pooledEngine);
+		}
 		
 		
 		if(host)
@@ -136,6 +139,7 @@ public class GameScreen implements Screen
 
 			//create player entity
 			player = Factory.createPlayer((int)pos.x, (int) pos.y);
+			//Factory.createSeal((int)pos.x+1, (int) pos.y+1);
 
 			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
 			newEntityData.put("Type", "Player");
