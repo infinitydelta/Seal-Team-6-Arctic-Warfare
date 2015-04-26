@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.net.Socket;
@@ -14,8 +15,7 @@ public class NetworkHostUpdateHandler extends Thread {
 	ObjectInputStream ois;
 	ObjectOutputStream oos;
 	
-	public ConcurrentHashMap<Long, HashMap<String, Object>> entities;
-	public long pollingRate = 200;
+	public HashSet<HashMap<String, Object>> entities;
 	
 	public NetworkHostUpdateHandler(NetworkHost networkHost, Socket socket, ObjectOutputStream oos) {
 		this.networkHost = networkHost;
@@ -28,7 +28,7 @@ public class NetworkHostUpdateHandler extends Thread {
 		};
 		this.oos = oos;
 		
-		entities = new ConcurrentHashMap<Long, HashMap<String, Object>>();
+		entities = new HashSet<HashMap<String, Object>>();
 		
 		start();
 	}
@@ -44,7 +44,7 @@ public class NetworkHostUpdateHandler extends Thread {
 				if (o.getClass() == String.class) {
 					if (((String)o).equals("Ready")) {
 						System.out.println("Sending data to " + socket.getRemoteAddress());
-						oos.writeObject("test");
+						oos.writeObject(networkHost.entities);
 						oos.flush();
 						oos.reset();
 					}

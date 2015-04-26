@@ -2,9 +2,7 @@ package com.mygdx.game.networking;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
@@ -62,10 +60,8 @@ public class NetworkClient extends Thread {
 					RandomInt.setSeed(mapSeed);
 					DungeonGenerator.generateDungeon(gScreen);
 				}
-				else if (o.getClass() == HashMap.class) {
-					System.out.println("Receiving hashmap");
-					for (Map.Entry<Long, Map<String, Object>> entry : ((ConcurrentHashMap<Long, Map<String, Object>>) o).entrySet()) {
-					}
+				else if (o.getClass() == HashSet.class) {
+					System.out.println("Receiving HashSet");
 				}
 				else if (o.getClass() == String.class) {
 					System.out.println("Receiving string: " + (String)o);

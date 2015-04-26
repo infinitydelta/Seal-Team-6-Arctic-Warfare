@@ -44,6 +44,8 @@ public class NetworkHost {
 		
 		serverSocket = Gdx.net.newServerSocket(Protocol.TCP, gScreen.port, serverSocketHint); //Create ServerSocket with TCP protocol on the port specified
 		
+		entities = new ConcurrentHashMap<Long, ConcurrentHashMap<String, Object>>();
+		
 		networkHostConnectHandler = new NetworkHostConnectHandler(this);
 	}
 }
