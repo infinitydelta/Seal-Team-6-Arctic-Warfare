@@ -27,7 +27,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
 
     //gameplay values
-    float speed = .25f;
+    float speed = 10f;
     float diagSpeed = speed/root2;
 
 
@@ -92,7 +92,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
             movement.moveY = true;
 
         }
-
+        movement.body.setLinearVelocity(movement.xVel, movement.yVel);
         if (!moveY && !moveX) visual.setAnimation(Factory.idleAnmation);
         else visual.setAnimation(Factory.runAnimation);
 

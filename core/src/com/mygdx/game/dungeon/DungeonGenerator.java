@@ -22,7 +22,7 @@ public class DungeonGenerator {
 
     public static int mapSize = 64;
     static Vector2 center;
-    static int[][] map;
+    public static int[][] map;
 
     public static Room[] rooms;
     public static int numRooms = 10;
@@ -449,30 +449,29 @@ public class DungeonGenerator {
                 //ground
                 if (map[x][y] == 1)
                 {
-                    //doing it above, dont need to do it again
-                    //GameObject tile = (GameObject)Instantiate(ground, new Vector3(x, y, 5), Quaternion.identity);
-                    //tile.transform.parent = transform;
-                    Entity e = pooledEngine.createEntity();
-                    PositionComponent p = new PositionComponent(x, y);
-                    e.add(p);
-                    TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 0, 32, 32);
-                    e.add(new VisualComponent(t));
-                    pooledEngine.addEntity(e);
+                    Factory.createGround(x,y);
                 }
                 //wall
                 else if (map[x][y] == 2)
                 {
-                    //GameObject tile = (GameObject)Instantiate(wall, new Vector3(x, y, 5), Quaternion.identity);
-                    //tile.transform.parent = transform;
+                    Factory.createWall(x,y);
                 }
 
-                else if (map[x][y] == 3)
+                else
                 {
-                    //GameObject tile = (GameObject)Instantiate(pink, new Vector3(x, y, 1), Quaternion.identity);
-                    //tile.transform.parent = transform;
+                    Factory.createFakeWall(x, y);
                 }
             }
         }
+    }
+
+    public static Vector2 getSpawnPosition()
+    {
+        int roomNum = RandomInt.Range(0, (int)numRooms );
+        int x = RandomInt.Range(rooms[roomNum].x + 1, (int) (rooms[roomNum].x + rooms[roomNum].width));
+        int y = RandomInt.Range(rooms[roomNum].y + 1, (int)(rooms[roomNum].y + rooms[roomNum].height));
+        System.out.println("spawn position:" + x + ", " + y);
+        return new Vector2(x, y);
     }
 
 
