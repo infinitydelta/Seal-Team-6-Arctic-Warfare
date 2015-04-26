@@ -58,6 +58,9 @@ public class Factory {
     public static Texture playerbullet;
     public static Texture worldTiles;
     public static Texture ammoElement;
+    public static Texture heart;
+    public static Texture hfront;
+    public static Texture hback;
 
     public static Animation runAnimation;
     public static Animation idleAnmation;
@@ -81,6 +84,9 @@ public class Factory {
         seal_walk = new Texture("sealWalk.png");
         seal_idle = new Texture("sealIdle.png");
         ammoElement = new Texture("ammo.png");
+        heart = new Texture("heart.png");
+        hfront = new Texture("red.png");
+        hback = new Texture("hback.png");
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
         //animation

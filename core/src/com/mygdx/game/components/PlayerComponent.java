@@ -28,7 +28,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     public boolean up = false, down = false, left = false, right = false;
     private boolean moveX = false, moveY = false;
     private float root2 = (float) Math.sqrt(2);
-    public int health;
+    int health = 10;
+    public int maxHealth = 10;
 
 
     //gameplay values
@@ -116,5 +117,10 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     @Override
     public void reset() {
 
+    }
+    public void takeDamage(int amt)
+    {
+    	health = Math.max(0, health-amt);
+    	player.getComponent(HealthGUIComponent.class).setValue(health);
     }
 }

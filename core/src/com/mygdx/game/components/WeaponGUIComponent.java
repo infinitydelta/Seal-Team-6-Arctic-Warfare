@@ -15,8 +15,8 @@ public class WeaponGUIComponent extends Component
 	ArrayList<Image> ammoElements;
 	int maxAmmo;
 	int currentAmmo;
-	private int xloc = 10;
-	private int yloc = 680;
+	private int xloc = 54;
+	private int yloc = 650;
 	private int spacing = 14;
 	
 	public WeaponGUIComponent(Stage stage, int maxAmmo)

@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.components.HealthGUIComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.WeaponComponent;
@@ -175,6 +176,8 @@ public class GameScreen implements Screen
 		WeaponGUIComponent wgc = new WeaponGUIComponent(stage, weapon.getComponent(WeaponComponent.class).getMagSize());
 		weapon.add(wgc);
 		weapon.getComponent(WeaponComponent.class).setGUIComponent(wgc);
+		player.add(new HealthGUIComponent(stage, player.getComponent(PlayerComponent.class).maxHealth));
+		player.getComponent(PlayerComponent.class).takeDamage(4);
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
 
