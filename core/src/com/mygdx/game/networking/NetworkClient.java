@@ -48,7 +48,6 @@ public class NetworkClient extends Thread {
 		}
 		
 		initialize();
-		
 		start();
 	}
 	
@@ -60,8 +59,6 @@ public class NetworkClient extends Thread {
 				System.out.println("Receiving Hashmap");
 				
 				gScreen.networkPlayerNum = (Integer)((HashMap)o).get("playerNum");
-				System.out.println(gScreen.networkPlayerNum);
-				
 				long mapSeed = (Long)((HashMap)o).get("mapSeed");
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(gScreen);
@@ -92,16 +89,12 @@ public class NetworkClient extends Thread {
 					
 					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
+						
 						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
 		            			//Entity exists, so replace its values
-<<<<<<< HEAD
-		            			//GameScreen.allEntities.remove(entity2);
-		            			entity2 = entity;
-		            			//
-=======
 		            			GameScreen.allEntities.remove(entity2);
->>>>>>> parent of 35ae67b... Networking stuff
+		            			GameScreen.allEntities.add(entity);
 		            			entityExists = true;
 		            		}
 		            	}
@@ -112,19 +105,17 @@ public class NetworkClient extends Thread {
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
-<<<<<<< HEAD
+								System.out.println("PENGUIN TIME");
 								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
-=======
-								Factory.createNetworkPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
->>>>>>> parent of 35ae67b... Networking stuff
 							}
 							else if (entity.get("type").equals("bullet")) {
 								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"));
 							}
+							GameScreen.allEntities.add(entity);
 						}
-						GameScreen.allEntities.add(entity);
 					}
 					oos.writeObject(GameScreen.myEntities);
+					//oos.writeObject(GameScreen.myEntities);
 					oos.flush();
 					oos.reset();
 				}

@@ -4,12 +4,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.rmi.server.SocketSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
@@ -23,13 +27,17 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.components.CollisionComponent;
@@ -37,6 +45,7 @@ import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.components.WeaponComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
@@ -60,8 +69,11 @@ public class GameScreen implements Screen
 	OrthographicCamera camera;
 	static FitViewport viewport;
 
-	public static PooledEngine pooledEngine;
 	Stage stage;
+	Skin uiSkin;
+	Label playerUsername;
+
+	public static PooledEngine pooledEngine;
 	public static World world;
 	InputHandler input;
 	public Entity player;
@@ -79,30 +91,26 @@ public class GameScreen implements Screen
 	
 	ArrayList<Entity> map;
 
-	NetworkHost networkHost;
+	public NetworkHost networkHost;
 
-	NetworkClient networkClient;
+	public NetworkClient networkClient;
 	
+	public static Queue<Entity> toBeDeleted;
 	
-<<<<<<< HEAD
-=======
 	public static int networkPlayerNum;
 	
 	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
     public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
->>>>>>> parent of 35ae67b... Networking stuff
+    public static boolean myEntitiesLock = false;
+    public static boolean allEntitiesLock = false;
 
 
 	float deltatimesink;
 	static final float physicsTimeStep = 1/60f;
 
-<<<<<<< HEAD
-
-=======
 	public boolean initialized = false;
+		
 	
-	
->>>>>>> parent of 35ae67b... Networking stuff
 	public GameScreen(boolean host, String ip, int port)
 	{
 		this.host = host;
@@ -118,10 +126,10 @@ public class GameScreen implements Screen
 
 		//stage for ui
 		stage = new Stage();
-		
+		uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
 		//change mouse cursor to picture
 		Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
-		Gdx.input.setCursorImage(pm, pm.getWidth() / 2, pm.getHeight() / 2);
+		Gdx.input.setCursorImage(pm, pm.getWidth()/2, pm.getHeight()/2);
 		pm.dispose();
 		
 		//box2d
@@ -136,63 +144,92 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
 		pooledEngine.addSystem(new NetworkSystem());
-		if(host) { //add ai only if host
+		pooledEngine.addSystem(new WeaponSystem());
+		if (host) {
 			pooledEngine.addSystem(new AISystem());
 			pooledEngine.getSystem(AISystem.class).setPlayers(pooledEngine);
 		}
+
+		toBeDeleted = new LinkedList<Entity>();
+		
+
+		
 		
 		
 		if(host)
 		{
 			networkHost = new NetworkHost(this);
-			
-			
-			
-			Vector2 pos = DungeonGenerator.getSpawnPosition();
-
-			//create player entity
-			player = Factory.createPlayer((int)pos.x, (int) pos.y);
-			//Factory.createSeal((int)pos.x+1, (int) pos.y+1);
-
-			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
-			newEntityData.put("Type", "Player");
-			newEntityData.put("Owner", "host");
-			newEntityData.put("OwnersID", player.getId());
-			newEntityData.put("X", (int)pos.x);
-			newEntityData.put("Y", (int)pos.y);
-			networkHost.entities.add(newEntityData);
-			
-			
-			//create weapon entity
-			weapon = Factory.createWeapon();
-
-			player.getComponent(PlayerComponent.class).addWeapon(weapon);
 		}
 		else //client
 		{
 			networkClient = new NetworkClient(this);
 		}
 		
-
-		createBox2d();
-		deltatimesink = 0.0f;
+		while (!initialized) {}
+		
+		//create player entity
+		Vector2 pos = DungeonGenerator.getSpawnPosition();
+		player = Factory.createPlayer((int)pos.x, (int) pos.y, networkPlayerNum);
+		
+		//create seal entity
+		pos = DungeonGenerator.getSpawnPosition();
+		Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum);
+		
+		//create weapon entity
+		weapon = Factory.createWeapon();
+		weapon.add(new WeaponComponent(weapon));
+		player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
-		
+
+		playerUsername = new Label(player.getComponent(PlayerComponent.class).name, uiSkin);
+		float xx = player.getComponent(PositionComponent.class).x;
+		float yy = player.getComponent(PositionComponent.class).y;
+		Vector3 v2 = new Vector3(xx , yy , 0);
+		System.out.println(v2);
+		camera.project(v2);
+		System.out.println(v2);
+		playerUsername.setPosition(100, 100);
+		stage.addActor(playerUsername);
+
+		createBox2d();
+		//Entity play = Factory.createPlayer(pos.x - 1, pos.y, 1);
+		//Entity weaponz = Factory.createWeapon();
+		//weaponz.add(new WeaponComponent(weaponz));
+		//play.getComponent(PlayerComponent.class).addWeapon(weaponz);
+		deltatimesink = 0.0f;
+
+
 	}
+
+	Vector2 camPos()
+	{
+		Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(mousePos);
+		PositionComponent position = player.getComponent(PositionComponent.class);
+
+		Vector2 cam = new Vector2((position.x + mousePos.x)/2, (position.y + mousePos.y)/2);
+		Vector2 cam2 = new Vector2((position.x + cam.x)/2, (position.y + cam.y)/2);
+		return cam2;
+	}
+
 	public void render(float delta)
 	{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		PositionComponent position = player.getComponent(PositionComponent.class);
-		camera.position.set(position.x, position.y, 0);
+		Vector2 pos = camPos();
+		float x = MathUtils.lerp(camera.position.x, pos.x, 7f * delta);
+		float y = MathUtils.lerp(camera.position.y, pos.y, 7f * delta);
+		camera.position.set(x, y, 0);
+
 		camera.update();
 
 		pooledEngine.update(Gdx.graphics.getDeltaTime());
 
 		stage.draw(); //ui
 
-		//debugRenderer.render(world, camera.combined);
+		debugRenderer.render(world, camera.combined);
 		world.step(delta, 6, 2);
 		//Find number of physics steps to simulate
 		/*
@@ -210,6 +247,30 @@ public class GameScreen implements Screen
 		*/
 		//Temporal Aliasing?
 		//Spiral of death?
+		
+		//remove all components scheduled for removal AFTER physics step
+		/*while(!toBeDeleted.isEmpty())
+		{
+			Entity e = toBeDeleted.remove();
+<<<<<<< HEAD
+=======
+			try
+			{
+				//e.removeAll();
+				//e.getComponent(MovementComponent.class).body.setActive(false);
+				//world.destroyBody(e.getComponent(MovementComponent.class).body);
+				//e.getComponent(MovementComponent.class).body.setUserData(null);
+				//e.getComponent(MovementComponent.class).body = null;
+			} catch (Exception ex) {
+				System.out.println("deletion exception: " + ex.getMessage());
+			} finally {
+				//pooledEngine.removeEntity(e);
+			}
+>>>>>>> 84dfbf646a7b0fa883e0a1739eca9281abe542db
+			world.destroyBody(e.getComponent(MovementComponent.class).body);
+			pooledEngine.removeEntity(e);
+			
+		}*/
 
 	}
 	public void resize(int width, int height)
@@ -261,7 +322,5 @@ public class GameScreen implements Screen
 	public static void worldViewSize(int size)
 	{
 		viewport.setWorldSize(size, size);
-	}
-
-	
+	}	
 }

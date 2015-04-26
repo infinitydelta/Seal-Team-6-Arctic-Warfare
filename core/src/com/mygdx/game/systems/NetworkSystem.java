@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.GameScreen;
+import com.mygdx.game.MainGame;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.NetworkComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -53,38 +54,32 @@ public class NetworkSystem extends IteratingSystem {
     		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
         		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
         			myEntity = true;
-        			entity2 = newEntityData;
+        			GameScreen.myEntities.remove(entity2);
         		}
         	}
     		GameScreen.myEntities.add(newEntityData);
     		//Populate and replace myEntities with newEntities
         }
         if (!myEntity) {
-        	System.out.println("not my entity");
         	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-<<<<<<< HEAD
-        			//System.out.println(network.type);
-        			network.type = (String)entity2.get("Type");
+        			network.type = (String)entity2.get("type");
         			network.playerNum = (Integer)entity2.get("playerNum");
         			network.ownerID = (Long)entity2.get("ownerID");
-=======
-        			System.out.println(network.type);
->>>>>>> parent of 35ae67b... Networking stuff
         			pos.x = (Float)entity2.get("xPos");
         			pos.y = (Float)entity2.get("yPos");
         			move.xVel = (Float)entity2.get("xVel");
         			move.xVel = (Float)entity2.get("yVel");
-        			pos.x = 0f;
         		}
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value
         }
     	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
     		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-    			entity2 = newEntityData;
+    			GameScreen.allEntities.remove(entity2);
     		}
     	}
+    	GameScreen.allEntities.add(newEntityData);
         if (GameScreen.networkPlayerNum != 0) {
 	        //System.out.println("All ents: " + GameScreen.allEntities.toString());
 	        //System.out.println("My ents: " + GameScreen.myEntities.toString());

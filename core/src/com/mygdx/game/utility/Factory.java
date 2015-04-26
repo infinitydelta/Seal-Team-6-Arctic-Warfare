@@ -45,10 +45,12 @@ public class Factory {
     public static Animation penguin_idle_anim;
     public static Animation penguin_walk_anim;
 
+    
     public static Texture seal_walk;
     public static Texture seal_idle;
     public static Animation seal_idle_anim;
     public static Animation seal_walk_anim;
+
 
     public static Texture whiteball;
     public static Texture objects;
@@ -76,14 +78,11 @@ public class Factory {
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
-
         seal_walk = new Texture("sealWalk.png");
         seal_idle = new Texture("sealIdle.png");
-
         ammoElement = new Texture("ammo.png");
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
-
         //animation
         Texture walk = new Texture("minimalObjects_32x32Tiles.png");
         TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
@@ -106,9 +105,8 @@ public class Factory {
             penguinWalkFrames[i] = penguinWalkTemp[0][i];
         }
         penguin_walk_anim = new Animation(1/15f, penguinWalkFrames);
-        
 
-        //penguin animations
+      //seel animations
         TextureRegion[] sealIdleFrames = new TextureRegion[5];
         TextureRegion[][] sealTemp = TextureRegion.split(seal_idle, 32, 32);
         for (int i = 0; i < 5; i ++)
@@ -124,7 +122,7 @@ public class Factory {
             sealWalkFrames[i] = sealWalkTemp[0][i];
         }
         seal_walk_anim = new Animation(1/15f, sealWalkFrames);
-
+        
         int index = 0;
         for (int i = 0; i < 1; i++) // column length, number of rows
         {
@@ -175,9 +173,8 @@ public class Factory {
 
         return player;
     }
-
-
-    public static Entity createSeal(int x, int y)
+    
+    public static Entity createSeal(int x, int y, Integer playerNum)
     {
         Entity seal = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -187,19 +184,20 @@ public class Factory {
         CircleShape circle = new CircleShape();
         circle.setRadius(.4f);
         short seal_col = PLAYER_COL | PLAYER_PROJ_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, ENEMY_COL, seal_col, p, 'e');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, ENEMY_COL, seal_col, p, seal, 'e');
 
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         seal.add(m);
 
         seal.add(new VisualComponent(seal_idle_anim));
         seal.add(new AIControllerComponent());
-        seal.add(new NetworkComponent(seal.getId(), p, m));
+        seal.add(new NetworkComponent("seal", playerNum, seal.getId(), p, m));
 
 
         GameScreen.pooledEngine.addEntity(seal);
 
         return seal;
+    }
 
     public static Entity createNetworkPlayer(float x, float y, Integer playerNum)
     {
@@ -225,7 +223,6 @@ public class Factory {
 
 
         return networkPlayer;
-
     }
 
     public static Entity createWeapon()
