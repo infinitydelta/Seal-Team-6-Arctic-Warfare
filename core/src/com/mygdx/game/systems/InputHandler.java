@@ -1,5 +1,7 @@
 package com.mygdx.game.systems;
 
+import jdk.nashorn.internal.runtime.regexp.joni.MatcherFactory;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -114,7 +116,7 @@ public class InputHandler implements InputProcessor {
 
         Vector3 clickPos= new Vector3(screenX, screenY, 0);
         camera.unproject(clickPos);
-        float angle = (float) Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f));
+        float angle = (float) (Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f)));
         Factory.createBullet(playerPosition.x  , playerPosition.y, angle, 50f);
         return false;
     }
@@ -147,6 +149,7 @@ public class InputHandler implements InputProcessor {
         	if(playerComponent.visual.sprite.isFlipX())
         	{
         		playerComponent.visual.sprite.flip(true, false);
+        		weaponSprite.sprite.flip(false, true);
         	}
         }
         else 
@@ -154,6 +157,7 @@ public class InputHandler implements InputProcessor {
 			if(!playerComponent.visual.sprite.isFlipX())
 			{
 				playerComponent.visual.sprite.flip(true, false);
+				weaponSprite.sprite.flip(false, true);
 			}
 		}
         return false;

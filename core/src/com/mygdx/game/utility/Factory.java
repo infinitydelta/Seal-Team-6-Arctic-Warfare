@@ -40,6 +40,8 @@ public class Factory {
 
     public static Texture whiteball;
     public static Texture objects;
+    public static Texture gun1;
+    public static Texture playerbullet;
     public static Texture worldTiles;
 
     public static Animation runAnimation;
@@ -56,6 +58,8 @@ public class Factory {
         bg_tile = new Texture("blacktile.png");
         whiteball = new Texture("white ball.png");
         objects = new Texture("objects.png");
+        gun1 = new Texture("gun1.png");
+        playerbullet = new Texture("bullet.png");
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
@@ -133,7 +137,7 @@ public class Factory {
     {
 
         Entity weapon = GameScreen.pooledEngine.createEntity();
-        TextureRegion weap = new TextureRegion(objects, 3 * 32, 1 * 32, 32, 32);
+        TextureRegion weap = new TextureRegion(gun1, 0 * 32, 0 * 32, 32, 32);
         weapon.add(new PositionComponent(0, 0));
         weapon.add(new VisualComponent(weap));
         GameScreen.pooledEngine.addEntity(weapon);
@@ -154,7 +158,7 @@ public class Factory {
         rectangle.setAsBox(.2f, .1f);
         CircleShape circle = new CircleShape();
         circle.setRadius(.2f);
-
+        
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
@@ -162,6 +166,11 @@ public class Factory {
         MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
         bullet.add(m);
         //add visual
+        TextureRegion b = new TextureRegion(playerbullet, 0, 0, 16, 16);
+        VisualComponent vc = new VisualComponent(b);
+        vc.sprite.setRotation((float)Math.toDegrees(angle));
+        //vc.sprite.setScale(.8f);
+        bullet.add(vc);
         //
 
         bullet.add(new NetworkComponent("bullet", bullet.getId(), p, m));
