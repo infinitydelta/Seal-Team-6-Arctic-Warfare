@@ -15,9 +15,9 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     Entity player;
     public Entity weapon;
 
-    PositionComponent position;
-    MovementComponent movement;
-    VisualComponent visual;
+    public PositionComponent position;
+    public MovementComponent movement;
+    public VisualComponent visual;
 
     PositionComponent weaponPosition;
 
@@ -54,7 +54,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
         if (left)
         {
-            if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+            //if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
 
             movement.xVel = -speed;
             moveX = true;
@@ -62,7 +62,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
         }
         if (right)
         {
-            if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+            //if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
             movement.xVel = speed;
             moveX = true;
             movement.moveX = true;

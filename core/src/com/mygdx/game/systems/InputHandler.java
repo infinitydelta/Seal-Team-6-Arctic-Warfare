@@ -142,6 +142,20 @@ public class InputHandler implements InputProcessor {
         //angle between mouse and player (weapon) pos
         float rotation = (float) Math.toDegrees(Math.atan2(worldCoordinates.y - (playerPosition.y + .5f), worldCoordinates.x - (playerPosition.x + .5f)));
         weaponSprite.sprite.setRotation(rotation);
+        if(worldCoordinates.x > playerPosition.x)
+        {
+        	if(playerComponent.visual.sprite.isFlipX())
+        	{
+        		playerComponent.visual.sprite.flip(true, false);
+        	}
+        }
+        else 
+        {
+			if(!playerComponent.visual.sprite.isFlipX())
+			{
+				playerComponent.visual.sprite.flip(true, false);
+			}
+		}
         return false;
     }
 
