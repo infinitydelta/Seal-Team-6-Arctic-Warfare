@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,11 +33,12 @@ public class LoginScreen implements Screen{
 	TextField passwordField;
 	boolean guest=false;
 	Socket s;
-	
+	public static String username;
 
 	Table table;
 	
 	LoginScreen(MainGame game){
+
 		this.game = game;
 		stage = new Stage();
 		uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -54,11 +56,12 @@ public class LoginScreen implements Screen{
 		loginButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				if(usernameField.getText()!=""&& passwordField.getText()!=""){
-					try {						
+					try {
 						s=new Socket("localhost",6789);
 						ObjectOutputStream oos=new ObjectOutputStream(s.getOutputStream());
 						oos.writeObject("Login");
-						oos.writeObject(usernameField.getText());
+						username=usernameField.getText();
+						oos.writeObject(username);
 						oos.writeObject(passwordField.getText());
 						oos.flush();
 						ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
@@ -83,6 +86,8 @@ public class LoginScreen implements Screen{
 		guestButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
 				guest=true;
+				username = "Guest";
+				game.setScreen(new MenuScreen(game));
 			}
 		});
 		newUserButton.addListener(new ClickListener(){

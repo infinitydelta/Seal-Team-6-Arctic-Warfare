@@ -25,13 +25,17 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.components.CollisionComponent;
@@ -62,8 +66,11 @@ public class GameScreen implements Screen
 	OrthographicCamera camera;
 	static FitViewport viewport;
 
-	public static PooledEngine pooledEngine;
 	Stage stage;
+	Skin uiSkin;
+	Label playerUsername;
+
+	public static PooledEngine pooledEngine;
 	public static World world;
 	InputHandler input;
 	public Entity player;
@@ -114,7 +121,7 @@ public class GameScreen implements Screen
 
 		//stage for ui
 		stage = new Stage();
-		
+		uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
 		//change mouse cursor to picture
 		Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
 		Gdx.input.setCursorImage(pm, pm.getWidth()/2, pm.getHeight()/2);
@@ -162,16 +169,44 @@ public class GameScreen implements Screen
 		player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
-		
+
+		playerUsername = new Label(player.getComponent(PlayerComponent.class).name, uiSkin);
+		float xx = player.getComponent(PositionComponent.class).x;
+		float yy = player.getComponent(PositionComponent.class).y;
+		Vector3 v2 = new Vector3(xx , yy , 0);
+		System.out.println(v2);
+		camera.project(v2);
+		System.out.println(v2);
+		playerUsername.setPosition(100, 100);
+		stage.addActor(playerUsername);
+
 		createBox2d();
-		deltatimesink = 0.0f;		
+		deltatimesink = 0.0f;
+
+
 	}
+
+	Vector2 camPos()
+	{
+		Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(mousePos);
+		PositionComponent position = player.getComponent(PositionComponent.class);
+
+		Vector2 cam = new Vector2((position.x + mousePos.x)/2, (position.y + mousePos.y)/2);
+		Vector2 cam2 = new Vector2((position.x + cam.x)/2, (position.y + cam.y)/2);
+		return cam2;
+	}
+
 	public void render(float delta)
 	{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		PositionComponent position = player.getComponent(PositionComponent.class);
-		camera.position.set(position.x, position.y, 0);
+		Vector2 pos = camPos();
+		camera.position.set(pos.x, pos.y, 0);
+		float x = MathUtils.lerp(camera.position.x, pos.x, 1f);
+		float y = MathUtils.lerp(camera.position.y, pos.y, 1f);
+
 		camera.update();
 
 		pooledEngine.update(Gdx.graphics.getDeltaTime());
@@ -204,13 +239,13 @@ public class GameScreen implements Screen
 			try
 			{
 				e.getComponent(MovementComponent.class).body.setActive(false);
-				world.destroyBody(e.getComponent(MovementComponent.class).body);
+				//world.destroyBody(e.getComponent(MovementComponent.class).body);
 				//e.getComponent(MovementComponent.class).body.setUserData(null);
 				//e.getComponent(MovementComponent.class).body = null;
 			} catch (Exception ex) {
 				System.out.println("deletion exception: " + ex.getMessage());
 			} finally {
-				pooledEngine.removeEntity(e);
+				//pooledEngine.removeEntity(e);
 			}
 
 

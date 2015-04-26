@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
+import com.mygdx.game.LoginScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.*;
 
@@ -128,7 +129,7 @@ public class Factory {
         player.add(m);
 
         player.add(new VisualComponent(runAnimation));
-        player.add(new PlayerComponent(player));
+        player.add(new PlayerComponent(LoginScreen.username, player));
         player.add(new NetworkComponent("player", GameScreen.networkPlayerNum, player.getId(), p, m));
 
 
