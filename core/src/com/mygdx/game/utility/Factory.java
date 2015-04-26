@@ -58,6 +58,9 @@ public class Factory {
 
     public static Animation runAnimation;
     public static Animation idleAnmation;
+    
+    public static Texture bulletDestroy;
+    public static Animation bulletDestroyAnim;
 
     public static Sound expl19;
 
@@ -81,6 +84,7 @@ public class Factory {
         heart = new Texture("heart.png");
         hfront = new Texture("red.png");
         hback = new Texture("hback.png");
+        bulletDestroy = new Texture("bulletdestroy.png");
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
         //animation
@@ -88,6 +92,15 @@ public class Factory {
         TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
         TextureRegion[] walkFrames = new TextureRegion[6];
         TextureRegion[] idleFrames = new TextureRegion[6];
+        
+        //bullet animation
+        TextureRegion[] bulletframes = new TextureRegion[8];
+        TextureRegion[][] bulletTemp = TextureRegion.split(bulletDestroy, 16, 16);
+        for(int i = 0; i < 8; i++)
+        {
+        	bulletframes[i] = bulletTemp[0][i];
+        }
+        bulletDestroyAnim = new Animation(1/30f, bulletframes);
 
         //penguin animations
         TextureRegion[] penguinIdleFrames = new TextureRegion[5];
