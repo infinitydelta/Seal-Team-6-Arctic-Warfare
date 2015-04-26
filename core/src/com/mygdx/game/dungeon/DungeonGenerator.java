@@ -449,28 +449,29 @@ public class DungeonGenerator {
                 //ground
                 if (map[x][y] == 1)
                 {
-                    //doing it above, dont need to do it again
-                    //GameObject tile = (GameObject)Instantiate(ground, new Vector3(x, y, 5), Quaternion.identity);
-                    //tile.transform.parent = transform;
                     Factory.createGround(x,y);
                 }
                 //wall
                 else if (map[x][y] == 2)
                 {
-                    //GameObject tile = (GameObject)Instantiate(wall, new Vector3(x, y, 5), Quaternion.identity);
-                    //tile.transform.parent = transform;
-                    //Factory.createWall(x,y);
+                    Factory.createWall(x,y);
                 }
 
-                else if (map[x][y] == 3)
+                else
                 {
-                    //GameObject tile = (GameObject)Instantiate(pink, new Vector3(x, y, 1), Quaternion.identity);
-                    //tile.transform.parent = transform;
-                    //Factory.createGround(x,y);
-
+                    Factory.createFakeWall(x, y);
                 }
             }
         }
+    }
+
+    public static Vector2 getSpawnPosition()
+    {
+        int roomNum = RandomInt.Range(0, (int)numRooms );
+        int x = RandomInt.Range(rooms[roomNum].x + 1, (int) (rooms[roomNum].x + rooms[roomNum].width));
+        int y = RandomInt.Range(rooms[roomNum].y + 1, (int)(rooms[roomNum].y + rooms[roomNum].height));
+        System.out.println("spawn position:" + x + ", " + y);
+        return new Vector2(x, y);
     }
 
 

@@ -50,7 +50,7 @@ public class MainGame extends Game {
 	@Override
 	public void create () 
 	{
-		//loadAssets();
+
 		Factory.loadAssets();
 		menuScreen = new MenuScreen(this);
 		//gameScreen = new GameScreen(this);
@@ -69,40 +69,5 @@ public class MainGame extends Game {
 		
 
 	}
-	private void loadAssets()
-	{
-		//textures
-		kenny = new Texture("p1_stand.png");
-		bg_tile = new Texture("blacktile.png");
-		whiteball = new Texture("white ball.png");
-		objects = new Texture("objects.png");
-		sandTiles = new Texture("map.png");
 
-		//animation
-		Texture walk = new Texture("minimalObjects_32x32Tiles.png");
-		TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
-		TextureRegion[] walkFrames = new TextureRegion[6];
-		TextureRegion[] idleFrames = new TextureRegion[6];
-
-		int index = 0;
-		for (int i = 0; i < 1; i++) // column length, number of rows
-		{
-			for (int j = 0; j < 6; j++) //row length, number of columns
-			{
-				if (index < 6)
-				{
-					//System.out.println("index: " + index);
-					//System.out.println("i: " + i + "; j: " + j);
-					walkFrames[index] = temp[i][j];
-					idleFrames[index] = temp[1][j];
-					idleFrames[index].flip(true, false);
-					index++;
-				}
-			}
-		}
-		runAnimation = new Animation(1/6f, walkFrames);
-
-		idleAnmation = new Animation(1/2f, idleFrames);
-
-	}
 }

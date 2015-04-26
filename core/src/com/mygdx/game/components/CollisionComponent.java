@@ -16,8 +16,8 @@ public class CollisionComponent extends Component implements Pool.Poolable {
     // NOT UPDATED BY OUR OWN SYSTEMS, ONLY BOX2D
     //
 
-    Body body;
-    Fixture fixture;
+    public Body body;
+    public Fixture fixture;
 
     public CollisionComponent(World world, BodyDef.BodyType type, Shape shape, short catagoryBits, short maskBits,PositionComponent position)
     {
@@ -36,7 +36,7 @@ public class CollisionComponent extends Component implements Pool.Poolable {
         fixtureDef.shape = shape;
         fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
-        fixtureDef.restitution = 0f;
+        fixtureDef.restitution = .5f;
         fixture = body.createFixture(fixtureDef);
 
         shape.dispose();

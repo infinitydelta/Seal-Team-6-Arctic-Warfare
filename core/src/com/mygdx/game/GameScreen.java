@@ -52,11 +52,11 @@ public class GameScreen implements Screen
 
 	static final int CAM_WIDTH = 20;
 	
-	static final int CAM_SIZE = 50;
+	static final int CAM_SIZE = 20;
 
 	//MainGame game;
 	OrthographicCamera camera;
-	FitViewport viewport;
+	static FitViewport viewport;
 
 	public static PooledEngine pooledEngine;
 	Stage stage;
@@ -91,7 +91,7 @@ public class GameScreen implements Screen
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera(CAM_WIDTH, CAM_WIDTH* (h/w) );
-		viewport = new FitViewport(CAM_SIZE, CAM_SIZE * (h/w), camera); // 20 world units wide
+		viewport = new FitViewport(CAM_SIZE, CAM_SIZE * (h/w), camera);
 		camera.position.set(0, 0, 0);
 		camera.update();
 
@@ -124,10 +124,10 @@ public class GameScreen implements Screen
 			
 			
 			
-			
-			
+			Vector2 pos = DungeonGenerator.getSpawnPosition();
+
 			//create player entity
-			player = Factory.createPlayer(0, 0);
+			player = Factory.createPlayer((int)pos.x, (int) pos.y);
 
 			
 			Long newEntityID = player.getId();
@@ -301,6 +301,11 @@ public class GameScreen implements Screen
 		body.applyLinearImpulse(0, 1/60f, body.getPosition().x, body.getPosition().y, true);
 
 		rectangle.dispose();
+	}
+
+	public static void worldViewSize(int size)
+	{
+		viewport.setWorldSize(size, size);
 	}
 
 	

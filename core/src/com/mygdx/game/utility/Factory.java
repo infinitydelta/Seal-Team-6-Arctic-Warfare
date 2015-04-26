@@ -86,7 +86,7 @@ public class Factory {
 
         //create a body for the player
         CircleShape circle = new CircleShape();
-        circle.setRadius(.48f);
+        circle.setRadius(.4f);
         short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
         CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p);
 
@@ -122,17 +122,20 @@ public class Factory {
         bullet.add(p);
         PolygonShape rectangle = new PolygonShape();
         rectangle.setAsBox(.2f, .1f);
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.2f);
 
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, rectangle, PLAYER_PROJ_COL, bullet_col, p);
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p);
         bullet.add(new MovementComponent(col, GameScreen.world, xVel, yVel, 0));
         //add visual
         //
         GameScreen.pooledEngine.addEntity(bullet);
-
         return bullet;
+        //rectangle.dispose();
+        //circle.dispose();
     }
 
     public static Entity createGround(float x, float y)
@@ -141,6 +144,17 @@ public class Factory {
         PositionComponent p = new PositionComponent(x, y);
         e.add(p);
         TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 0, 32, 32);
+        e.add(new VisualComponent(t));
+        GameScreen.pooledEngine.addEntity(e);
+        return e;
+    }
+
+    public static Entity createFakeWall(float x, float y)
+    {
+        Entity e = GameScreen.pooledEngine.createEntity();
+        PositionComponent p = new PositionComponent(x, y);
+        e.add(p);
+        TextureRegion t = new TextureRegion(Factory.sandTiles, 0, 1 * 32, 32, 32);
         e.add(new VisualComponent(t));
         GameScreen.pooledEngine.addEntity(e);
         return e;
