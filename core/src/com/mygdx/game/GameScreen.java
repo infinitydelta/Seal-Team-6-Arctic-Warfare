@@ -175,7 +175,7 @@ public class GameScreen implements Screen
 
 		stage.draw(); //ui
 
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 		world.step(delta, 6, 2);
 		//Find number of physics steps to simulate
 		/*

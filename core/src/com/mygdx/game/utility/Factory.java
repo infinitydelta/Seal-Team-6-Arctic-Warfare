@@ -30,6 +30,14 @@ public class Factory {
     //textures
     static Texture kenny;
     static Texture bg_tile;
+
+    public static Texture penguin_walk;
+    public static Texture penguin_idle;
+    public static Animation penguin_idle_anim;
+    public static Animation penguin_walk_anim;
+
+
+
     public static Texture whiteball;
     public static Texture objects;
     public static Texture worldTiles;
@@ -49,12 +57,30 @@ public class Factory {
         whiteball = new Texture("white ball.png");
         objects = new Texture("objects.png");
         worldTiles = new Texture("map2.png");
-
+        penguin_walk = new Texture("penguinWalk.png");
+        penguin_idle = new Texture("penguinIdle.png");
         //animation
         Texture walk = new Texture("minimalObjects_32x32Tiles.png");
         TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
         TextureRegion[] walkFrames = new TextureRegion[6];
         TextureRegion[] idleFrames = new TextureRegion[6];
+
+        //penguin animations
+        TextureRegion[] penguinIdleFrames = new TextureRegion[5];
+        TextureRegion[][] penguinTemp = TextureRegion.split(penguin_idle, 32, 32);
+        for (int i = 0; i < 5; i ++)
+        {
+            penguinIdleFrames[i] = penguinTemp[0][i];
+        }
+        penguin_idle_anim = new Animation(1/8f, penguinIdleFrames);
+
+        TextureRegion[] penguinWalkFrames = new TextureRegion[5];
+        TextureRegion[][] penguinWalkTemp = TextureRegion.split(penguin_walk, 32, 32);
+        for (int i = 0; i < 5; i ++)
+        {
+            penguinWalkFrames[i] = penguinWalkTemp[0][i];
+        }
+        penguin_walk_anim = new Animation(1/15f, penguinWalkFrames);
 
         int index = 0;
         for (int i = 0; i < 1; i++) // column length, number of rows
