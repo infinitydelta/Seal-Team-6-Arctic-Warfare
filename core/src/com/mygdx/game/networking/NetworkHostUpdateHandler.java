@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.net.Socket;
+import com.mygdx.game.GameScreen;
+import com.mygdx.game.utility.Factory;
 
 public class NetworkHostUpdateHandler extends Thread {
 	NetworkHost networkHost;
@@ -28,8 +30,6 @@ public class NetworkHostUpdateHandler extends Thread {
 		};
 		this.oos = oos;
 		
-		entities = new HashSet<HashMap<String, Object>>();
-		
 		start();
 	}
 	
@@ -41,10 +41,36 @@ public class NetworkHostUpdateHandler extends Thread {
 			try
 			{
 				Object o = ois.readObject();
-				if (o.getClass() == String.class) {
+				if (o.getClass() == HashSet.class) {
+					System.out.println("Receiving hashset:" + o.toString());
+					
+					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>)o) {
+						if (GameScreen.allEntities.contains(entity)) {
+							//Update the entity
+							
+						}
+						else {
+							//Create the entity
+							if (entity.get("type").equals("player")) {
+								//Factory.createPlayer((Integer) entity.get("xPos"), (Integer) entity.get("yPos"));
+								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f);
+							}
+						}
+						GameScreen.allEntities.remove(entity);
+						GameScreen.allEntities.add(entity);
+					}
+					
+					HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.allEntities.clone();
+					oos.writeObject(sendData);
+					oos.flush();
+					oos.reset();
+					//System.out.println("Receiving string from " + socket.getRemoteAddress() + ":" + (String)o);
+				}
+				else if (o.getClass() == String.class) {
 					if (((String)o).equals("Ready")) {
 						//System.out.println("Sending data to " + socket.getRemoteAddress());
-						oos.writeObject(networkHost.entities);
+						HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.allEntities.clone();
+						oos.writeObject(sendData);
 						oos.flush();
 						oos.reset();
 					}

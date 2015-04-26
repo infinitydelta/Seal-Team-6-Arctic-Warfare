@@ -29,7 +29,7 @@ public class MyContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        System.out.println("contact end: " + contact.toString());
+        //System.out.println("contact end: " + contact.toString());
 
     }
 

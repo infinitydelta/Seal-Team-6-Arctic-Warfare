@@ -60,17 +60,9 @@ public class NetworkClient extends Thread {
 				long mapSeed = (Long)((HashMap)o).get("mapSeed");
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(gScreen);
-				Vector2 pos = DungeonGenerator.getSpawnPosition();
-				//create player entity
-				gScreen.player = Factory.createPlayer((int)pos.x, (int)pos.y);
 				
-				
-				//create weapon entity
-				gScreen.weapon = Factory.createWeapon();
-	
-				gScreen.player.getComponent(PlayerComponent.class).addWeapon(gScreen.weapon);
-									
-				oos.writeObject("Ready");
+				HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
+				oos.writeObject(sendData);
 				oos.flush();
 				oos.reset();
 				
@@ -93,17 +85,24 @@ public class NetworkClient extends Thread {
 
 				if (o.getClass() == HashSet.class) {
 					System.out.println("Receiving HashSet");
-					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>) o) {
-						for (Map.Entry<String, Object> entry : entity.entrySet()) {
-							if (entity.get("Type").equals("Map")) {
-								
-							}
-							else if (entity.get("Type").equals("Player")) {
-								
+					
+					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>)o) {
+						if (GameScreen.allEntities.contains(entity)) {
+							//Update the entity
+						}
+						else {
+							//Create the entity
+							if (entity.get("type").equals("player")) {
+								//Factory.createPlayer(((Float) entity.get("xPos")).intValue(), ((Float) entity.get("yPos")).intValue());
+								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f);
 							}
 						}
+						GameScreen.allEntities.remove(entity);
+						GameScreen.allEntities.add(entity);
 					}
-					oos.writeObject("ReadyForUpdate");
+					
+					HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
+					oos.writeObject(sendData);
 					oos.flush();
 					oos.reset();
 				}

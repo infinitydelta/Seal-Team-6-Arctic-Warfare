@@ -28,8 +28,6 @@ public class NetworkHost {
 	public NetworkHostConnectHandler networkHostConnectHandler;
 	public NetworkHostUpdateHandler networkHostUpdateHandler;
 	
-	public HashSet<HashMap<String, Object>> entities;
-	
 	public int numPlayers = 1;
 	
 	public NetworkHost(GameScreen gScreen) {
@@ -50,9 +48,7 @@ public class NetworkHost {
 		serverSocketHint.acceptTimeout = 0; //0 = no timeout
 		
 		serverSocket = Gdx.net.newServerSocket(Protocol.TCP, gScreen.port, serverSocketHint); //Create ServerSocket with TCP protocol on the port specified
-		
-		entities = new HashSet<HashMap<String, Object>>();
-		
+				
 		networkHostConnectHandler = new NetworkHostConnectHandler(this);
 		
 		gScreen.initialized = true;
