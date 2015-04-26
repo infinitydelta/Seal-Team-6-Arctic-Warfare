@@ -1,9 +1,8 @@
 package com.mygdx.game.utility;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,8 +10,18 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
+
+import com.mygdx.game.LoginScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.*;
+
+import com.mygdx.game.components.CollisionComponent;
+import com.mygdx.game.components.MovementComponent;
+import com.mygdx.game.components.NetworkComponent;
+import com.mygdx.game.components.PlayerComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.VisualComponent;
+
 
 /**
  * Created by KS on 4/24/2015.
@@ -43,12 +52,15 @@ public class Factory {
 
     public static Texture whiteball;
     public static Texture objects;
+    public static Texture gun1;
+    public static Texture playerbullet;
     public static Texture worldTiles;
+    public static Texture ammoElement;
 
     public static Animation runAnimation;
     public static Animation idleAnmation;
 
-
+    public static Sound expl19;
 
 
 
@@ -59,11 +71,19 @@ public class Factory {
         bg_tile = new Texture("blacktile.png");
         whiteball = new Texture("white ball.png");
         objects = new Texture("objects.png");
+        gun1 = new Texture("gun1.png");
+        playerbullet = new Texture("bullet.png");
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
+
         seal_walk = new Texture("sealWalk.png");
         seal_idle = new Texture("sealIdle.png");
+
+        ammoElement = new Texture("ammo.png");
+        //sound?
+        expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
+
         //animation
         Texture walk = new Texture("minimalObjects_32x32Tiles.png");
         TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
@@ -127,7 +147,9 @@ public class Factory {
 
     }
 
-    public static Entity createPlayer(int x, int y)
+
+    public static Entity createPlayer(float x, float y, Integer playerNum)
+
     {
         Entity player = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -137,20 +159,23 @@ public class Factory {
         CircleShape circle = new CircleShape();
         circle.setRadius(.4f);
         short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, 'p');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, player, 'p');
 
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         player.add(m);
 
+
         player.add(new VisualComponent(penguin_idle_anim));
-        player.add(new PlayerComponent(player));
-        player.add(new NetworkComponent(player.getId(), p, m));
+
+        player.add(new PlayerComponent(LoginScreen.username, player));
+        player.add(new NetworkComponent("player", playerNum, player.getId(), p, m));
 
 
         GameScreen.pooledEngine.addEntity(player);
 
         return player;
     }
+
 
     public static Entity createSeal(int x, int y)
     {
@@ -175,13 +200,39 @@ public class Factory {
         GameScreen.pooledEngine.addEntity(seal);
 
         return seal;
+
+    public static Entity createNetworkPlayer(float x, float y, Integer playerNum)
+    {
+        Entity networkPlayer = GameScreen.pooledEngine.createEntity();
+        PositionComponent p = new PositionComponent(x, y);
+        networkPlayer.add(p);
+
+        //create a body for the player
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.4f);
+        short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, networkPlayer, 'p');
+
+        MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
+        networkPlayer.add(m);
+
+
+        TextureRegion b = new TextureRegion(penguin_idle, 0, 0, 32, 32);
+        networkPlayer.add(new VisualComponent(b));
+
+        networkPlayer.add(new NetworkComponent("player", playerNum, networkPlayer.getId(), p, m));
+
+
+
+        return networkPlayer;
+
     }
 
     public static Entity createWeapon()
     {
 
         Entity weapon = GameScreen.pooledEngine.createEntity();
-        TextureRegion weap = new TextureRegion(objects, 3 * 32, 1 * 32, 32, 32);
+        TextureRegion weap = new TextureRegion(gun1, 0 * 32, 0 * 32, 32, 32);
         weapon.add(new PositionComponent(0, 0));
         weapon.add(new VisualComponent(weap));
         GameScreen.pooledEngine.addEntity(weapon);
@@ -193,7 +244,7 @@ public class Factory {
 
     }
 
-    public static Entity createBullet(float x, float y, float angle, float vel)
+    public static Entity createBullet(float x, float y, float angle, float vel, Integer playerNum)
     {
         Entity bullet = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y, angle);
@@ -202,17 +253,22 @@ public class Factory {
         rectangle.setAsBox(.2f, .1f);
         CircleShape circle = new CircleShape();
         circle.setRadius(.2f);
-
+        
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, 'b');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');
         MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
         bullet.add(m);
         //add visual
+        TextureRegion b = new TextureRegion(playerbullet, 0, 0, 16, 16);
+        VisualComponent vc = new VisualComponent(b);
+        vc.sprite.setRotation((float)Math.toDegrees(angle));
+        //vc.sprite.setScale(.8f);
+        bullet.add(vc);
         //
 
-        bullet.add(new NetworkComponent(bullet.getId(), p, m));
+        bullet.add(new NetworkComponent("bullet", playerNum, bullet.getId(), p, m));
 
         GameScreen.pooledEngine.addEntity(bullet);
         return bullet;
@@ -272,7 +328,7 @@ public class Factory {
         PolygonShape square = new PolygonShape();
         square.setAsBox(.5f, .5f);
         short all = PLAYER_COL | PLAYER_PROJ_COL | ENEMY_COL | ENEMY_PROJ_COL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p, 'w');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p, wall, 'w');
 
         TextureRegion t;
         switch(type)

@@ -15,15 +15,20 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     Entity player;
     public Entity weapon;
 
-    PositionComponent position;
-    MovementComponent movement;
-    VisualComponent visual;
+    public String name;
+
+    public PositionComponent position;
+    public MovementComponent movement;
+    public VisualComponent visual;
+    public WeaponComponent weaponComponent;
 
     PositionComponent weaponPosition;
+    
 
     public boolean up = false, down = false, left = false, right = false;
     private boolean moveX = false, moveY = false;
     private float root2 = (float) Math.sqrt(2);
+    public int health;
 
 
     //gameplay values
@@ -31,8 +36,10 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     float diagSpeed = speed/root2;
 
 
-    public PlayerComponent(Entity player)
+    public PlayerComponent(String name, Entity player)
     {
+        this.name = name;
+        System.out.println(name);
         this.player = player;
         position = player.getComponent(PositionComponent.class);
         movement = player.getComponent(MovementComponent.class); //need movement instantiated
@@ -43,6 +50,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     {
         this.weapon = weapon;
         weaponPosition = weapon.getComponent(PositionComponent.class);
+        weaponComponent = weapon.getComponent(WeaponComponent.class);
     }
 
     public void update()
@@ -54,7 +62,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
         if (left)
         {
-            if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+            //if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
 
             movement.xVel = -speed;
             moveX = true;
@@ -62,7 +70,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
         }
         if (right)
         {
-            if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+            //if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
             movement.xVel = speed;
             moveX = true;
             movement.moveX = true;
@@ -96,8 +104,11 @@ public class PlayerComponent extends Component implements Pool.Poolable {
         if (!moveY && !moveX) visual.setAnimation(Factory.penguin_idle_anim);
         else visual.setAnimation(Factory.penguin_walk_anim);
 
-        weaponPosition.x = position.x;
-        weaponPosition.y = position.y;
+        if (weaponPosition != null)
+        {
+            weaponPosition.x = position.x;
+            weaponPosition.y = position.y;
+        }
 
     }
 

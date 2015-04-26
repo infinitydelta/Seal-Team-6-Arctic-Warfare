@@ -10,17 +10,19 @@ import java.net.Inet4Address;
  */
 public class NetworkComponent extends Component {
 
-    public String owner;
+    public Integer playerNum;
     public Long ownerID;
+    public String type;
     public float xPos, yPos;
     public float xVel, yVel;
 
 
-    public NetworkComponent(long id, PositionComponent pos, MovementComponent move)
+    public NetworkComponent(String type, Integer playerNum, long id, PositionComponent pos, MovementComponent move)
     {
 
-        owner = MenuScreen.ipaddress;
+        this.playerNum = playerNum;
         this.ownerID = id;
+        this.type = type;
         xPos = pos.x;
         yPos = pos.y;
         xVel = move.xVel;

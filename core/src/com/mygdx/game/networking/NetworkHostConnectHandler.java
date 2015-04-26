@@ -29,12 +29,16 @@ public class NetworkHostConnectHandler extends Thread {
 			System.out.println("Sending initial game state");
 			try
 			{
-				//ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-				oos.writeObject(networkHost.mapSeed);
+				HashMap<String, Object> initializationData = new HashMap<String, Object>();
+				initializationData.put("playerNum", networkHost.numPlayers);
+				initializationData.put("mapSeed", networkHost.mapSeed);
+				
+				oos.writeObject(initializationData);
 				oos.flush();
 				oos.reset();
 				NetworkHostUpdateHandler networkHostUpdateHandler = new NetworkHostUpdateHandler(networkHost, socket, oos);
+				networkHost.numPlayers++;
 			}
 			catch(Exception e)
 			{

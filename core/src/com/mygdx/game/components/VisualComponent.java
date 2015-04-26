@@ -64,7 +64,7 @@ public class VisualComponent extends Component implements Pool.Poolable {
         }
         if (animation != null)
         {
-
+            animation = null;
         }
         animated = false;
         stateTime = 0;

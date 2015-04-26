@@ -1,6 +1,11 @@
 package com.mygdx.game;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.sun.rowset.internal.Row;
 
 public class MenuScreen implements Screen
 {
@@ -22,14 +26,19 @@ public class MenuScreen implements Screen
 	Skin uiSkin;
 	TextButton hostButton;
 	TextButton joinButton;
+
+	
 	Label hostiplabel;
 	Label joiniplabel;
 	Label hostportlabel;
 	Label joinportlabel;
 	Label hostipfield;
+
+	
+	TextField joinportfield;
 	TextField hostportfield;
 	TextField joinipfield;
-	TextField joinportfield;
+
 	Table table;
 
 	public static String ipaddress;
@@ -41,8 +50,10 @@ public class MenuScreen implements Screen
 		uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
 		hostButton = new TextButton("HOST", uiSkin);
 		joinButton = new TextButton("JOIN", uiSkin);
+	
 		hostiplabel = new Label("ADDRESS:", uiSkin);
 		hostipfield = new Label("UNKNOWN", uiSkin);
+
 		try
 		{
 			ipaddress = Inet4Address.getLocalHost().getHostAddress();
@@ -58,6 +69,7 @@ public class MenuScreen implements Screen
 		hostportfield = new TextField("7777", uiSkin);
 		joinipfield = new TextField("localhost", uiSkin);
 		joinportfield = new TextField("7777", uiSkin);
+
 		table = new Table();
 		
 	}
@@ -96,11 +108,13 @@ public class MenuScreen implements Screen
 		table.add(joinportlabel);
 		table.add(joinportfield).row();
 		table.add(joinButton).size(150,60).colspan(2).padBottom(40).row();
+
 		table.setFillParent(true);
 		stage.addActor(table);
 		
 		Gdx.input.setInputProcessor(stage);
 	}
+	
 	public void hide()
 	{
 		
