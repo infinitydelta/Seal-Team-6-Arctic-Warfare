@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
@@ -61,8 +63,7 @@ public class NetworkClient extends Thread {
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(gScreen);
 				
-				HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
-				oos.writeObject(sendData);
+				oos.writeObject(GameScreen.myEntities);
 				oos.flush();
 				oos.reset();
 				
@@ -83,19 +84,18 @@ public class NetworkClient extends Thread {
 				}
 				catch (Exception e) {System.out.println(e.getMessage());}
 
-				if (o.getClass() == HashSet.class) {
-					System.out.println("Receiving HashSet (" + ((HashSet<HashMap<String, Object>>)o).size() + "):" + o.toString());
+				if (o.getClass() == CopyOnWriteArraySet.class) {
+					System.out.println("Receiving HashSet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
-					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>)o) {
-						System.out.println("Test");
+					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
-						/*for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
 		            			//Entity exists, so replace its values
 		            			GameScreen.allEntities.remove(entity2);
 		            			entityExists = true;
 		            		}
-		            	}*/
+		            	}
 						
 						if (entityExists) {
 							//Update the entity
@@ -112,8 +112,7 @@ public class NetworkClient extends Thread {
 						}
 					}
 					synchronized(GameScreen.myEntities) {
-						HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
-						oos.writeObject(sendData);
+						oos.writeObject(GameScreen.myEntities);
 					}
 					//oos.writeObject(GameScreen.myEntities);
 					oos.flush();

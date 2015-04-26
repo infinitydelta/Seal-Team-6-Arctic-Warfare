@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
@@ -97,8 +99,8 @@ public class GameScreen implements Screen
 	
 	public static int networkPlayerNum;
 	
-	public static HashSet<HashMap<String, Object>> myEntities = new HashSet<HashMap<String, Object>>();
-    public static HashSet<HashMap<String, Object>> allEntities = new HashSet<HashMap<String, Object>>();
+	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
+    public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
 
 
 	float deltatimesink;
@@ -151,8 +153,6 @@ public class GameScreen implements Screen
 		if(host)
 		{
 			networkHost = new NetworkHost(this);
-			
-			Vector2 pos = DungeonGenerator.getSpawnPosition();
 		}
 		else //client
 		{

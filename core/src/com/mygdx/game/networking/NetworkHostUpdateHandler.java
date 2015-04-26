@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.gdx.net.Socket;
 import com.mygdx.game.GameScreen;
@@ -41,19 +43,18 @@ public class NetworkHostUpdateHandler extends Thread {
 			try
 			{
 				Object o = ois.readObject();
-				if (o.getClass() == HashSet.class) {
-					System.out.println("Receiving hashset (" + ((HashSet<HashMap<String, Object>>)o).size() + "):" + o.toString());
+				if (o.getClass() == CopyOnWriteArraySet.class) {
+					//System.out.println("Receiving hashset (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
-					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>)o) {
-						System.out.println("Test");
+					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
 						
-						/*for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
 		            			GameScreen.allEntities.remove(entity2);
 		            			entityExists = true;
 		            		}
-		            	}*/
+		            	}
 						if (entityExists) {
 							//Update the entity
 						}
@@ -69,8 +70,7 @@ public class NetworkHostUpdateHandler extends Thread {
 						}
 					}
 					synchronized(GameScreen.allEntities) {
-						HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.allEntities.clone();
-						oos.writeObject(sendData);
+						oos.writeObject(GameScreen.allEntities);
 					}
 					//oos.writeObject(GameScreen.allEntities);
 					oos.flush();
@@ -81,8 +81,7 @@ public class NetworkHostUpdateHandler extends Thread {
 					if (((String)o).equals("Ready")) {
 						//System.out.println("Sending data to " + socket.getRemoteAddress());
 						synchronized(GameScreen.allEntities) {
-							HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.allEntities.clone();
-							oos.writeObject(sendData);
+							oos.writeObject(GameScreen.allEntities);
 						}
 						//oos.writeObject(GameScreen.allEntities);
 						oos.flush();
