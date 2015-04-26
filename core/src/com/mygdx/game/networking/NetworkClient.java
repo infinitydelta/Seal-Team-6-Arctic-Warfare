@@ -102,7 +102,7 @@ public class NetworkClient extends Thread {
 						}
 						else {
 							//Create the entity
-							if (entity.get("type").equals("player")) {
+							/*if (entity.get("type").equals("player")) {
 								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 							}
 							else if (entity.get("type").equals("bullet")) {
@@ -110,7 +110,7 @@ public class NetworkClient extends Thread {
 							}
 							else if (entity.get("type").equals("seal")) {
 								Factory.createSeal((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
-							}
+							}*/
 						}
 					}
 					
