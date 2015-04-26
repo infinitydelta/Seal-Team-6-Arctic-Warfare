@@ -43,15 +43,15 @@ public class NetworkHostUpdateHandler extends Thread {
 				Object o = ois.readObject();
 				if (o.getClass() == String.class) {
 					if (((String)o).equals("Ready")) {
-						System.out.println("Sending data to " + socket.getRemoteAddress());
+						//System.out.println("Sending data to " + socket.getRemoteAddress());
 						oos.writeObject(networkHost.entities);
 						oos.flush();
 						oos.reset();
 					}
-					System.out.println("Receving string from " + socket.getRemoteAddress() + ":" + (String)o);
+					//System.out.println("Receving string from " + socket.getRemoteAddress() + ":" + (String)o);
 				}
 				else {
-					System.out.println("Receving other datatype from " + socket.getRemoteAddress());
+					//System.out.println("Receving other datatype from " + socket.getRemoteAddress());
 				}
 			}
 			catch(Exception e)

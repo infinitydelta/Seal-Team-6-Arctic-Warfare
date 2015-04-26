@@ -64,11 +64,11 @@ public class GameScreen implements Screen
 	Stage stage;
 	public static World world;
 	InputHandler input;
-	Entity player;
+	public Entity player;
 
 	Box2DDebugRenderer debugRenderer;
 
-	Entity weapon;
+	public Entity weapon;
 
 	//box2d
 	BodyDef bodyDef;
@@ -153,45 +153,10 @@ public class GameScreen implements Screen
 			weapon = Factory.createWeapon();
 
 			player.getComponent(PlayerComponent.class).addWeapon(weapon);
-
-
-			//bullet
-			/*
-			Entity bullet = pooledEngine.createEntity();
-			PositionComponent positionB = new PositionComponent(0, -5);
-			bullet.add(positionB);
-			//bullet.add(new MovementComponent(position, world, 0, 0, 0));
-
-			PolygonShape rectangle = new PolygonShape();
-			rectangle.setAsBox(.3f, .2f);
-			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));
-			*/
 		}
 		else //client
 		{
 			networkClient = new NetworkClient(this);
-			
-			
-			//create player entity
-			player = Factory.createPlayer(0, 0);
-			
-			
-			//create weapon entity
-			weapon = Factory.createWeapon();
-
-			player.getComponent(PlayerComponent.class).addWeapon(weapon);
-
-			//pooledEngine.addEntity(e);
-			
-			//bullet
-			/*Entity bullet = pooledEngine.createEntity();
-			PositionComponent positionB = new PositionComponent(0, -5);
-			bullet.add(positionB);
-			bullet.add(new MovementComponent(position, world, 0, 0, 0));
-
-			PolygonShape rectangle = new PolygonShape();
-			rectangle.setAsBox(.3f, .2f);
-			bullet.add(new CollisionComponent(world, BodyDef.BodyType.KinematicBody, rectangle, positionB));*/
 		}
 		
 
