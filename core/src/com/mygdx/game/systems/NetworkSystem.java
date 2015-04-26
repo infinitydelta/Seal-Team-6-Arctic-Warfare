@@ -1,3 +1,4 @@
+//IM SO ANGRY
 package com.mygdx.game.systems;
 
 import java.util.HashMap;
@@ -30,11 +31,7 @@ public class NetworkSystem extends IteratingSystem {
         PositionComponent pos = pm.get(entity);
         MovementComponent move = mm.get(entity);
         NetworkComponent network = nm.get(entity);
-        /*network.xPos = pos.x;
-        network.yPos = pos.y;
-        network.xVel = move.xVel;
-        network.yVel = move.yVel;
-        */
+        
         HashMap<String, Object> newEntityData = new HashMap<String, Object>();
         newEntityData.put("type", network.type);
         newEntityData.put("playerNum", network.playerNum);
