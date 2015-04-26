@@ -25,6 +25,7 @@ public class WeaponComponent extends Component implements Pool.Poolable {
 
     @Override
     public void reset() {
+        automatic = false;
 
     }
 }
