@@ -1,22 +1,15 @@
 package com.mygdx.game.systems;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.GameScreen;
-import com.mygdx.game.MainGame;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.NetworkComponent;
 import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.utility.RandomInt;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 /**
  * Created by KS on 4/25/2015.
@@ -42,7 +35,7 @@ public class NetworkSystem extends IteratingSystem {
         network.xVel = move.xVel;
         network.yVel = move.yVel;
         */
-        ConcurrentHashMap<String, Object> newEntityData = new ConcurrentHashMap<String, Object>();
+        HashMap<String, Object> newEntityData = new HashMap<String, Object>();
         newEntityData.put("type", network.type);
         newEntityData.put("playerNum", network.playerNum);
         newEntityData.put("ownerID", network.ownerID);
@@ -54,20 +47,18 @@ public class NetworkSystem extends IteratingSystem {
         boolean myEntityFound = false;
         
         if (network.playerNum.equals(GameScreen.networkPlayerNum)) {
-    		for (ConcurrentHashMap<String, Object> entity2 : GameScreen.myEntities) {
+    		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
         		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-        			GameScreen.myEntitiesLock = true;
         			GameScreen.myEntities.remove(entity2);
         			GameScreen.myEntities.add(newEntityData);
         			myEntityFound = true;
         		}
         	}
     		GameScreen.myEntities.add(newEntityData);
-			GameScreen.myEntitiesLock = false;
     		//Populate and replace myEntities with newEntities
         }
         else {
-        	for (ConcurrentHashMap<String, Object> entity2 : GameScreen.allEntities) {
+        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
         			move.xVel = (Float)entity2.get("xVel");
         			move.xVel = (Float)entity2.get("yVel");
@@ -77,15 +68,13 @@ public class NetworkSystem extends IteratingSystem {
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value
         }
-    	for (ConcurrentHashMap<String, Object> entity2 : GameScreen.allEntities) {
+    	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
     		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-    			GameScreen.allEntitiesLock = true;
     			GameScreen.allEntities.remove(entity2);
     			GameScreen.allEntities.add(newEntityData);
     		}
     	}
     	GameScreen.allEntities.add(newEntityData);
-    	GameScreen.allEntitiesLock = false;
         /*if (GameScreen.networkPlayerNum == 0) {
 	        System.out.println("All ents: " + GameScreen.allEntities.size());
 	        System.out.println("My ents: " + GameScreen.myEntities.size());

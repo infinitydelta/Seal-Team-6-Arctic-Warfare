@@ -1,9 +1,9 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.Entity;
@@ -88,10 +88,8 @@ public class GameScreen implements Screen
 	
 	public static int networkPlayerNum;
 	
-	public static CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> myEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
-    public static CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> allEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
-    public static boolean myEntitiesLock = false;
-    public static boolean allEntitiesLock = false;
+	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
+    public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
     
     public static NetworkSystem networkSystem = new NetworkSystem();
 

@@ -1,12 +1,9 @@
 package com.mygdx.game.networking;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.gdx.Gdx;
@@ -50,10 +47,10 @@ public class NetworkHostUpdateHandler extends Thread {
 					//Run NetworkSystem here
 					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 					
-					for (ConcurrentHashMap<String, Object> entity : (CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>)o) {
+					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
 						
-						for (ConcurrentHashMap<String, Object> entity2 : GameScreen.allEntities) {
+						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
 		            			//Entity received exists in allEntries, so replace its values
 		            			GameScreen.allEntities.remove(entity2);
@@ -63,7 +60,6 @@ public class NetworkHostUpdateHandler extends Thread {
 		            	}
 						if (entityExists) {
 							//Update the entity
-							
 						}
 						else {
 							//Create the entity
@@ -76,8 +72,6 @@ public class NetworkHostUpdateHandler extends Thread {
 						}
 					}
 					
-					//System.out.println("Sending CopyOnWriteArraySet (" + GameScreen.allEntities.size() + "):" + GameScreen.allEntities.toString());
-					while (GameScreen.allEntitiesLock) {}
 					//System.out.println(GameScreen.allEntities);
 					oos.writeObject(GameScreen.allEntities);
 					oos.flush();
