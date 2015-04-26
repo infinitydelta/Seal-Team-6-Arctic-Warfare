@@ -183,7 +183,7 @@ public class Factory {
         //create a body for the seal
         CircleShape circle = new CircleShape();
         circle.setRadius(.4f);
-        short seal_col = PLAYER_COL | PLAYER_PROJ_COL | WALL;
+        short seal_col = PLAYER_COL | PLAYER_PROJ_COL | WALL | ENEMY_COL;
         CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, ENEMY_COL, seal_col, p, seal, 'e');
 
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);

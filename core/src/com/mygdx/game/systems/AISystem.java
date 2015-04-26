@@ -29,7 +29,7 @@ public class AISystem extends IteratingSystem {
     ComparableVector2 dir = new ComparableVector2(0,1);
     ComparableVector2 nextPos =  new ComparableVector2(0,1);
 
-    float lastdx;
+
     private ImmutableArray<Entity> players;
 
     public AISystem() {
@@ -80,16 +80,20 @@ public class AISystem extends IteratingSystem {
                 visual.setAnimation(Factory.seal_walk_anim);
                 ai.xTarIndex = (int)px;
                 ai.yTarIndex = (int)py;
-                if((dx>0 && lastdx<0)|| (dx<0 && lastdx>0)){
-                    visual.sprite.flip(true, false);
-                }
+
+                    if(dx>0) {
+                        if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+                    }else{
+                        if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+                    }
+
                 dir.set(dx,dy);
                 collision.body.setLinearVelocity(dir);
             }else{
                 collision.body.setLinearVelocity(0,0);
                 visual.setAnimation(Factory.seal_idle_anim);
             }
-            lastdx = dx;
+            ai.lastdx = dx;
         }
 
 
