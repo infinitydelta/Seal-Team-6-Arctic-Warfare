@@ -87,7 +87,7 @@ public class AISystem extends IteratingSystem {
                         if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
                     }
 
-                dir.set(dx,dy);
+                dir.set(ai.speed * dx, ai.speed * dy);
                 collision.body.setLinearVelocity(dir);
             }else{
                 collision.body.setLinearVelocity(0,0);

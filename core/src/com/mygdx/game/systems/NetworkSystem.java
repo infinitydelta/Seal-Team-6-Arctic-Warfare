@@ -61,6 +61,8 @@ public class NetworkSystem extends IteratingSystem {
 	        		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
 	
 	                    //move.body.setLinearVelocity(move.xVel, move.yVel);
+	        			move.xVel = (Float)entity2.get("xVel");
+	                    move.yVel = (Float)entity2.get("yVel");
 	        			pos.x = (Float)entity2.get("xPos");
 	        			pos.y = (Float)entity2.get("yPos");
 	                    //while (GameScreen.world.isLocked()) {}
@@ -70,8 +72,6 @@ public class NetworkSystem extends IteratingSystem {
 	                        move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
 	
 	                    }
-	                    move.xVel = (Float)entity2.get("xVel");
-	                    move.yVel = (Float)entity2.get("yVel");
 	        		}
 	        	}
 	        	//Update each entity with networkComponent with its corresponding allEntities value
