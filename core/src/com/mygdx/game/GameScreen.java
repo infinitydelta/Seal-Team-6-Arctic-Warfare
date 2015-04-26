@@ -203,9 +203,19 @@ public class GameScreen implements Screen
 		while(!toBeDeleted.isEmpty())
 		{
 			Entity e = toBeDeleted.remove();
-			world.destroyBody(e.getComponent(MovementComponent.class).body);
-			pooledEngine.removeEntity(e);
-			
+			try
+			{
+				e.getComponent(MovementComponent.class).body.setActive(false);
+				world.destroyBody(e.getComponent(MovementComponent.class).body);
+				//e.getComponent(MovementComponent.class).body.setUserData(null);
+				//e.getComponent(MovementComponent.class).body = null;
+			} catch (Exception ex) {
+				System.out.println("deletion exception: " + ex.getMessage());
+			} finally {
+				pooledEngine.removeEntity(e);
+			}
+
+
 		}
 
 	}
