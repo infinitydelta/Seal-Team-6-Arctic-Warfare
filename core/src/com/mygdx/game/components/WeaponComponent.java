@@ -29,6 +29,8 @@ public class WeaponComponent extends Component implements Pool.Poolable
     float bulletVelocity;
     float force;
     Entity bullet;
+    
+    WeaponGUIComponent wgc;
 
     public WeaponComponent(Entity entity)
     {
@@ -66,6 +68,7 @@ public class WeaponComponent extends Component implements Pool.Poolable
 				reloading = false;
 				reloadtimer = 0;
 				currentclip = magSize;
+				wgc.reload();
 			}
     	}
     	else if(firetimer < 1/fireRate)
@@ -81,6 +84,15 @@ public class WeaponComponent extends Component implements Pool.Poolable
             Factory.expl19.play();
             firetimer = 0;
             currentclip--;
+            wgc.fire();
     	}
+    }
+    public void setGUIComponent(WeaponGUIComponent wgc)
+    {
+    	this.wgc = wgc;
+    }
+    public int getMagSize()
+    {
+    	return magSize;
     }
 }

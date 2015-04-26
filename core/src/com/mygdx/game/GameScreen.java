@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.WeaponComponent;
+import com.mygdx.game.components.WeaponGUIComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
@@ -171,6 +172,9 @@ public class GameScreen implements Screen
 		weapon = Factory.createWeapon();
 		weapon.add(new WeaponComponent(weapon));
 		player.getComponent(PlayerComponent.class).addWeapon(weapon);
+		WeaponGUIComponent wgc = new WeaponGUIComponent(stage, weapon.getComponent(WeaponComponent.class).getMagSize());
+		weapon.add(wgc);
+		weapon.getComponent(WeaponComponent.class).setGUIComponent(wgc);
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
 
@@ -219,6 +223,7 @@ public class GameScreen implements Screen
 
 		pooledEngine.update(Gdx.graphics.getDeltaTime());
 
+		stage.act(delta);
 		stage.draw(); //ui
 
 		debugRenderer.render(world, camera.combined);
