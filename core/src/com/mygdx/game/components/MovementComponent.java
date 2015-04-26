@@ -3,6 +3,7 @@ package com.mygdx.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.GameScreen;
 
 /**
  * Created by KS on 3/4/2015.
@@ -41,9 +42,12 @@ public class MovementComponent extends Component implements Pool.Poolable {
 
     @Override
     public void reset() {
+        System.out.println("reset");
         xVel = 0;
         yVel = 0;
         acc = 0;
+        GameScreen.world.destroyBody(body);
+        body.setUserData(null);
         body = null;
     }
 }
