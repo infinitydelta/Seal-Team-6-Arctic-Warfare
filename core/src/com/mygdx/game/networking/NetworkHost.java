@@ -3,6 +3,7 @@ package com.mygdx.game.networking;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,7 +27,7 @@ public class NetworkHost {
 	public NetworkHostConnectHandler networkHostConnectHandler;
 	public NetworkHostUpdateHandler networkHostUpdateHandler;
 	
-	public ConcurrentHashMap<Long, ConcurrentHashMap<String, Object>> entities;
+	public HashSet<HashMap<String, Object>> entities;
 	
 	public NetworkHost(GameScreen gScreen) {
 		this.gScreen = gScreen;
@@ -44,7 +45,7 @@ public class NetworkHost {
 		
 		serverSocket = Gdx.net.newServerSocket(Protocol.TCP, gScreen.port, serverSocketHint); //Create ServerSocket with TCP protocol on the port specified
 		
-		entities = new ConcurrentHashMap<Long, ConcurrentHashMap<String, Object>>();
+		entities = new HashSet<HashMap<String, Object>>();
 		
 		networkHostConnectHandler = new NetworkHostConnectHandler(this);
 	}

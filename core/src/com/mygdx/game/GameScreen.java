@@ -137,16 +137,13 @@ public class GameScreen implements Screen
 			//create player entity
 			player = Factory.createPlayer((int)pos.x, (int) pos.y);
 
-			/*
 			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
 			newEntityData.put("Type", "Player");
 			newEntityData.put("Owner", "host");
 			newEntityData.put("OwnersID", player.getId());
-			newEntityData.put("X", 0);
-			newEntityData.put("Y", 0);
-			newEntityData.put("Z", 0);
-			networkHost.entities.put(newEntityData);
-			*/
+			newEntityData.put("X", (int)pos.x);
+			newEntityData.put("Y", (int)pos.y);
+			networkHost.entities.add(newEntityData);
 			
 			
 			//create weapon entity
