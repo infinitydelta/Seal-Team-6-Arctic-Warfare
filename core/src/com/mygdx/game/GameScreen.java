@@ -4,10 +4,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.rmi.server.SocketSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,6 +84,7 @@ public class GameScreen implements Screen
 
 	NetworkClient networkClient;
 	
+	public static Queue<Entity> toBeDeleted;
 	
 
 
@@ -122,7 +124,7 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
-		
+		toBeDeleted = new LinkedList<Entity>();
 		
 		
 		
@@ -194,6 +196,15 @@ public class GameScreen implements Screen
 		}
 		//Temporal Aliasing?
 		//Spiral of death?
+		
+		//remove all components scheduled for removal AFTER physics step
+		while(!toBeDeleted.isEmpty())
+		{
+			Entity e = toBeDeleted.remove();
+			world.destroyBody(e.getComponent(MovementComponent.class).body);
+			pooledEngine.removeEntity(e);
+			
+		}
 
 	}
 	public void resize(int width, int height)

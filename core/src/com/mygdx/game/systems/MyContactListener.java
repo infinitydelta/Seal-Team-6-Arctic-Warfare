@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.mygdx.game.GameScreen;
 
 /**
  * Created by KS on 4/25/2015.
@@ -18,6 +19,11 @@ public class MyContactListener implements ContactListener {
         if (contact.getFixtureB().getBody().getUserData().equals('b'))
         {
             //contact.getFixtureB().getBody().setActive(false);
+        	//GameScreen.toBeDeleted.add(contact.getFixtureB());
+        }
+        else if(contact.getFixtureA().getBody().getUserData().equals('b'))
+        {
+        	//GameScreen.toBeDeleted.add(contact.getFixtureA().getBody());
         }
     }
 

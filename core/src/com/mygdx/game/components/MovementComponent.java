@@ -61,23 +61,7 @@ public class MovementComponent extends Component implements Pool.Poolable {
 
     public void update()
     {
-        /*
-        if (!moveX)
-        {
-            body.applyLinearImpulse(xVel, 0, body.getPosition().x, body.getPosition().y, true);
-            moveX = true;
-        }
-        if (!moveY)
-        {
-            body.applyLinearImpulse(0, yVel, body.getPosition().x, body.getPosition().y, true);
-            moveY = true;
-        }
-        */
-        if (body.getLinearVelocity().x != xVel || body.getLinearVelocity().y != yVel)
-        {
-            //body.setLinearVelocity(xVel, yVel);
-        }
-        //System.out.println("xvel: " + xVel + ", yvel: " + yVel);
+        
     }
 
     @Override

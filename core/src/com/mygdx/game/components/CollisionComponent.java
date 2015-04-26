@@ -28,6 +28,7 @@ public class CollisionComponent extends Component implements Pool.Poolable {
         body = world.createBody(bodyDef);
         body.setUserData(userData);
         FixtureDef fixtureDef = new FixtureDef();
+        
         //PolygonShape rectangle = new PolygonShape();
         //rectangle.setAsBox(.5f, .5f);
 
