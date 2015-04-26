@@ -108,7 +108,7 @@ public class Factory {
 
     }
 
-    public static Entity createPlayer(int x, int y)
+    public static Entity createPlayer(int x, int y, Integer playerNum)
     {
         Entity player = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -125,7 +125,7 @@ public class Factory {
 
         player.add(new VisualComponent(runAnimation));
         player.add(new PlayerComponent(player));
-        player.add(new NetworkComponent("player", GameScreen.networkPlayerNum, player.getId(), p, m));
+        player.add(new NetworkComponent("player", playerNum, player.getId(), p, m));
 
 
         GameScreen.pooledEngine.addEntity(player);
@@ -149,7 +149,7 @@ public class Factory {
 
     }
 
-    public static Entity createBullet(float x, float y, float angle, float vel)
+    public static Entity createBullet(float x, float y, float angle, float vel, Integer playerNum)
     {
         Entity bullet = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y, angle);
@@ -173,7 +173,7 @@ public class Factory {
         bullet.add(vc);
         //
 
-        bullet.add(new NetworkComponent("bullet", GameScreen.networkPlayerNum, bullet.getId(), p, m));
+        bullet.add(new NetworkComponent("player", playerNum, bullet.getId(), p, m));
 
         GameScreen.pooledEngine.addEntity(bullet);
         return bullet;

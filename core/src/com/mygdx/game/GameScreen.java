@@ -154,7 +154,7 @@ public class GameScreen implements Screen
 		
 		//create player entity
 		Vector2 pos = DungeonGenerator.getSpawnPosition();
-		player = Factory.createPlayer((int)pos.x, (int) pos.y);
+		player = Factory.createPlayer((int)pos.x, (int) pos.y, networkPlayerNum);
 		
 		//create weapon entity
 		weapon = Factory.createWeapon();
@@ -198,13 +198,13 @@ public class GameScreen implements Screen
 		//Spiral of death?
 		
 		//remove all components scheduled for removal AFTER physics step
-		while(!toBeDeleted.isEmpty())
+		/*while(!toBeDeleted.isEmpty())
 		{
 			Entity e = toBeDeleted.remove();
 			world.destroyBody(e.getComponent(MovementComponent.class).body);
 			pooledEngine.removeEntity(e);
 			
-		}
+		}*/
 
 	}
 	public void resize(int width, int height)

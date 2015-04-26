@@ -84,25 +84,38 @@ public class NetworkClient extends Thread {
 				catch (Exception e) {System.out.println(e.getMessage());}
 
 				if (o.getClass() == HashSet.class) {
-					System.out.println("Receiving HashSet");
+					System.out.println("Receiving HashSet (" + ((HashSet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
 					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>)o) {
-						if (GameScreen.allEntities.contains(entity)) {
+						System.out.println("Test");
+						boolean entityExists = false;
+						/*for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
+		            			//Entity exists, so replace its values
+		            			GameScreen.allEntities.remove(entity2);
+		            			entityExists = true;
+		            		}
+		            	}*/
+						
+						if (entityExists) {
 							//Update the entity
 						}
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
 								//Factory.createPlayer(((Float) entity.get("xPos")).intValue(), ((Float) entity.get("yPos")).intValue());
-								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f);
+								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f, (Integer)entity.get("playerNum"));
 							}
 						}
-						GameScreen.allEntities.remove(entity);
-						GameScreen.allEntities.add(entity);
+						synchronized(GameScreen.allEntities) {
+							GameScreen.allEntities.add(entity);
+						}
 					}
-					
-					HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
-					oos.writeObject(sendData);
+					synchronized(GameScreen.myEntities) {
+						HashSet<HashMap<String, Object>> sendData = (HashSet<HashMap<String, Object>>) GameScreen.myEntities.clone();
+						oos.writeObject(sendData);
+					}
+					//oos.writeObject(GameScreen.myEntities);
 					oos.flush();
 					oos.reset();
 				}
