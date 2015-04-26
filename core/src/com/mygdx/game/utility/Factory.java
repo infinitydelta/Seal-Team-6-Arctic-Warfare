@@ -21,7 +21,7 @@ import com.mygdx.game.components.NetworkComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
->>>>>>> origin/master
+
 
 /**
  * Created by KS on 4/24/2015.

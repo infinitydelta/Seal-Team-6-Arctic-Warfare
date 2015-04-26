@@ -24,11 +24,11 @@ public class MyContactListener implements ContactListener {
         if (etA.type == ('b') && etB.type == 'w')
         {
             //contact.getFixtureB().getBody().setActive(false);
-        	GameScreen.toBeDeleted.add(etA.e);
+        	//GameScreen.toBeDeleted.add(etA.e);
         }
         if(etB.type == 'b' && etA.type == 'w')
         {
-        	GameScreen.toBeDeleted.add(etB.e);
+        	//GameScreen.toBeDeleted.add(etB.e);
         }
     }
 
