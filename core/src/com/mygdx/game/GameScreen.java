@@ -101,15 +101,13 @@ public class GameScreen implements Screen
 	
 	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
     public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
-    public static boolean myEntitiesLock = false;
-    public static boolean allEntitiesLock = false;
 
 
 	float deltatimesink;
 	static final float physicsTimeStep = 1/60f;
 
 	public boolean initialized = false;
-		
+	
 	
 	public GameScreen(boolean host, String ip, int port)
 	{
