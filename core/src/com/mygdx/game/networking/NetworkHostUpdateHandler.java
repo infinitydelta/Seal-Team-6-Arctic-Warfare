@@ -51,7 +51,7 @@ public class NetworkHostUpdateHandler extends Thread {
 						
 						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
-		            			GameScreen.allEntities.remove(entity2);
+		            			entity2 = entity;
 		            			entityExists = true;
 		            		}
 		            	}
@@ -61,16 +61,15 @@ public class NetworkHostUpdateHandler extends Thread {
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
-								Factory.createNetworkPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
+								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
 							}
 							else if (entity.get("type").equals("bullet")) {
 								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"));
 							}
+							GameScreen.allEntities.add(entity);
 						}
-						GameScreen.allEntities.add(entity);
 					}
 					oos.writeObject(GameScreen.allEntities);
-					//oos.writeObject(GameScreen.allEntities);
 					oos.flush();
 					oos.reset();
 					//System.out.println("Receiving string from " + socket.getRemoteAddress() + ":" + (String)o);

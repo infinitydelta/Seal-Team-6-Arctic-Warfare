@@ -53,7 +53,7 @@ public class NetworkSystem extends IteratingSystem {
     		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
         		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
         			myEntity = true;
-        			GameScreen.myEntities.remove(entity2);
+        			entity2 = newEntityData;
         		}
         	}
     		GameScreen.myEntities.add(newEntityData);
@@ -63,7 +63,10 @@ public class NetworkSystem extends IteratingSystem {
         	System.out.println("not my entity");
         	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-        			System.out.println(network.type);
+        			//System.out.println(network.type);
+        			network.type = (String)entity2.get("Type");
+        			network.playerNum = (Integer)entity2.get("playerNum");
+        			network.ownerID = (Long)entity2.get("ownerID");
         			pos.x = (Float)entity2.get("xPos");
         			pos.y = (Float)entity2.get("yPos");
         			move.xVel = (Float)entity2.get("xVel");
@@ -75,10 +78,9 @@ public class NetworkSystem extends IteratingSystem {
         }
     	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
     		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-    			GameScreen.allEntities.remove(entity2);
+    			entity2 = newEntityData;
     		}
     	}
-    	GameScreen.allEntities.add(newEntityData);
         if (GameScreen.networkPlayerNum != 0) {
 	        //System.out.println("All ents: " + GameScreen.allEntities.toString());
 	        //System.out.println("My ents: " + GameScreen.myEntities.toString());
