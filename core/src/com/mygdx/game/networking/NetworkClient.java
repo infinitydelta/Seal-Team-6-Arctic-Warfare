@@ -97,12 +97,10 @@ public class NetworkClient extends Thread {
 		            		}
 		            	}
 						
-						if (entityExists) {
-							//Update the entity
-						}
-						else {
+						if (!entityExists) {
 							//Create the entity
-							/*if (entity.get("type").equals("player")) {
+							System.out.println("Attempting spawn");
+							if (entity.get("type").equals("player")) {
 								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 							}
 							else if (entity.get("type").equals("bullet")) {
@@ -110,7 +108,8 @@ public class NetworkClient extends Thread {
 							}
 							else if (entity.get("type").equals("seal")) {
 								Factory.createSeal((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
-							}*/
+							}
+							System.out.println("Spawn success");
 						}
 					}
 					
@@ -120,7 +119,15 @@ public class NetworkClient extends Thread {
 					oos.reset();
 				}
 				else if (o.getClass() == String.class) {
-					System.out.println("Receiving string: " + (String)o);
+					//System.out.println("Receiving string: " + (String)o);
+					
+					//Run NetworkSystem here
+					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
+					
+					System.out.println(GameScreen.myEntities);
+					oos.writeObject(GameScreen.myEntities);
+					oos.flush();
+					oos.reset();
 				}
 				else {
 					System.out.println("Receiving other datatype:" + o.toString());

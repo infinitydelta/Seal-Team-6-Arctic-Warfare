@@ -1,5 +1,7 @@
 package com.mygdx.game.utility;
 
+import javafx.scene.shape.Line;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -10,17 +12,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
-
 import com.mygdx.game.LoginScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.*;
-
-import com.mygdx.game.components.CollisionComponent;
-import com.mygdx.game.components.MovementComponent;
-import com.mygdx.game.components.NetworkComponent;
-import com.mygdx.game.components.PlayerComponent;
-import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.components.VisualComponent;
 
 
 /**
@@ -267,11 +261,10 @@ public class Factory {
         rectangle.setAsBox(.2f, .1f);
         CircleShape circle = new CircleShape();
         circle.setRadius(.2f);
-        
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');	//DANGER LINE CANT EVEN CROSS
         MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
         bullet.add(m);
         //add visual
@@ -286,7 +279,6 @@ public class Factory {
         	id = bullet.getId();
         }
         bullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
-
         GameScreen.pooledEngine.addEntity(bullet);
         return bullet;
         //rectangle.dispose();

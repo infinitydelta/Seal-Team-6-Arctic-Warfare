@@ -72,13 +72,6 @@ public class NetworkSystem extends IteratingSystem {
 	                    }
 	                    move.xVel = (Float)entity2.get("xVel");
 	                    move.yVel = (Float)entity2.get("yVel");
-	                    //move.updatePosition(pos.x, pos.y);
-	
-	                    //move.body.setTransform((Float)entity2.get("xPos"), (Float)entity2.get("yPos"), 0);
-	                    //move.body.getPosition().set(new Vector2(pos.x, pos.y));
-	                    //System.out.println("x: " + pos.x + ", y: " + pos.y);
-	                    //System.out.println("body pos: " + move.body.getPosition());
-	
 	        		}
 	        	}
 	        	//Update each entity with networkComponent with its corresponding allEntities value
@@ -90,6 +83,8 @@ public class NetworkSystem extends IteratingSystem {
 	    		}
 	    	}
 	    	GameScreen.allEntities.add(newEntityData);
+	    	//Unconditionally replaces this entity in allEntities
+	    	
 	        /*if (GameScreen.networkPlayerNum == 0) {
 		        System.out.println("All ents: " + GameScreen.allEntities.size());
 		        System.out.println("My ents: " + GameScreen.myEntities.size());
