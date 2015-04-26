@@ -99,17 +99,19 @@ public class NetworkClient extends Thread {
 						
 						if (!entityExists) {
 							//Create the entity
-							System.out.println("Attempting spawn");
-							if (entity.get("type").equals("player")) {
-								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
+							synchronized (GameScreen.world) {
+								System.out.println("Attempting spawn");
+								if (entity.get("type").equals("player")) {
+									Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
+								}
+								else if (entity.get("type").equals("bullet")) {
+									Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
+								}
+								else if (entity.get("type").equals("seal")) {
+									Factory.createSeal((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
+								}
+								System.out.println("Spawn success");
 							}
-							else if (entity.get("type").equals("bullet")) {
-								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
-							}
-							else if (entity.get("type").equals("seal")) {
-								Factory.createSeal((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
-							}
-							System.out.println("Spawn success");
 						}
 					}
 					
