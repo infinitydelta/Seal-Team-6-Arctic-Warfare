@@ -93,8 +93,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
         }
         movement.body.setLinearVelocity(movement.xVel, movement.yVel);
-        if (!moveY && !moveX) visual.setAnimation(Factory.idleAnmation);
-        else visual.setAnimation(Factory.runAnimation);
+        if (!moveY && !moveX) visual.setAnimation(Factory.penguin_idle_anim);
+        else visual.setAnimation(Factory.penguin_walk_anim);
 
         weaponPosition.x = position.x;
         weaponPosition.y = position.y;

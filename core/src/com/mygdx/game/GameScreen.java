@@ -80,12 +80,13 @@ public class GameScreen implements Screen
 	
 	ArrayList<Entity> map;
 
-	NetworkHost networkHost;
+	public NetworkHost networkHost;
 
-	NetworkClient networkClient;
+	public NetworkClient networkClient;
 	
 	public static Queue<Entity> toBeDeleted;
 	
+	public int networkPlayerNum;
 
 
 	float deltatimesink;
@@ -124,7 +125,11 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
+		pooledEngine.addSystem(new NetworkSystem());
+
 		toBeDeleted = new LinkedList<Entity>();
+		
+
 		
 		
 		
@@ -139,16 +144,13 @@ public class GameScreen implements Screen
 			//create player entity
 			player = Factory.createPlayer((int)pos.x, (int) pos.y);
 
-			/*
 			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
 			newEntityData.put("Type", "Player");
 			newEntityData.put("Owner", "host");
 			newEntityData.put("OwnersID", player.getId());
-			newEntityData.put("X", 0);
-			newEntityData.put("Y", 0);
-			newEntityData.put("Z", 0);
-			networkHost.entities.put(newEntityData);
-			*/
+			newEntityData.put("X", (int)pos.x);
+			newEntityData.put("Y", (int)pos.y);
+			networkHost.entities.add(newEntityData);
 			
 			
 			//create weapon entity
@@ -180,9 +182,10 @@ public class GameScreen implements Screen
 
 		stage.draw(); //ui
 
-		debugRenderer.render(world, camera.combined);
-		
+		//debugRenderer.render(world, camera.combined);
+		world.step(delta, 6, 2);
 		//Find number of physics steps to simulate
+		/*
 		deltatimesink += delta;
 		int numStepsToSim = 0;
 		while(deltatimesink > physicsTimeStep)
@@ -194,6 +197,7 @@ public class GameScreen implements Screen
 		{
 			world.step(1/60f, 6, 2); //physics simulation of 1/60th of a second
 		}
+		*/
 		//Temporal Aliasing?
 		//Spiral of death?
 		

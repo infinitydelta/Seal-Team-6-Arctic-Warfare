@@ -8,8 +8,10 @@ import com.badlogic.gdx.utils.Pool;
  */
 public class AIControllerComponent extends Component implements Pool.Poolable {
     static public int h[][];
-    public int xIndex;
-    public int yIndex;
+    public Integer xIndex; //position indices
+    public Integer yIndex;
+    public Integer xTarIndex; //target position indices
+    public Integer yTarIndex;
 
     public int radius;
     public boolean active = false;

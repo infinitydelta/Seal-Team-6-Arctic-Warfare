@@ -48,10 +48,10 @@ public class NetworkHostUpdateHandler extends Thread {
 						oos.flush();
 						oos.reset();
 					}
-					//System.out.println("Receving string from " + socket.getRemoteAddress() + ":" + (String)o);
+					//System.out.println("Receiving string from " + socket.getRemoteAddress() + ":" + (String)o);
 				}
 				else {
-					//System.out.println("Receving other datatype from " + socket.getRemoteAddress());
+					//System.out.println("Receiving other datatype from " + socket.getRemoteAddress());
 				}
 			}
 			catch(Exception e)

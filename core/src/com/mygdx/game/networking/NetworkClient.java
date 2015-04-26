@@ -2,7 +2,10 @@ package com.mygdx.game.networking;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
@@ -27,8 +30,9 @@ public class NetworkClient extends Thread {
 		System.out.println("CLIENT");
 		SocketHints socketHints = new SocketHints();
 		socketHints.connectTimeout = 10000; //10s?
-		
+
 		Socket socket = Gdx.net.newClientSocket(Protocol.TCP, gScreen.ip, gScreen.port, socketHints);
+		
 		System.out.println("CONNECTED");
 		try 
 		{
@@ -82,13 +86,19 @@ public class NetworkClient extends Thread {
 					o = ois.readObject();
 				}
 				catch (Exception e) {System.out.println(e.getMessage());}
-				System.out.println("Receiving data");
 				oos.writeObject("Ready");
 				oos.flush();
 				oos.reset();
 
 				if (o.getClass() == HashSet.class) {
 					System.out.println("Receiving HashSet");
+					for (HashMap<String, Object> entity : (HashSet<HashMap<String, Object>>) o) {
+						for (Map.Entry<String, Object> entry : entity.entrySet()) {
+							if (entity.get("Type").equals("Player")) {
+								
+							}
+						}
+					}
 				}
 				else if (o.getClass() == String.class) {
 					System.out.println("Receiving string: " + (String)o);
