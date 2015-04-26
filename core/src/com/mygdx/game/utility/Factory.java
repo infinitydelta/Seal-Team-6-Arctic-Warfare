@@ -1,9 +1,6 @@
 package com.mygdx.game.utility;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,9 +10,18 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
+
 import com.mygdx.game.LoginScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.*;
+
+import com.mygdx.game.components.CollisionComponent;
+import com.mygdx.game.components.MovementComponent;
+import com.mygdx.game.components.NetworkComponent;
+import com.mygdx.game.components.PlayerComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.VisualComponent;
+>>>>>>> origin/master
 
 /**
  * Created by KS on 4/24/2015.
@@ -46,6 +52,7 @@ public class Factory {
     public static Texture gun1;
     public static Texture playerbullet;
     public static Texture worldTiles;
+    public static Texture ammoElement;
 
     public static Animation runAnimation;
     public static Animation idleAnmation;
@@ -66,6 +73,7 @@ public class Factory {
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
+        ammoElement = new Texture("ammo.png");
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
         //animation

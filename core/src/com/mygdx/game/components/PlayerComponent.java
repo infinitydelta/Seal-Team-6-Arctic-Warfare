@@ -20,12 +20,15 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     public PositionComponent position;
     public MovementComponent movement;
     public VisualComponent visual;
+    public WeaponComponent weaponComponent;
 
     PositionComponent weaponPosition;
+    
 
     public boolean up = false, down = false, left = false, right = false;
     private boolean moveX = false, moveY = false;
     private float root2 = (float) Math.sqrt(2);
+    public int health;
 
 
     //gameplay values
@@ -47,6 +50,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     {
         this.weapon = weapon;
         weaponPosition = weapon.getComponent(PositionComponent.class);
+        weaponComponent = weapon.getComponent(WeaponComponent.class);
     }
 
     public void update()

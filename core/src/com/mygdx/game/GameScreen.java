@@ -43,6 +43,7 @@ import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.components.WeaponComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
@@ -139,6 +140,7 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
 		pooledEngine.addSystem(new NetworkSystem());
+		pooledEngine.addSystem(new WeaponSystem());
 
 		toBeDeleted = new LinkedList<Entity>();
 		
@@ -165,7 +167,7 @@ public class GameScreen implements Screen
 		
 		//create weapon entity
 		weapon = Factory.createWeapon();
-
+		weapon.add(new WeaponComponent(weapon));
 		player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
