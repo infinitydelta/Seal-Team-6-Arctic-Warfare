@@ -29,6 +29,7 @@ public class NetworkSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+    	try {
         PositionComponent pos = pm.get(entity);
         MovementComponent move = mm.get(entity);
         NetworkComponent network = nm.get(entity);
@@ -64,11 +65,11 @@ public class NetworkSystem extends IteratingSystem {
         			pos.y = (Float)entity2.get("yPos");
                     //while (GameScreen.world.isLocked()) {}
                     //if (!GameScreen.world.isLocked())
-                    /*synchronized (GameScreen.world)
+                    synchronized (GameScreen.world)
                     {
-                        //move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
+                        move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
 
-                    }*/
+                    }
                     move.xVel = (Float)entity2.get("xVel");
                     move.yVel = (Float)entity2.get("yVel");
                     //move.updatePosition(pos.x, pos.y);
@@ -93,5 +94,10 @@ public class NetworkSystem extends IteratingSystem {
 	        System.out.println("All ents: " + GameScreen.allEntities.size());
 	        System.out.println("My ents: " + GameScreen.myEntities.size());
         }*/
+    	}
+    	catch (Exception e) {
+    		System.out.println(e.getMessage());
+    		e.printStackTrace();
+    	}
     }
 }
