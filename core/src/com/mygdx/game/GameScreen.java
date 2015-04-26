@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -86,13 +87,18 @@ public class GameScreen implements Screen
 	
 	public static Queue<Entity> toBeDeleted;
 	
-	public int networkPlayerNum;
+	public static int networkPlayerNum;
+	
+	public static HashSet<HashMap<String, Object>> myEntities = new HashSet<HashMap<String, Object>>();
+    public static HashSet<HashMap<String, Object>> allEntities = new HashSet<HashMap<String, Object>>();
 
 
 	float deltatimesink;
 	static final float physicsTimeStep = 1/60f;
 
-
+	public boolean initialized = false;
+	
+	
 	public GameScreen(boolean host, String ip, int port)
 	{
 		this.host = host;
@@ -137,38 +143,28 @@ public class GameScreen implements Screen
 		{
 			networkHost = new NetworkHost(this);
 			
-			
-			
 			Vector2 pos = DungeonGenerator.getSpawnPosition();
-
-			//create player entity
-			player = Factory.createPlayer((int)pos.x, (int) pos.y);
-
-			HashMap<String, Object> newEntityData = new HashMap<String, Object>();
-			newEntityData.put("Type", "Player");
-			newEntityData.put("Owner", "host");
-			newEntityData.put("OwnersID", player.getId());
-			newEntityData.put("X", (int)pos.x);
-			newEntityData.put("Y", (int)pos.y);
-			networkHost.entities.add(newEntityData);
-			
-			
-			//create weapon entity
-			weapon = Factory.createWeapon();
-
-			player.getComponent(PlayerComponent.class).addWeapon(weapon);
 		}
 		else //client
 		{
 			networkClient = new NetworkClient(this);
 		}
 		
+		while (!initialized) {}
+		
+		//create player entity
+		Vector2 pos = DungeonGenerator.getSpawnPosition();
+		player = Factory.createPlayer((int)pos.x, (int) pos.y);
+		
+		//create weapon entity
+		weapon = Factory.createWeapon();
 
-		createBox2d();
-		deltatimesink = 0.0f;
+		player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
 		input = new InputHandler(camera, player); //handle input of 1 single player
 		
+		createBox2d();
+		deltatimesink = 0.0f;		
 	}
 	public void render(float delta)
 	{
@@ -270,7 +266,5 @@ public class GameScreen implements Screen
 	public static void worldViewSize(int size)
 	{
 		viewport.setWorldSize(size, size);
-	}
-
-	
+	}	
 }
