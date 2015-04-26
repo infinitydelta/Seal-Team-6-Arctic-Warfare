@@ -84,12 +84,25 @@ public class GameScreen implements Screen
 	NetworkClient networkClient;
 	
 	
+<<<<<<< HEAD
+=======
+	public static int networkPlayerNum;
+	
+	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
+    public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
+>>>>>>> parent of 35ae67b... Networking stuff
 
 
 	float deltatimesink;
 	static final float physicsTimeStep = 1/60f;
 
+<<<<<<< HEAD
 
+=======
+	public boolean initialized = false;
+	
+	
+>>>>>>> parent of 35ae67b... Networking stuff
 	public GameScreen(boolean host, String ip, int port)
 	{
 		this.host = host;
