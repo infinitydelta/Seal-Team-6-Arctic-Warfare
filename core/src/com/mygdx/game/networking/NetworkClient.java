@@ -2,6 +2,7 @@ package com.mygdx.game.networking;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -86,7 +87,11 @@ public class NetworkClient extends Thread {
 				catch (Exception e) {System.out.println(e.getMessage());}
 
 				if (o.getClass() == CopyOnWriteArraySet.class) {
-					//System.out.println("Receiving HashSet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
+					//System.out.println("Receiving (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
+					
+					//Run NetworkSystem here
+					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
+					
 					
 					for (ConcurrentHashMap<String, Object> entity : (CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>)o) {
 						boolean entityExists = false;
@@ -106,16 +111,17 @@ public class NetworkClient extends Thread {
 						}
 						else {
 							//Create the entity
-							/*if (entity.get("type").equals("player")) {
+							if (entity.get("type").equals("player")) {
 								//System.out.println("PENGUIN TIME");
 								//System.out.println(GameScreen.allEntities.toString());
 								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 							}
 							else if (entity.get("type").equals("bullet")) {
 								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
-							}*/
+							}
 						}
 					}
+					
 					//System.out.println("Sending CopyOnWriteArraySet (" + GameScreen.myEntities.size() + "):" + GameScreen.myEntities.toString());
 					while (GameScreen.myEntitiesLock) {}
 					//System.out.println(GameScreen.myEntities);

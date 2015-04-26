@@ -78,8 +78,6 @@ public class NetworkSystem extends IteratingSystem {
         			pos.y = (Float)entity2.get("yPos");
         			move.xVel = (Float)entity2.get("xVel");
         			move.xVel = (Float)entity2.get("yVel");
-        			pos.x += (float)RandomInt.Range(0, 50)/50f;
-        			pos.y += (float)RandomInt.Range(0, 50)/50f;
         		}
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value

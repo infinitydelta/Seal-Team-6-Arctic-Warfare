@@ -1,59 +1,48 @@
 package com.mygdx.game;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.net.ServerSocket;
-import com.badlogic.gdx.net.ServerSocketHints;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.components.CollisionComponent;
-import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.PlayerComponent;
 import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.components.WeaponComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
-import com.mygdx.game.networking.NetworkHostConnectHandler;
-import com.mygdx.game.systems.*;
+import com.mygdx.game.systems.AISystem;
+import com.mygdx.game.systems.InputHandler;
+import com.mygdx.game.systems.MovementSystem;
+import com.mygdx.game.systems.MyContactListener;
+import com.mygdx.game.systems.NetworkSystem;
+import com.mygdx.game.systems.PlayerSystem;
+import com.mygdx.game.systems.RenderingSystem;
+import com.mygdx.game.systems.WeaponSystem;
 import com.mygdx.game.utility.Factory;
-import com.mygdx.game.utility.RandomInt;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class GameScreen implements Screen
 {
@@ -103,6 +92,8 @@ public class GameScreen implements Screen
     public static CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> allEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
     public static boolean myEntitiesLock = false;
     public static boolean allEntitiesLock = false;
+    
+    public static NetworkSystem networkSystem = new NetworkSystem();
 
 
 	float deltatimesink;
@@ -143,13 +134,12 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
-		pooledEngine.addSystem(new NetworkSystem());
+		pooledEngine.addSystem(networkSystem);
 		pooledEngine.addSystem(new WeaponSystem());
 		if (host) {
 			pooledEngine.addSystem(new AISystem());
 			pooledEngine.getSystem(AISystem.class).setPlayers(pooledEngine);
 		}
-
 		toBeDeleted = new LinkedList<Entity>();
 		
 
