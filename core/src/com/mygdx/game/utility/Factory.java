@@ -207,7 +207,7 @@ public class Factory {
         seal.add(m);
 
         seal.add(new VisualComponent(seal_idle_anim));
-        seal.add(new AIControllerComponent());
+        seal.add(new AIControllerComponent(-0.5f));
         
         if (id == null) {
         	id = seal.getId();

@@ -12,8 +12,13 @@ public class AIControllerComponent extends Component implements Pool.Poolable {
     public Integer yIndex = new Integer(0);
     public Integer xTarIndex = new Integer(30); //target position indices
     public Integer yTarIndex = new Integer(30);
+    public Float speed = new Float(1);
     public float lastdx;
 
+    public AIControllerComponent(Float speed) {
+		this.speed = speed;
+	}
+    
     @Override
     public void reset() {
 
