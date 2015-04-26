@@ -47,39 +47,38 @@ public class NetworkSystem extends IteratingSystem {
         newEntityData.put("xVel", move.xVel);
         newEntityData.put("yVel", move.yVel);
         
+        boolean myEntity = false;
+        
         if (((Integer) newEntityData.get("playerNum")).equals(GameScreen.networkPlayerNum)) {
-        	synchronized(GameScreen.myEntities) {
-        		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
-            		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-            			GameScreen.myEntities.remove(entity2);
-            		}
-            	}
-        		GameScreen.myEntities.add(newEntityData);
-        		//Populate and replace myEntities with newEntities
-        	}
-        }
-        else {
-        	synchronized(GameScreen.allEntities) {
-	        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
-	        		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-	        			System.out.println(network.type);
-	        			pos.x = (Float)entity2.get("xPos");
-	        			pos.y = (Float)entity2.get("yPos");
-	        			move.xVel = (Float)entity2.get("xVel");
-	        			move.xVel = (Float)entity2.get("yVel");
-	        		}
-	        	}
-	        	//Update each entity with networkComponent with its corresponding allEntities value
-        	}
-        }
-        synchronized(GameScreen.allEntities) {
-        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+    		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
         		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-        			GameScreen.allEntities.remove(entity2);
+        			myEntity = true;
+        			GameScreen.myEntities.remove(entity2);
         		}
         	}
-        	GameScreen.allEntities.add(newEntityData);
+    		GameScreen.myEntities.add(newEntityData);
+    		//Populate and replace myEntities with newEntities
         }
+        if (!myEntity) {
+        	System.out.println("not my entity");
+        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+        		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
+        			System.out.println(network.type);
+        			pos.x = (Float)entity2.get("xPos");
+        			pos.y = (Float)entity2.get("yPos");
+        			move.xVel = (Float)entity2.get("xVel");
+        			move.xVel = (Float)entity2.get("yVel");
+        			pos.x = 0f;
+        		}
+        	}
+        	//Update each entity with networkComponent with its corresponding allEntities value
+        }
+    	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
+    		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
+    			GameScreen.allEntities.remove(entity2);
+    		}
+    	}
+    	GameScreen.allEntities.add(newEntityData);
         if (GameScreen.networkPlayerNum != 0) {
 	        //System.out.println("All ents: " + GameScreen.allEntities.toString());
 	        //System.out.println("My ents: " + GameScreen.myEntities.toString());

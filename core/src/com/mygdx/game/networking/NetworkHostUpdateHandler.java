@@ -61,17 +61,15 @@ public class NetworkHostUpdateHandler extends Thread {
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
-								//Factory.createPlayer((Integer) entity.get("xPos"), (Integer) entity.get("yPos"));
-								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f, (Integer) entity.get("playerNum"));
+								Factory.createNetworkPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
+							}
+							else if (entity.get("type").equals("bullet")) {
+								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"));
 							}
 						}
-						synchronized(GameScreen.allEntities) {
-							GameScreen.allEntities.add(entity);
-						}
+						GameScreen.allEntities.add(entity);
 					}
-					synchronized(GameScreen.allEntities) {
-						oos.writeObject(GameScreen.allEntities);
-					}
+					oos.writeObject(GameScreen.allEntities);
 					//oos.writeObject(GameScreen.allEntities);
 					oos.flush();
 					oos.reset();
@@ -80,9 +78,7 @@ public class NetworkHostUpdateHandler extends Thread {
 				else if (o.getClass() == String.class) {
 					if (((String)o).equals("Ready")) {
 						//System.out.println("Sending data to " + socket.getRemoteAddress());
-						synchronized(GameScreen.allEntities) {
-							oos.writeObject(GameScreen.allEntities);
-						}
+						oos.writeObject(GameScreen.allEntities);
 						//oos.writeObject(GameScreen.allEntities);
 						oos.flush();
 						oos.reset();

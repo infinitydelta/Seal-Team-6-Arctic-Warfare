@@ -85,7 +85,7 @@ public class NetworkClient extends Thread {
 				catch (Exception e) {System.out.println(e.getMessage());}
 
 				if (o.getClass() == CopyOnWriteArraySet.class) {
-					System.out.println("Receiving HashSet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
+					//System.out.println("Receiving HashSet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
 					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
@@ -103,17 +103,15 @@ public class NetworkClient extends Thread {
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
-								//Factory.createPlayer(((Float) entity.get("xPos")).intValue(), ((Float) entity.get("yPos")).intValue());
-								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), 0f, 0f, (Integer)entity.get("playerNum"));
+								Factory.createNetworkPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
+							}
+							else if (entity.get("type").equals("bullet")) {
+								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"));
 							}
 						}
-						synchronized(GameScreen.allEntities) {
-							GameScreen.allEntities.add(entity);
-						}
+						GameScreen.allEntities.add(entity);
 					}
-					synchronized(GameScreen.myEntities) {
-						oos.writeObject(GameScreen.myEntities);
-					}
+					oos.writeObject(GameScreen.myEntities);
 					//oos.writeObject(GameScreen.myEntities);
 					oos.flush();
 					oos.reset();

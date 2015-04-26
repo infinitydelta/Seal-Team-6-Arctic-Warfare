@@ -14,7 +14,7 @@ import com.mygdx.game.utility.EntityType;
 public class MyContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
-        System.out.println("contact began: " + contact.toString());
+        //System.out.println("contact began: " + contact.toString());
         //System.out.println("contact a: " + contact.getFixtureA().getBody().getUserData());
         //System.out.println("contact b: " + contact.getFixtureB().getBody().getUserData());
         //contact.getFixtureA().getUserData()
