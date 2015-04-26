@@ -183,6 +183,10 @@ public class GameScreen implements Screen
 		stage.addActor(playerUsername);
 
 		createBox2d();
+		//Entity play = Factory.createPlayer(pos.x - 1, pos.y, 1);
+		//Entity weaponz = Factory.createWeapon();
+		//weaponz.add(new WeaponComponent(weaponz));
+		//play.getComponent(PlayerComponent.class).addWeapon(weaponz);
 		deltatimesink = 0.0f;
 
 

@@ -122,7 +122,7 @@ public class Factory {
     }
 
 
-    public static Entity createPlayer(int x, int y, Integer playerNum)
+    public static Entity createPlayer(float x, float y, Integer playerNum)
 
     {
         Entity player = GameScreen.pooledEngine.createEntity();
@@ -164,8 +164,9 @@ public class Factory {
 
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         networkPlayer.add(m);
-
-        networkPlayer.add(new VisualComponent(penguin_idle_anim));
+        TextureRegion b = new TextureRegion(playerbullet, 0, 0, 16, 16);
+        VisualComponent v = new VisualComponent(b);
+        networkPlayer.add(v);
 
         networkPlayer.add(new NetworkComponent("player", GameScreen.networkPlayerNum, networkPlayer.getId(), p, m));
 

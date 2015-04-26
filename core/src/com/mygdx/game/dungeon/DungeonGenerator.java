@@ -418,6 +418,17 @@ public class DungeonGenerator {
         //draw wall tiles around rooms by looping through each tile of map and seeing if it's ground
         //if it is, surround with walls
         //can instantiate here and add to room gameobject if want to
+        for (int i = -20; i < mapSize + 20; i++)
+        {
+            for (int j = - 20; j < mapSize + 20; j++)
+            {
+                if (i < 1 || i >= mapSize-1 || j < 1 || j >= mapSize-1)
+                {
+                    Factory.createFakeWall(i, j);
+                }
+            }
+        }
+
         for (int x = 1; x < mapSize-1; x++)
         {
             for (int y = 1; y < mapSize-1; y++)
