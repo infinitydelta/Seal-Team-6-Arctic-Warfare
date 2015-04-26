@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.GameScreen;
+import com.mygdx.game.MainGame;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.NetworkComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -60,15 +61,15 @@ public class NetworkSystem extends IteratingSystem {
     		//Populate and replace myEntities with newEntities
         }
         if (!myEntity) {
-        	System.out.println("not my entity");
         	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-        			System.out.println(network.type);
+        			network.type = (String)entity2.get("type");
+        			network.playerNum = (Integer)entity2.get("playerNum");
+        			network.ownerID = (Long)entity2.get("ownerID");
         			pos.x = (Float)entity2.get("xPos");
         			pos.y = (Float)entity2.get("yPos");
         			move.xVel = (Float)entity2.get("xVel");
         			move.xVel = (Float)entity2.get("yVel");
-        			pos.x = 0f;
         		}
         	}
         	//Update each entity with networkComponent with its corresponding allEntities value

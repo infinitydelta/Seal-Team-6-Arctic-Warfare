@@ -44,7 +44,7 @@ public class NetworkHostUpdateHandler extends Thread {
 			{
 				Object o = ois.readObject();
 				if (o.getClass() == CopyOnWriteArraySet.class) {
-					//System.out.println("Receiving hashset (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
+					System.out.println("Receiving CopyOnWriteArraySet (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
 					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
@@ -52,6 +52,7 @@ public class NetworkHostUpdateHandler extends Thread {
 						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
 		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
 		            			GameScreen.allEntities.remove(entity2);
+		            			GameScreen.allEntities.add(entity);
 		            			entityExists = true;
 		            		}
 		            	}
@@ -61,13 +62,14 @@ public class NetworkHostUpdateHandler extends Thread {
 						else {
 							//Create the entity
 							if (entity.get("type").equals("player")) {
-								Factory.createNetworkPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
+								System.out.println("PENGUIN TIME");
+								Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"));
 							}
 							else if (entity.get("type").equals("bullet")) {
 								Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"));
 							}
+							GameScreen.allEntities.add(entity);
 						}
-						GameScreen.allEntities.add(entity);
 					}
 					oos.writeObject(GameScreen.allEntities);
 					//oos.writeObject(GameScreen.allEntities);

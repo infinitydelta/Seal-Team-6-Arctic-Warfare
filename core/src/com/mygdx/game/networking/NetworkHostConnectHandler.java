@@ -23,7 +23,6 @@ public class NetworkHostConnectHandler extends Thread {
 			System.out.println("Waiting...");
 			Socket socket = networkHost.serverSocket.accept(null);
 			
-			//BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream())); //dont need anything from the other player yet
 			System.out.println("connected");
 			//Send the current state of the game as a starting point
 			System.out.println("Sending initial game state");
