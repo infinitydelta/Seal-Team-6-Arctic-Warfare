@@ -31,7 +31,7 @@ public class LoginScreen implements Screen{
 	Label passwordLabel;
 	TextField usernameField;
 	TextField passwordField;
-	boolean guest=false;
+	public static boolean guest=false;
 	Socket s;
 	public static String username;
 
@@ -86,7 +86,7 @@ public class LoginScreen implements Screen{
 		guestButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event,float x, float y){
 				guest=true;
-				username = "ayy lmao";
+				username = "Guest";
 				game.setScreen(new MenuScreen(game));
 			}
 		});

@@ -181,7 +181,6 @@ public class GameScreen implements Screen
 		
 		//create weapon entity
 		weapon = Factory.createWeapon();
-		weapon.add(new WeaponComponent(weapon));
 		player.getComponent(PlayerComponent.class).addWeapon(weapon);
 		WeaponGUIComponent wgc = new WeaponGUIComponent(stage, weapon.getComponent(WeaponComponent.class).getMagSize());
 		weapon.add(wgc);
@@ -198,7 +197,7 @@ public class GameScreen implements Screen
 		System.out.println(v2);
 		camera.project(v2);
 		System.out.println(v2);
-		playerUsername.setPosition(100, 100);
+		playerUsername.setPosition(60, 700);
 		stage.addActor(playerUsername);
 
 		createBox2d();

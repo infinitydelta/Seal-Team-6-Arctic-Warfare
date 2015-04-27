@@ -128,7 +128,7 @@ public class InputHandler implements InputProcessor {
         //right click
         else if (button == 1)
         {
-            game.newLevel();
+            //game.newLevel();
         }
 
         return false;

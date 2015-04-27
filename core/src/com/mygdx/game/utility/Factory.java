@@ -344,10 +344,13 @@ public class Factory {
         TextureRegion weap = new TextureRegion(gun1, 0 * 32, 0 * 32, 32, 32);
         weapon.add(new PositionComponent(0, 0));
         weapon.add(new VisualComponent(weap));
+        int max = 20;
+        if(LoginScreen.guest)
+        {
+        	max = 10;
+        }
+        weapon.add(new WeaponComponent(weapon, max));
         GameScreen.pooledEngine.addEntity(weapon);
-
-        Entity e = GameScreen.pooledEngine.createEntity();
-        e.add(new PositionComponent(0, 0));
 
         return weapon;
 

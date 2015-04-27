@@ -32,14 +32,14 @@ public class WeaponComponent extends Component implements Pool.Poolable
     
     WeaponGUIComponent wgc;
 
-    public WeaponComponent(Entity entity)
+    public WeaponComponent(Entity entity, int max)
     {
         automatic = false;
         reloading = false;
         this.entity = entity;
         fireRate = 8;
         reloadtime = 1f;
-        magSize = 20;
+        magSize = max;
         currentclip = magSize;
         firetimer = 0;
         reloadtimer = 0;
