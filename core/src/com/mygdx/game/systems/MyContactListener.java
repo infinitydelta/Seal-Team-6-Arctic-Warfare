@@ -6,7 +6,11 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.GameScreen;
+
 import com.mygdx.game.components.AIControllerComponent;
+
+import com.mygdx.game.components.PositionComponent;
+
 import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.utility.EntityType;
 import com.mygdx.game.utility.Factory;
@@ -31,13 +35,11 @@ public class MyContactListener implements ContactListener {
         }
         if(etB.type == 'b' && etA.type == 'w')
         {
+        	VisualComponent vc = etB.e.getComponent(VisualComponent.class);
+        	PositionComponent pc = etB.e.getComponent(PositionComponent.class);
+        	float rot = vc.rotation;
+        	Factory.createBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etB.e);
-        	/*VisualComponent vc = etB.e.getComponent(VisualComponent.class);
-        	float rot = vc.sprite.getRotation();
-        	vc.animation = Factory.bulletDestroyAnim;
-        	vc.animated = true;
-        	vc.animation.setRotation(rot);
-        	*/
         }
         if (etA.type == ('b') && etB.type == 'e')
         {

@@ -448,7 +448,7 @@ public class DungeonGenerator {
             {
                 if (map[x][y] == 1) //ground
                 {
-                	int type = 0;
+                	int type = RandomInt.Range(5, 9);
                     if(map[x][y+1] == 0)
                     {
                     	if(map[x+1][y+1]==0)

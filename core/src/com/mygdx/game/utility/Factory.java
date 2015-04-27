@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -104,6 +105,7 @@ public class Factory {
         	bulletframes[i] = bulletTemp[0][i];
         }
         bulletDestroyAnim = new Animation(1/30f, bulletframes);
+        bulletDestroyAnim.setPlayMode(PlayMode.NORMAL);
 
         //penguin animations
         TextureRegion[] penguinIdleFrames = new TextureRegion[5];
@@ -295,7 +297,8 @@ public class Factory {
         //add visual
         TextureRegion b = new TextureRegion(playerbullet, 0, 0, 16, 16);
         VisualComponent vc = new VisualComponent(b);
-        vc.sprite.setRotation((float) Math.toDegrees(angle));
+
+        vc.rotation = ((float)Math.toDegrees(angle));
         //vc.sprite.setScale(.8f);
         bullet.add(vc);
         //
@@ -332,6 +335,18 @@ public class Factory {
         	break;
         case 4:
         	t = new TextureRegion(Factory.worldTiles, 0, 1*32, 32, 32);
+        	break;
+        case 5:
+        	t = new TextureRegion(Factory.worldTiles, 0, 0, 32, 32);
+        	break;
+        case 6:
+        	t = new TextureRegion(Factory.worldTiles, 4*32, 0, 32, 32);
+        	break;
+        case 7:
+        	t = new TextureRegion(Factory.worldTiles, 1*32, 1*32, 32, 32);
+        	break;
+        case 8:
+        	t = new TextureRegion(Factory.worldTiles, 2*32, 1*32, 32, 32);
         	break;
         default:
         	t = new TextureRegion(Factory.worldTiles, 0, 0, 32, 32);
@@ -423,6 +438,20 @@ public class Factory {
         GameScreen.pooledEngine.addEntity(wall);
 
         return wall;
+    }
+    public static Entity createBulletDestroyed(float x, float y, float rotation)
+    {
+    	Entity bulletDestroyed = new Entity();
+    	
+    	PositionComponent p = new PositionComponent(x, y);
+    	bulletDestroyed.add(p);
+    	
+    	VisualComponent vc = new VisualComponent(Factory.bulletDestroyAnim);
+    	vc.animated = true;
+    	vc.rotation = rotation;
+    	
+    	
+    	return bulletDestroyed;
     }
 
 

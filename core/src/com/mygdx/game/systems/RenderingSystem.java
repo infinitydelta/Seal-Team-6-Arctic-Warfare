@@ -75,6 +75,7 @@ public class RenderingSystem extends IteratingSystem {
             }
             if (visual.sprite != null) {
                 visual.sprite.setPosition(position.x, position.y);
+                visual.sprite.setRotation(visual.rotation);
                 visual.sprite.draw(spriteBatch);
             }
 

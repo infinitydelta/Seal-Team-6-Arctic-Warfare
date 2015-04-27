@@ -32,6 +32,7 @@ public class AISystem extends IteratingSystem {
 
 
     private ImmutableArray<Entity> players;
+    private ImmutableArray<Entity> bullets;
 
     public AISystem() {
         super(Family.getFor(AIControllerComponent.class, PositionComponent.class, MovementComponent.class));
@@ -72,57 +73,62 @@ public class AISystem extends IteratingSystem {
         MovementComponent collision = cm.get(entity);
         VisualComponent visual = vm.get(entity);
 
-        timeElapsed+=deltaTime;
-        if(timeElapsed>4) {
+        timeElapsed += deltaTime;
+        if (timeElapsed > 4) {
             timeElapsed = 0;
             ai.randWalk = !ai.randWalk;
-            float xr = ((float)Math.random()*ai.speed*4)-ai.speed*2;
-            float yr = ((float)Math.random()*ai.speed*4)-ai.speed*2;
-            dir.set(xr,yr);
+            Random rand = new Random((long) position.y);
+            float xr = (rand.nextFloat() * ai.speed * 4) - ai.speed * 2;
+            float yr = (rand.nextFloat() * ai.speed * 4) - ai.speed * 2;
+            dir.set(xr, yr);
         }
+        if (!ai.dead){
+            for (int i = 0; i < players.size(); i++) {
+                float px = players.get(i).getComponent(PositionComponent.class).x;
+                float py = players.get(i).getComponent(PositionComponent.class).y;
+                ai.xIndex = (int) position.x;
+                ai.yIndex = (int) position.y;
+                float dx = px - position.x;
+                float dy = py - position.y;
+                if (dx * dx + dy * dy < 50) {
+                    int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
+                    //System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
+                    if (fear < 10 && players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer == 0) {
+                        ai.mode = false;
+                    }
+                    visual.setAnimation(Factory.seal_walk_anim);
+                    ai.xTarIndex = (int) px;
+                    ai.yTarIndex = (int) py;
 
-        for(int i=0; i<players.size(); i++){
-            float px = players.get(i).getComponent(PositionComponent.class).x;
-            float py = players.get(i).getComponent(PositionComponent.class).y;
-            ai.xIndex = (int) position.x;
-            ai.yIndex = (int) position.y;
-            float dx=px-position.x;
-            float dy=py-position.y;
-            if(dx*dx+dy*dy < 50){
-                int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
-                //System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
-                if(fear < 10 && players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer == 0){
-                    ai.mode = false;
-                }
-                visual.setAnimation(Factory.seal_walk_anim);
-                ai.xTarIndex = (int)px;
-                ai.yTarIndex = (int)py;
-
-                    if(dx>0) {
+                    if (dx > 0) {
                         if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
-                    }else{
+                    } else {
                         if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
                     }
-                if(!ai.mode) {
-                    dir.set(ai.speed * dx, ai.speed * dy);
-                }else{
-                    dir.set(-ai.speed * dx, -ai.speed * dy);
-                }
-                collision.body.setLinearVelocity(dir);
-            }else{
-                if(!ai.randWalk) {
-                    collision.body.setLinearVelocity(0, 0);
-                    visual.setAnimation(Factory.seal_idle_anim);
-                }else{
+                    if (!ai.mode) {
+                        dir.set(ai.speed * dx, ai.speed * dy);
+                    } else {
+                        dir.set(-ai.speed * dx, -ai.speed * dy);
+                    }
                     collision.body.setLinearVelocity(dir);
-                    visual.setAnimation(Factory.seal_walk_anim);
+                } else {
+                    if (!ai.randWalk) {
+                        collision.body.setLinearVelocity(0, 0);
+                        visual.setAnimation(Factory.seal_idle_anim);
+                    } else {
+                        collision.body.setLinearVelocity(dir);
+                        visual.setAnimation(Factory.seal_walk_anim);
+                    }
                 }
+                ai.lastdx = dx;
             }
-            ai.lastdx = dx;
+    }else{
+            if(ai.lastDead != ai.dead) {
+                visual.setAnimation(Factory.seal_die_anim);
+            }
         }
 
-
-
+        ai.lastDead = ai.dead;
     }
 
 
@@ -222,4 +228,6 @@ public class AISystem extends IteratingSystem {
     public void setPlayers(Engine engine){
         players = engine.getEntitiesFor(Family.getFor(PlayerComponent.class));
     }
+
+
 }
