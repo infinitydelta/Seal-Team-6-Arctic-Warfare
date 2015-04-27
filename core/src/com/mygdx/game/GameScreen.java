@@ -279,6 +279,7 @@ public class GameScreen implements Screen
 				synchronized (GameScreen.world)
 				{
 					world.destroyBody(e.getComponent(MovementComponent.class).body);
+					pooledEngine.removeEntity(e);
 				}
 				
 				//e.getComponent(MovementComponent.class).body.setUserData(null);
@@ -286,7 +287,7 @@ public class GameScreen implements Screen
 			} catch (Exception ex) {
 				//System.out.println("deletion exception: " + ex.getMessage());
 			} finally {
-				pooledEngine.removeEntity(e);
+				//pooledEngine.removeEntity(e);
 			}
 			//world.destroyBody(e.getComponent(MovementComponent.class).body);
 			//pooledEngine.removeEntity(e);
