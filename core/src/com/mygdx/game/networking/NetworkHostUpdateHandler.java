@@ -41,7 +41,6 @@ public class NetworkHostUpdateHandler extends Thread {
 			{
 				Object o = ois.readObject();
 				if (o.getClass() == CopyOnWriteArraySet.class) {
-					
 					//System.out.println("Receiving (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
 					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
@@ -79,7 +78,7 @@ public class NetworkHostUpdateHandler extends Thread {
 					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 				}
 				else if (o.getClass() == String.class) {
-					GameScreen.networkSystem.update(0f);
+					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 					
 					System.out.println(GameScreen.allEntities);
 					oos.writeObject(GameScreen.allEntities);
