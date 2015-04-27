@@ -188,7 +188,7 @@ public class GameScreen implements Screen
 		weapon.add(wgc);
 		weapon.getComponent(WeaponComponent.class).setGUIComponent(wgc);
 		player.add(new HealthGUIComponent(stage, player.getComponent(PlayerComponent.class).maxHealth));
-		player.getComponent(PlayerComponent.class).takeDamage(4);
+		//player.getComponent(PlayerComponent.class).takeDamage(4);
 
 		input = new InputHandler(this, camera, player); //handle input of 1 single player
 
