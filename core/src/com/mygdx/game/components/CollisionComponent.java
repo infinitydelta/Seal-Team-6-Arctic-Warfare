@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.game.GameScreen;
 import com.mygdx.game.utility.EntityType;
 
 /**
@@ -72,6 +73,7 @@ public class CollisionComponent extends Component implements Pool.Poolable {
     */
     @Override
     public void reset() {
+        //GameScreen.world.destroyBody(body);
         body = null;
         fixture = null;
     }

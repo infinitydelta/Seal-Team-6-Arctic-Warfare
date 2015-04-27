@@ -354,6 +354,7 @@ public class Factory {
         }
         e.add(new VisualComponent(t));
         GameScreen.pooledEngine.addEntity(e);
+        GameScreen.map.add(e);
         return e;
     }
 
@@ -365,6 +366,8 @@ public class Factory {
         TextureRegion t = new TextureRegion(Factory.worldTiles, 6*32, 1 * 32, 32, 32);
         e.add(new VisualComponent(t));
         GameScreen.pooledEngine.addEntity(e);
+        GameScreen.map.add(e);
+
         return e;
     }
 
@@ -378,7 +381,7 @@ public class Factory {
         square.setAsBox(.5f, .5f);
         short all = PLAYER_COL | PLAYER_PROJ_COL | ENEMY_COL | ENEMY_PROJ_COL;
         CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.StaticBody, square, WALL, all, p, wall, 'w');
-
+        wall.add(col);
         TextureRegion t;
         switch(type)
         {
@@ -436,6 +439,7 @@ public class Factory {
         }
         wall.add(new VisualComponent(t));
         GameScreen.pooledEngine.addEntity(wall);
+        GameScreen.map.add(wall);
 
         return wall;
     }

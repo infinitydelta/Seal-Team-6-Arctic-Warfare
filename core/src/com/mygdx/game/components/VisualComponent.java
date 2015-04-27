@@ -55,6 +55,7 @@ public class VisualComponent extends Component implements Pool.Poolable {
 
     @Override
     public void reset() {
+
         if (region != null)
         {
             region.getTexture().dispose();

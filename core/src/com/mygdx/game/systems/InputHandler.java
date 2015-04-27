@@ -27,7 +27,7 @@ import com.mygdx.game.utility.Factory;
 public class InputHandler implements InputProcessor {
 
     Camera camera;
-
+    GameScreen game;
 
     Entity player;
     //Cursor cursor;
@@ -40,9 +40,9 @@ public class InputHandler implements InputProcessor {
     VisualComponent weaponSprite;
 
 
-    public InputHandler(Camera camera, Entity player)
+    public InputHandler(GameScreen game, Camera camera, Entity player)
     {
-
+        this.game = game;
         this.camera = camera;
         this.player = player;
         //this.cursor = cursor;
@@ -119,9 +119,17 @@ public class InputHandler implements InputProcessor {
 
         //float angle = (float) Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f));
         //Factory.createBullet(playerPosition.x  , playerPosition.y, angle, 30f);
-
-        float angle = (float) (Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f)));
-        playerComponent.weaponComponent.fire(angle);
+        //left click
+        if (button == 0)
+        {
+            float angle = (float) (Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f)));
+            playerComponent.weaponComponent.fire(angle);
+        }
+        //right click
+        else if (button == 1)
+        {
+            game.newLevel();
+        }
 
         return false;
     }

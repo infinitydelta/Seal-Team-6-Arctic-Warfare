@@ -76,13 +76,14 @@ public class GameScreen implements Screen
 	public String ip;
 	boolean host;
 	
-	ArrayList<Entity> map;
+	public static ArrayList<Entity> map = new ArrayList<Entity>(DungeonGenerator.mapSize + 80);
 
 	public NetworkHost networkHost;
 
 	public NetworkClient networkClient;
 	
 	public static Queue<Entity> toBeDeleted;
+	//public static Entity[] map;
 	
 	public static int networkPlayerNum;
 	
@@ -182,7 +183,7 @@ public class GameScreen implements Screen
 		player.add(new HealthGUIComponent(stage, player.getComponent(PlayerComponent.class).maxHealth));
 		player.getComponent(PlayerComponent.class).takeDamage(4);
 
-		input = new InputHandler(camera, player); //handle input of 1 single player
+		input = new InputHandler(this, camera, player); //handle input of 1 single player
 
 		playerUsername = new Label(player.getComponent(PlayerComponent.class).name, uiSkin);
 		float xx = player.getComponent(PositionComponent.class).x;
@@ -337,6 +338,14 @@ public class GameScreen implements Screen
 		body.applyLinearImpulse(0, 1/60f, body.getPosition().x, body.getPosition().y, true);
 
 		rectangle.dispose();
+	}
+
+	public void newLevel()
+	{
+		for (Entity tile : map)
+		{
+			pooledEngine.removeEntity(tile);
+		}
 	}
 
 	public static void worldViewSize(int size)
