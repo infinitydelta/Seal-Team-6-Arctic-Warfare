@@ -55,7 +55,7 @@ public class MainGame extends Game {
 		menuScreen = new MenuScreen(this);
 		loginScreen = new LoginScreen(this);
 		//gameScreen = new GameScreen(this);
-		setScreen(menuScreen);
+		setScreen(loginScreen);
 
 	}
 

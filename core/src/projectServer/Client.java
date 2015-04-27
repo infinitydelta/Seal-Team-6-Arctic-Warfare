@@ -21,7 +21,7 @@ public class Client extends Thread {
 				oos.writeObject(temp);
 				oos.flush();
 				ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
-				boolean flag=(boolean)ois.readObject();
+				Boolean flag=(Boolean)ois.readObject();
 				if(flag){
 					System.out.println("Logged in");
 					break;

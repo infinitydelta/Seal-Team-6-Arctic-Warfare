@@ -227,7 +227,7 @@ public class GameScreen implements Screen
 		stage.act(delta);
 		stage.draw(); //ui
 
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 		synchronized (GameScreen.world)
 		{
 			world.step(delta, 6, 2);
@@ -259,11 +259,15 @@ public class GameScreen implements Screen
 			{
 				//e.removeAll();
 				//e.getComponent(MovementComponent.class).body.setActive(false);
-				world.destroyBody(e.getComponent(MovementComponent.class).body);
+				synchronized (GameScreen.world)
+				{
+					world.destroyBody(e.getComponent(MovementComponent.class).body);
+				}
+				
 				//e.getComponent(MovementComponent.class).body.setUserData(null);
 				//e.getComponent(MovementComponent.class).body = null;
 			} catch (Exception ex) {
-				System.out.println("deletion exception: " + ex.getMessage());
+				//System.out.println("deletion exception: " + ex.getMessage());
 			} finally {
 				pooledEngine.removeEntity(e);
 			}

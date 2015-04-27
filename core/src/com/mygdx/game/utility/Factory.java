@@ -277,7 +277,7 @@ public class Factory {
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');	//DANGER LINE CANT EVEN CROSS
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');
         MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
         bullet.add(m);
         //add visual
