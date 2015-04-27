@@ -1,7 +1,6 @@
 package com.mygdx.game.networking;
 
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -11,13 +10,12 @@ import com.badlogic.gdx.net.Socket;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.utility.Factory;
 
-public class NetworkHostUpdateHandler extends Thread {
+public class NetworkHostInput extends Thread {
 	NetworkHost networkHost;
 	Socket socket;
 	ObjectInputStream ois;
-	ObjectOutputStream oos;
 	
-	public NetworkHostUpdateHandler(NetworkHost networkHost, Socket socket, ObjectOutputStream oos) {
+	public NetworkHostInput(NetworkHost networkHost, Socket socket) {
 		this.networkHost = networkHost;
 		this.socket = socket;
 		try {
@@ -26,7 +24,6 @@ public class NetworkHostUpdateHandler extends Thread {
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		this.oos = oos;
 		
 		start();
 	}
@@ -68,24 +65,12 @@ public class NetworkHostUpdateHandler extends Thread {
 							}
 						}
 					}
-					//System.out.println(GameScreen.allEntities);
-					oos.writeObject(GameScreen.allEntities);
-					oos.flush();
-					oos.reset();
 					
 					//Run NetworkSystem here
 					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 				}
-				else if (o.getClass() == String.class) {
-					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
-					
-					System.out.println(GameScreen.allEntities);
-					oos.writeObject(GameScreen.allEntities);
-					oos.flush();
-					oos.reset();
-				}
 				else {
-					//System.out.println("Receiving other datatype from " + socket.getRemoteAddress());
+					System.out.println("Host receiving other datatype:" + o.toString());
 				}
 			}
 			catch(SocketException e)

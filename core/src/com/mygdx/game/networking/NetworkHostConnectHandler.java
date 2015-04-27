@@ -37,6 +37,8 @@ public class NetworkHostConnectHandler extends Thread {
 				oos.flush();
 				oos.reset();
 				NetworkHostUpdateHandler networkHostUpdateHandler = new NetworkHostUpdateHandler(networkHost, socket, oos);
+				//NetworkHostInput netHosInp = new NetworkHostInput(networkHost, socket);
+				//NetworkHostOutput netHosOut = new NetworkHostOutput(networkHost, socket, oos);
 			}
 			catch(Exception e)
 			{
