@@ -65,14 +65,21 @@ public class RenderingSystem extends IteratingSystem {
             if (visual.animated) //if visual component is animated
             {
                 visual.stateTime += deltaTime;
-                TextureRegion currentFrame = visual.animation.getKeyFrame(visual.stateTime, true);
-                boolean flip = visual.sprite.isFlipX();
-                visual.sprite = new Sprite(currentFrame);
-                visual.sprite.flip(flip, false);
+                if(visual.playOneShot && visual.animation.isAnimationFinished(visual.stateTime))
+                {
+                	
+                }
+                else
+                {
+                	TextureRegion currentFrame = visual.animation.getKeyFrame(visual.stateTime, true);
+                    boolean flip = visual.sprite.isFlipX();
+                    visual.sprite = new Sprite(currentFrame);
+                    visual.sprite.flip(flip, false);
 
-                visual.sprite.setSize (visual.sprite.getWidth()/visual.sprite.getHeight(), visual.sprite.getHeight()/visual.sprite.getHeight());
-                //spriteBatch.draw(currentFrame, position.x, position.y);
-                visual.stateTime %= 100000;
+                    visual.sprite.setSize (visual.sprite.getWidth()/visual.sprite.getHeight(), visual.sprite.getHeight()/visual.sprite.getHeight());
+                    //spriteBatch.draw(currentFrame, position.x, position.y);
+                    visual.stateTime %= 100000;
+				}
             }
             if (visual.sprite != null) {
                 visual.sprite.setPosition(position.x, position.y);
@@ -80,7 +87,7 @@ public class RenderingSystem extends IteratingSystem {
                 visual.sprite.setRotation(visual.rotation);
                 visual.sprite.draw(spriteBatch);
             }
-            if(visual.animated && visual.playOneShot)
+            if(visual.animated && visual.destroyAfterPlay)
         	{
         		
         		if(visual.animation.isAnimationFinished(visual.stateTime))

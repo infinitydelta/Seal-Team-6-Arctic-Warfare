@@ -14,6 +14,7 @@ import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.utility.Factory;
 import com.mygdx.game.utility.RandomInt;
 
+import java.security.spec.DSAGenParameterSpec;
 import java.util.*;
 
 /**
@@ -132,8 +133,14 @@ public class AISystem extends IteratingSystem {
             }
     }else{
             if(ai.lastDead != ai.dead) {
-                visual.setAnimation(Factory.seal_die_anim);
+                //visual.setAnimation(Factory.seal_die_anim);
+            	Entity ds = Factory.createDeadSeal(position.x, position.y);
+            	if(visual.sprite.isFlipX())
+            	{
+            		ds.getComponent(VisualComponent.class).sprite.setFlip(true, false);
+            	}
                 GameScreen.toBeDeleted.add(entity);
+                
             }
         }
 

@@ -449,7 +449,7 @@ public class Factory {
     	VisualComponent vc = new VisualComponent(Factory.bulletDestroyAnim);
     	vc.animated = true;
     	vc.rotation = rotation;
-    	vc.playOneShot = true;
+    	vc.destroyAfterPlay = true;
     	vc.stateTime = 0f;
     	vc.animation.setPlayMode(PlayMode.NORMAL);
     	vc.sprite.setOriginCenter();
@@ -457,6 +457,23 @@ public class Factory {
     	GameScreen.pooledEngine.addEntity(bulletDestroyed);
     	
     	return bulletDestroyed;
+    }
+    public static Entity createDeadSeal(float x, float y)
+    {
+    	Entity deadSeal = new Entity();
+    	
+    	PositionComponent p = new PositionComponent(x, y);
+    	deadSeal.add(p);
+    	
+    	VisualComponent vc = new VisualComponent(Factory.seal_die_anim);
+    	vc.animated = true;
+    	vc.playOneShot = true;
+    	vc.stateTime = 0f;
+    	vc.animation.setPlayMode(PlayMode.NORMAL);
+    	deadSeal.add(vc);
+    	
+    	GameScreen.pooledEngine.addEntity(deadSeal);
+    	return deadSeal;
     }
 
 

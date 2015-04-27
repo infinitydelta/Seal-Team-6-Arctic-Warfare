@@ -30,7 +30,10 @@ public class MyContactListener implements ContactListener {
 
         if (etA.type == ('b') && etB.type == 'w')
         {
-            //contact.getFixtureB().getBody().setActive(false);
+        	VisualComponent vc = etA.e.getComponent(VisualComponent.class);
+        	PositionComponent pc = etA.e.getComponent(PositionComponent.class);
+        	float rot = vc.rotation;
+        	Factory.createBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etA.e);
         }
         if(etB.type == 'b' && etA.type == 'w')
@@ -44,12 +47,24 @@ public class MyContactListener implements ContactListener {
         if (etA.type == ('b') && etB.type == 'e')
         {
            etB.e.getComponent(AIControllerComponent.class).health--;
-            GameScreen.toBeDeleted.add(etA.e);
+            //GameScreen.toBeDeleted.add(etA.e);
+            
+            VisualComponent vc = etA.e.getComponent(VisualComponent.class);
+        	PositionComponent pc = etA.e.getComponent(PositionComponent.class);
+        	float rot = vc.rotation;
+        	Factory.createBulletDestroyed(pc.x, pc.y, rot);
+        	GameScreen.toBeDeleted.add(etA.e);
         }
         if (etA.type == ('e') && etB.type == 'b')
         {
             etA.e.getComponent(AIControllerComponent.class).health--;
             GameScreen.toBeDeleted.add(etB.e);
+            
+            VisualComponent vc = etB.e.getComponent(VisualComponent.class);
+        	PositionComponent pc = etB.e.getComponent(PositionComponent.class);
+        	float rot = vc.rotation;
+        	Factory.createBulletDestroyed(pc.x, pc.y, rot);
+        	GameScreen.toBeDeleted.add(etB.e);
         }
     }
 
