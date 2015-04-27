@@ -90,7 +90,7 @@ public class AISystem extends IteratingSystem {
             float dy=py-position.y;
             if(dx*dx+dy*dy < 50){
                 int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
-                System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
+                //System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
                 if(fear < 10 && players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer == 0){
                     ai.mode = false;
                 }
