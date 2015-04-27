@@ -74,8 +74,8 @@ public class RenderingSystem extends IteratingSystem {
                 visual.stateTime %= 100000;
             }
             if (visual.sprite != null) {
+            	visual.sprite.setRotation(visual.rotation);
                 visual.sprite.setPosition(position.x, position.y);
-                visual.sprite.setRotation(visual.rotation);
                 visual.sprite.draw(spriteBatch);
             }
 

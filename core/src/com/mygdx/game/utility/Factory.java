@@ -449,7 +449,11 @@ public class Factory {
     	VisualComponent vc = new VisualComponent(Factory.bulletDestroyAnim);
     	vc.animated = true;
     	vc.rotation = rotation;
-    	
+    	vc.stateTime = 0f;
+    	vc.animation.setPlayMode(PlayMode.NORMAL);
+    	vc.sprite.setOriginCenter();
+    	bulletDestroyed.add(vc);
+    	GameScreen.pooledEngine.addEntity(bulletDestroyed);
     	
     	return bulletDestroyed;
     }
