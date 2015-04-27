@@ -14,20 +14,20 @@ public class WeaponComponent extends Component implements Pool.Poolable
 	Entity entity;
 
     //weapon properties
-    boolean automatic;
-    float fireRate; //shots/sec
-    int magSize;
-    float reloadtime;
-    int weight;
+    public boolean automatic;
+    public float fireRate; //shots/sec
+    public int magSize;
+    public float reloadtime;
+    public int weight;
     
-    float firetimer;
-    float reloadtimer;
-    boolean reloading;
-    int currentclip;
+    public float firetimer;
+    public float reloadtimer;
+    public boolean reloading;
+    public int currentclip;
 
     //bullet properties
-    float bulletVelocity;
-    float force;
+    public float bulletVelocity;
+    public float force;
     Entity bullet;
     
     WeaponGUIComponent wgc;

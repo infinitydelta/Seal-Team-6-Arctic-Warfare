@@ -11,6 +11,7 @@ import com.mygdx.game.utility.ComparableVector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.utility.Factory;
+import com.mygdx.game.utility.RandomInt;
 
 import java.util.*;
 
@@ -39,6 +40,8 @@ public class AISystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+
+
         /*
         if(timeElapsed>4) {
             timeElapsed=0;
@@ -69,6 +72,15 @@ public class AISystem extends IteratingSystem {
         MovementComponent collision = cm.get(entity);
         VisualComponent visual = vm.get(entity);
 
+        timeElapsed+=deltaTime;
+        if(timeElapsed>4) {
+            timeElapsed = 0;
+            ai.randWalk = !ai.randWalk;
+            float xr = ((float)Math.random()*ai.speed*4)-ai.speed*2;
+            float yr = ((float)Math.random()*ai.speed*4)-ai.speed*2;
+            dir.set(xr,yr);
+        }
+
         for(int i=0; i<players.size(); i++){
             float px = players.get(i).getComponent(PositionComponent.class).x;
             float py = players.get(i).getComponent(PositionComponent.class).y;
@@ -77,6 +89,11 @@ public class AISystem extends IteratingSystem {
             float dx=px-position.x;
             float dy=py-position.y;
             if(dx*dx+dy*dy < 50){
+                int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
+                System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
+                if(fear < 10 && players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer == 0){
+                    ai.mode = false;
+                }
                 visual.setAnimation(Factory.seal_walk_anim);
                 ai.xTarIndex = (int)px;
                 ai.yTarIndex = (int)py;
@@ -86,12 +103,20 @@ public class AISystem extends IteratingSystem {
                     }else{
                         if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
                     }
-
-                dir.set(ai.speed * dx, ai.speed * dy);
+                if(!ai.mode) {
+                    dir.set(ai.speed * dx, ai.speed * dy);
+                }else{
+                    dir.set(-ai.speed * dx, -ai.speed * dy);
+                }
                 collision.body.setLinearVelocity(dir);
             }else{
-                collision.body.setLinearVelocity(0,0);
-                visual.setAnimation(Factory.seal_idle_anim);
+                if(!ai.randWalk) {
+                    collision.body.setLinearVelocity(0, 0);
+                    visual.setAnimation(Factory.seal_idle_anim);
+                }else{
+                    collision.body.setLinearVelocity(dir);
+                    visual.setAnimation(Factory.seal_walk_anim);
+                }
             }
             ai.lastdx = dx;
         }
