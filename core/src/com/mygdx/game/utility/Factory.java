@@ -1,5 +1,7 @@
 package com.mygdx.game.utility;
 
+import java.util.ArrayList;
+
 import javafx.scene.shape.Line;
 
 import com.badlogic.ashley.core.Entity;
@@ -16,6 +18,7 @@ import com.mygdx.game.GameScreen;
 import com.mygdx.game.LoginScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.*;
+import com.mygdx.game.utility.RandomInt;
 
 
 /**
@@ -40,6 +43,29 @@ public class Factory {
     public static Animation penguin_idle_anim;
     public static Animation penguin_walk_anim;
 
+    public static Texture red_penguin_walk;
+    public static Texture red_penguin_idle;
+    public static Animation red_penguin_idle_anim;
+    public static Animation red_penguin_walk_anim;
+
+    public static Texture purple_penguin_walk;
+    public static Texture purple_penguin_idle;
+    public static Animation purple_penguin_idle_anim;
+    public static Animation purple_penguin_walk_anim;
+    
+    public static Texture orange_penguin_walk;
+    public static Texture  orange_penguin_idle;
+    public static Animation orange_penguin_idle_anim;
+    public static Animation orange_penguin_walk_anim;
+    
+    public static Texture green_penguin_walk;
+    public static Texture green_penguin_idle;
+    public static Animation green_penguin_idle_anim;
+    public static Animation green_penguin_walk_anim;
+    
+    public static ArrayList<Texture> penguin_textures;
+    public static ArrayList<Animation> penguin_animations;
+    public static ArrayList<Animation> penguin_walk_animations;
     
     public static Texture seal_walk;
     public static Texture seal_idle;
@@ -67,10 +93,12 @@ public class Factory {
 
     public static Sound expl19;
 
-
-
     public static void loadAssets()
     {
+    	penguin_animations = new ArrayList<Animation>();
+    	penguin_walk_animations = new ArrayList<Animation>();
+    	penguin_textures = new ArrayList<Texture>();
+    	
         //textures
         kenny = new Texture("p1_stand.png");
         bg_tile = new Texture("blacktile.png");
@@ -81,6 +109,7 @@ public class Factory {
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
+        penguin_textures.add(penguin_idle);
         seal_walk = new Texture("sealWalk.png");
         seal_idle = new Texture("sealIdle.png");
         seal_die = new Texture("sealDie.png");
@@ -89,6 +118,26 @@ public class Factory {
         hfront = new Texture("red.png");
         hback = new Texture("hback.png");
         bulletDestroy = new Texture("bulletdestroy.png");
+        
+        //colored pengus
+        red_penguin_walk = new Texture("redPenguinWalk.png");
+        red_penguin_idle = new Texture("redPenguinIdle.png");
+        penguin_textures.add(red_penguin_idle);
+
+        purple_penguin_walk = new Texture("purplePenguinWalk.png");
+        purple_penguin_idle = new Texture("purplePenguinIdle.png");
+        penguin_textures.add(purple_penguin_idle);
+        
+        orange_penguin_walk = new Texture("orangePenguinWalk.png");
+        orange_penguin_idle = new Texture("orangePenguinIdle.png");
+        penguin_textures.add(orange_penguin_idle);
+        
+        green_penguin_walk = new Texture("greenPenguinWalk.png");
+        green_penguin_idle = new Texture("greenPenguinIdle.png");
+        penguin_textures.add(green_penguin_idle);
+        
+        
+        
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
         //animation
@@ -108,21 +157,27 @@ public class Factory {
         bulletDestroyAnim.setPlayMode(PlayMode.NORMAL);
 
         //penguin animations
-        TextureRegion[] penguinIdleFrames = new TextureRegion[5];
-        TextureRegion[][] penguinTemp = TextureRegion.split(penguin_idle, 32, 32);
-        for (int i = 0; i < 5; i ++)
-        {
-            penguinIdleFrames[i] = penguinTemp[0][i];
-        }
-        penguin_idle_anim = new Animation(1/8f, penguinIdleFrames);
-
-        TextureRegion[] penguinWalkFrames = new TextureRegion[5];
-        TextureRegion[][] penguinWalkTemp = TextureRegion.split(penguin_walk, 32, 32);
-        for (int i = 0; i < 5; i ++)
-        {
-            penguinWalkFrames[i] = penguinWalkTemp[0][i];
-        }
-        penguin_walk_anim = new Animation(1/15f, penguinWalkFrames);
+        penguin_idle_anim = makePenguIdleAnim(penguin_idle);
+        penguin_animations.add(penguin_idle_anim);
+        red_penguin_idle_anim = makePenguIdleAnim(red_penguin_idle);
+        penguin_animations.add(red_penguin_idle_anim);
+        purple_penguin_idle_anim = makePenguIdleAnim(purple_penguin_idle);
+        penguin_animations.add(purple_penguin_idle_anim);
+        orange_penguin_idle_anim = makePenguIdleAnim(orange_penguin_idle);
+        penguin_animations.add(orange_penguin_idle_anim);
+        green_penguin_idle_anim = makePenguIdleAnim(green_penguin_idle);
+        penguin_animations.add(green_penguin_idle_anim);
+        
+        penguin_walk_anim = makePenguWalkAnim(penguin_walk);
+        penguin_walk_animations.add(penguin_walk_anim);
+        red_penguin_walk_anim = makePenguWalkAnim(red_penguin_walk);
+        penguin_walk_animations.add(red_penguin_walk_anim);
+        purple_penguin_walk_anim = makePenguWalkAnim(purple_penguin_walk);
+        penguin_walk_animations.add(purple_penguin_walk_anim);
+        orange_penguin_walk_anim = makePenguWalkAnim(orange_penguin_walk);
+        penguin_walk_animations.add(orange_penguin_walk_anim);
+        green_penguin_walk_anim = makePenguWalkAnim(green_penguin_walk);
+        penguin_walk_animations.add(green_penguin_walk_anim);
 
       //seel animations
         TextureRegion[] sealIdleFrames = new TextureRegion[5];
@@ -171,6 +226,26 @@ public class Factory {
         idleAnmation = new Animation(1/2f, idleFrames);
 
     }
+    
+    private static Animation makePenguIdleAnim(Texture pengu){
+    	TextureRegion[] penguinIdleFrames = new TextureRegion[5];
+        TextureRegion[][] penguinTemp = TextureRegion.split(pengu, 32, 32);
+        for (int i = 0; i < 5; i ++)
+        {
+            penguinIdleFrames[i] = penguinTemp[0][i];
+        }
+        return new Animation(1/8f, penguinIdleFrames);
+    }
+    
+    private static Animation makePenguWalkAnim(Texture pengu){
+    	TextureRegion[] penguinWalkFrames = new TextureRegion[5];
+        TextureRegion[][] penguinWalkTemp = TextureRegion.split(pengu, 32, 32);
+        for (int i = 0; i < 5; i ++)
+        {
+            penguinWalkFrames[i] = penguinWalkTemp[0][i];
+        }
+        return new Animation(1/15f, penguinWalkFrames);
+    }
 
 
     public static Entity createPlayer(float x, float y, Integer playerNum, Long id)
@@ -188,11 +263,10 @@ public class Factory {
 
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         player.add(m);
+        
+        player.add(new VisualComponent(penguin_animations.get(playerNum%5)));
 
-
-        player.add(new VisualComponent(penguin_idle_anim));
-
-        player.add(new PlayerComponent(LoginScreen.username, player));
+        player.add(new PlayerComponent(LoginScreen.username, player, playerNum%5));
         
         if (id == null) {
         	id = player.getId();
@@ -234,7 +308,7 @@ public class Factory {
         return seal;
     }
 
-    public static Entity createNetworkPlayer(float x, float y, Integer playerNum, Long id)
+    public static Entity createNetworkPlayer(float x, float y, Integer playerNum, Long id, int color)
     {
         Entity networkPlayer = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y);
@@ -249,8 +323,8 @@ public class Factory {
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
         networkPlayer.add(m);
 
-
-        TextureRegion b = new TextureRegion(penguin_idle, 0, 0, 32, 32);
+        
+        TextureRegion b = new TextureRegion(penguin_textures.get(color), 0, 0, 32, 32);
         networkPlayer.add(new VisualComponent(b));
 
         if (id == null) {

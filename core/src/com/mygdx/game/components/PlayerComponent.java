@@ -16,6 +16,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     public Entity weapon;
 
     public String name;
+    public int color;
 
     public PositionComponent position;
     public MovementComponent movement;
@@ -37,11 +38,12 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     float diagSpeed = speed/root2;
 
 
-    public PlayerComponent(String name, Entity player)
+    public PlayerComponent(String name, Entity player, int color)
     {
         this.name = name;
         System.out.println(name);
         this.player = player;
+        this.color = color;
         position = player.getComponent(PositionComponent.class);
         movement = player.getComponent(MovementComponent.class); //need movement instantiated
         visual = player.getComponent(VisualComponent.class);
@@ -102,8 +104,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
 
         }
         movement.body.setLinearVelocity(movement.xVel, movement.yVel);
-        if (!moveY && !moveX) visual.setAnimation(Factory.penguin_idle_anim);
-        else visual.setAnimation(Factory.penguin_walk_anim);
+        if (!moveY && !moveX) visual.setAnimation(Factory.penguin_animations.get(color));
+        else visual.setAnimation(Factory.penguin_walk_animations.get(color));
 
         if (weaponPosition != null)
         {
@@ -123,4 +125,5 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     	health = Math.max(0, health-amt);
     	player.getComponent(HealthGUIComponent.class).setValue(health);
     }
+    
 }
