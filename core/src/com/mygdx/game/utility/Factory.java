@@ -44,6 +44,8 @@ public class Factory {
     public static Texture seal_idle;
     public static Animation seal_idle_anim;
     public static Animation seal_walk_anim;
+    public static Texture seal_die;
+    public static Animation seal_die_anim;
 
 
     public static Texture whiteball;
@@ -80,6 +82,7 @@ public class Factory {
         penguin_idle = new Texture("penguinIdle.png");
         seal_walk = new Texture("sealWalk.png");
         seal_idle = new Texture("sealIdle.png");
+        seal_die = new Texture("sealDie.png");
         ammoElement = new Texture("ammo.png");
         heart = new Texture("heart.png");
         hfront = new Texture("red.png");
@@ -135,6 +138,15 @@ public class Factory {
             sealWalkFrames[i] = sealWalkTemp[0][i];
         }
         seal_walk_anim = new Animation(1/15f, sealWalkFrames);
+
+        TextureRegion[] sealDieFrames = new TextureRegion[5];
+        TextureRegion[][] dieTemp = TextureRegion.split(seal_die, 32, 32);
+        for (int i = 0; i < 5; i ++)
+        {
+            sealDieFrames[i] = dieTemp[0][i];
+        }
+        seal_die_anim = new Animation(1/8f, sealDieFrames);
+        seal_die_anim.setPlayMode(Animation.PlayMode.NORMAL);
         
         int index = 0;
         for (int i = 0; i < 1; i++) // column length, number of rows
@@ -283,7 +295,7 @@ public class Factory {
         //add visual
         TextureRegion b = new TextureRegion(playerbullet, 0, 0, 16, 16);
         VisualComponent vc = new VisualComponent(b);
-        vc.sprite.setRotation((float)Math.toDegrees(angle));
+        vc.sprite.setRotation((float) Math.toDegrees(angle));
         //vc.sprite.setScale(.8f);
         bullet.add(vc);
         //

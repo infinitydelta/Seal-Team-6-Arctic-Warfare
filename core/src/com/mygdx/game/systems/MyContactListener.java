@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.GameScreen;
+import com.mygdx.game.components.AIControllerComponent;
 import com.mygdx.game.components.VisualComponent;
 import com.mygdx.game.utility.EntityType;
 import com.mygdx.game.utility.Factory;
@@ -37,6 +38,16 @@ public class MyContactListener implements ContactListener {
         	vc.animated = true;
         	vc.animation.setRotation(rot);
         	*/
+        }
+        if (etA.type == ('b') && etB.type == 'e')
+        {
+           etB.e.getComponent(AIControllerComponent.class).dead = true;
+            GameScreen.toBeDeleted.add(etB.e);
+        }
+        if (etA.type == ('e') && etB.type == 'b')
+        {
+            etA.e.getComponent(AIControllerComponent.class).dead = true;
+            GameScreen.toBeDeleted.add(etA.e);
         }
     }
 
