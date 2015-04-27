@@ -104,7 +104,7 @@ public class Factory {
         {
         	bulletframes[i] = bulletTemp[0][i];
         }
-        bulletDestroyAnim = new Animation(1/30f, bulletframes);
+        bulletDestroyAnim = new Animation(1/60f, bulletframes);
         bulletDestroyAnim.setPlayMode(PlayMode.NORMAL);
 
         //penguin animations
@@ -449,6 +449,7 @@ public class Factory {
     	VisualComponent vc = new VisualComponent(Factory.bulletDestroyAnim);
     	vc.animated = true;
     	vc.rotation = rotation;
+    	vc.playOneShot = true;
     	vc.stateTime = 0f;
     	vc.animation.setPlayMode(PlayMode.NORMAL);
     	vc.sprite.setOriginCenter();

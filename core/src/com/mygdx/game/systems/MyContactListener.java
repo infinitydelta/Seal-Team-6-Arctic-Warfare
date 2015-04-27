@@ -39,8 +39,6 @@ public class MyContactListener implements ContactListener {
         	PositionComponent pc = etB.e.getComponent(PositionComponent.class);
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
-        	//Entity e = Factory.createSeal(pc.x, pc.y, 0, 1l);
-        	//e.getComponent(VisualComponent.class).rotation = rot;
         	GameScreen.toBeDeleted.add(etB.e);
         }
         if (etA.type == ('b') && etB.type == 'e')

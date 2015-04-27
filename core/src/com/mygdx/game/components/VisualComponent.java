@@ -16,6 +16,7 @@ public class VisualComponent extends Component implements Pool.Poolable {
     public Animation animation;
 
     public boolean animated = false;
+    public boolean playOneShot = false;
     public float stateTime = 0;
     public float rotation = 0;
 
