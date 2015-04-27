@@ -148,7 +148,7 @@ public class InputHandler implements InputProcessor {
         camera.unproject(worldCoordinates);
         //angle between mouse and player (weapon) pos
         float rotation = (float) Math.toDegrees(Math.atan2(worldCoordinates.y - (playerPosition.y + .5f), worldCoordinates.x - (playerPosition.x + .5f)));
-        weaponSprite.sprite.setRotation(rotation);
+        weaponSprite.rotation = (rotation);
         if(worldCoordinates.x > playerPosition.x)
         {
         	if(playerComponent.visual.sprite.isFlipX())
