@@ -257,106 +257,103 @@ public class Factory {
 
     {
         Entity player = GameScreen.pooledEngine.createEntity();
-        synchronized (GameScreen.world) {
-	        PositionComponent p = new PositionComponent(x, y);
-	        player.add(p);
-	
-	        //create a body for the player
-	        CircleShape circle = new CircleShape();
-	        circle.setRadius(.4f);
-	        short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
-	        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, player, 'p');
-	
-	        MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
-	        player.add(m);
-	        
-	        player.add(new VisualComponent(penguin_animations.get(playerNum%5)));
-	
-	        player.add(new PlayerComponent(LoginScreen.username, player, playerNum%5));
-	        
-	        if (id == null) {
-	        	id = player.getId();
-	        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
-	        	if (GameScreen.networkPlayerNum == 0) {
-	    			newEntData.put("type", "player");
-	    			newEntData.put("playerNum", playerNum);
-	    			newEntData.put("ownerID", id);
-	    			newEntData.put("xPos", x);
-	    			newEntData.put("yPos", y);
-	    			newEntData.put("xVel", 0f);
-	    			newEntData.put("yVel", 0f);
-	    			//GameScreen.allEntities.add(newEntData);
-	            }
-	            //GameScreen.myEntities.add(newEntData);
-	        }
-	        player.add(new NetworkComponent("player", playerNum, id, p, m));
-	
-	
-	        GameScreen.pooledEngine.addEntity(player);
-	        
-	        HashMap<String, Object> newEntData = new HashMap<String, Object>();
-			newEntData.put("type", "player");
-			newEntData.put("playerNum", playerNum);
-			newEntData.put("ownerID", id);
-			newEntData.put("xPos", x);
-			newEntData.put("yPos", y);
-			newEntData.put("xVel", 0f);
-			newEntData.put("yVel", 0f);
-			GameScreen.allEntities.add(newEntData);
+        PositionComponent p = new PositionComponent(x, y);
+        player.add(p);
+
+        //create a body for the player
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.4f);
+        short player_col = ENEMY_PROJ_COL | ENEMY_COL | WALL;
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_COL, player_col, p, player, 'p');
+
+        MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
+        player.add(m);
+        
+        player.add(new VisualComponent(penguin_animations.get(playerNum%5)));
+
+        player.add(new PlayerComponent(LoginScreen.username, player, playerNum%5));
+        
+        if (id == null) {
+        	id = player.getId();
+        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
+        	if (GameScreen.networkPlayerNum == 0) {
+    			newEntData.put("type", "player");
+    			newEntData.put("playerNum", playerNum);
+    			newEntData.put("ownerID", id);
+    			newEntData.put("xPos", x);
+    			newEntData.put("yPos", y);
+    			newEntData.put("xVel", 0f);
+    			newEntData.put("yVel", 0f);
+    			//GameScreen.allEntities.add(newEntData);
+            }
+            //GameScreen.myEntities.add(newEntData);
         }
+        player.add(new NetworkComponent("player", playerNum, id, p, m));
+
+
+        GameScreen.pooledEngine.addEntity(player);
+        
+        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+		newEntData.put("type", "player");
+		newEntData.put("playerNum", playerNum);
+		newEntData.put("ownerID", id);
+		newEntData.put("xPos", x);
+		newEntData.put("yPos", y);
+		newEntData.put("xVel", 0f);
+		newEntData.put("yVel", 0f);
+		GameScreen.allEntities.add(newEntData);
+
         return player;
     }
     
     public static Entity createSeal(float x, float y, Integer playerNum, Long id)
     {
         Entity seal = GameScreen.pooledEngine.createEntity();
-        synchronized (GameScreen.world) {
-	        PositionComponent p = new PositionComponent(x, y);
-	        seal.add(p);
-	
-	        //create a body for the seal
-	        CircleShape circle = new CircleShape();
-	        circle.setRadius(.4f);
-	        short seal_col = PLAYER_COL | PLAYER_PROJ_COL | WALL | ENEMY_COL;
-	        
-	        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, ENEMY_COL, seal_col, p, seal, 'e');
-	
-	        MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
-	        seal.add(m);
-	
-	        seal.add(new VisualComponent(seal_idle_anim));
-	        seal.add(new AIControllerComponent(-0.5f));
-	        
-	        if (id == null) {
-	        	id = seal.getId();
-	        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
-	        	if (GameScreen.networkPlayerNum == 0) {
-	    			newEntData.put("type", "seal");
-	    			newEntData.put("playerNum", playerNum);
-	    			newEntData.put("ownerID", id);
-	    			newEntData.put("xPos", x);
-	    			newEntData.put("yPos", y);
-	    			newEntData.put("xVel", 0f);
-	    			newEntData.put("yVel", 0f);
-	    			//GameScreen.allEntities.add(newEntData);
-	            }
-	            //GameScreen.myEntities.add(newEntData);
-	        }
-	        seal.add(new NetworkComponent("seal", playerNum, id, p, m));
-	
-	
-	        GameScreen.pooledEngine.addEntity(seal);
-	
-	        HashMap<String, Object> newEntData = new HashMap<String, Object>();
-			newEntData.put("type", "seal");
-			newEntData.put("playerNum", playerNum);
-			newEntData.put("ownerID", id);
-			newEntData.put("xPos", x);
-			newEntData.put("yPos", y);
-			newEntData.put("xVel", 0f);
-			newEntData.put("yVel", 0f);
-			GameScreen.allEntities.add(newEntData);
+        PositionComponent p = new PositionComponent(x, y);
+        seal.add(p);
+
+        //create a body for the seal
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.4f);
+        short seal_col = PLAYER_COL | PLAYER_PROJ_COL | WALL | ENEMY_COL;
+        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, ENEMY_COL, seal_col, p, seal, 'e');
+
+        MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
+        seal.add(m);
+
+        seal.add(new VisualComponent(seal_idle_anim));
+        seal.add(new AIControllerComponent(-0.5f));
+        
+        if (id == null) {
+        	id = seal.getId();
+        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
+        	if (GameScreen.networkPlayerNum == 0) {
+    			newEntData.put("type", "seal");
+    			newEntData.put("playerNum", playerNum);
+    			newEntData.put("ownerID", id);
+    			newEntData.put("xPos", x);
+    			newEntData.put("yPos", y);
+    			newEntData.put("xVel", 0f);
+    			newEntData.put("yVel", 0f);
+    			//GameScreen.allEntities.add(newEntData);
+            }
+            //GameScreen.myEntities.add(newEntData);
         }
+        seal.add(new NetworkComponent("seal", playerNum, id, p, m));
+
+
+        GameScreen.pooledEngine.addEntity(seal);
+
+        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+		newEntData.put("type", "seal");
+		newEntData.put("playerNum", playerNum);
+		newEntData.put("ownerID", id);
+		newEntData.put("xPos", x);
+		newEntData.put("yPos", y);
+		newEntData.put("xVel", 0f);
+		newEntData.put("yVel", 0f);
+		GameScreen.allEntities.add(newEntData);
+        
         return seal;
     }
 
@@ -419,16 +416,16 @@ public class Factory {
     public static Entity createBullet(float x, float y, float angle, float vel, Integer playerNum, Long id)
     {
         Entity bullet = GameScreen.pooledEngine.createEntity();
+        PositionComponent p = new PositionComponent(x, y, angle);
+        bullet.add(p);
+        PolygonShape rectangle = new PolygonShape();
+        rectangle.setAsBox(.2f, .1f);
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.2f);
+        float xVel = (float) Math.cos(angle) * vel;
+        float yVel = (float) Math.sin(angle) * vel;
+        short bullet_col = ENEMY_COL | WALL;
         synchronized (GameScreen.world) {
-	        PositionComponent p = new PositionComponent(x, y, angle);
-	        bullet.add(p);
-	        PolygonShape rectangle = new PolygonShape();
-	        rectangle.setAsBox(.2f, .1f);
-	        CircleShape circle = new CircleShape();
-	        circle.setRadius(.2f);
-	        float xVel = (float) Math.cos(angle) * vel;
-	        float yVel = (float) Math.sin(angle) * vel;
-	        short bullet_col = ENEMY_COL | WALL;
         	CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');
 	        MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
 	        bullet.add(m);

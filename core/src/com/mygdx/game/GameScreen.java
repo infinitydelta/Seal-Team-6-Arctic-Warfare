@@ -273,23 +273,24 @@ public class GameScreen implements Screen
 		//remove all components scheduled for removal AFTER physics step
 		while(!toBeDeleted.isEmpty())
 		{
-			System.out.println(x);
 			Entity e = toBeDeleted.remove();
 			
 			try
 			{
-				//e.removeAll();
-				//e.getComponent(MovementComponent.class).body.setActive(false);
-				synchronized (GameScreen.world)
-				{
-					//Remove entity from network entity holders
-					NetworkComponent nwComp = e.getComponent(NetworkComponent.class);
-					for (HashMap<String, Object> entity2 : myEntities) {
-						if (nwComp.playerNum.equals(entity2.get("playerNum")) && nwComp.ownerID.equals(entity2.get("ownerID"))) {
+				//Remove entity from network entity holders
+				NetworkComponent nwComp = e.getComponent(NetworkComponent.class);
+				for (HashMap<String, Object> entity2 : myEntities) {
+					if (nwComp.playerNum.equals(entity2.get("playerNum")) && nwComp.ownerID.equals(entity2.get("ownerID"))) {
+						if (entity2.get("playerNum").equals(networkPlayerNum)) {
 							allEntities.remove(entity2);
 							myEntities.remove(entity2);
 						}
 					}
+				}
+				//e.removeAll();
+				//e.getComponent(MovementComponent.class).body.setActive(false);
+				synchronized (GameScreen.world)
+				{
 					world.destroyBody(e.getComponent(MovementComponent.class).body);
 					pooledEngine.removeEntity(e);
 				}
