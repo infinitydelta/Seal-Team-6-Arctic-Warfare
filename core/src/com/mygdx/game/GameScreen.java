@@ -291,9 +291,7 @@ public class GameScreen implements Screen
 			}
 			//world.destroyBody(e.getComponent(MovementComponent.class).body);
 			//pooledEngine.removeEntity(e);
-			
 		}
-
 	}
 	public void resize(int width, int height)
 	{

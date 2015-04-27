@@ -2,6 +2,7 @@ package com.mygdx.game.networking;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -16,8 +17,6 @@ public class NetworkHostUpdateHandler extends Thread {
 	Socket socket;
 	ObjectInputStream ois;
 	ObjectOutputStream oos;
-	
-	public HashSet<HashMap<String, Object>> entities;
 	
 	public NetworkHostUpdateHandler(NetworkHost networkHost, Socket socket, ObjectOutputStream oos) {
 		this.networkHost = networkHost;
@@ -42,10 +41,8 @@ public class NetworkHostUpdateHandler extends Thread {
 			{
 				Object o = ois.readObject();
 				if (o.getClass() == CopyOnWriteArraySet.class) {
-					System.out.println("Receiving (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
-					//Run NetworkSystem here
-					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
+					//System.out.println("Receiving (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
 					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
@@ -61,7 +58,6 @@ public class NetworkHostUpdateHandler extends Thread {
 						if (!entityExists) {
 							//Create the entity
 							synchronized (GameScreen.world) {
-								System.out.println("Attempting spawn");
 								if (entity.get("type").equals("player")) {
 									Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 								}
@@ -71,20 +67,19 @@ public class NetworkHostUpdateHandler extends Thread {
 								else if (entity.get("type").equals("seal")) {
 									Factory.createSeal((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 								}
-								System.out.println("Spawn success");
 							}
 						}
 					}
-					
 					//System.out.println(GameScreen.allEntities);
 					oos.writeObject(GameScreen.allEntities);
-					//oos.writeObject("Not sending data");
 					oos.flush();
 					oos.reset();
-					//System.out.println("Receiving string from " + socket.getRemoteAddress() + ":" + (String)o);
+					
+					//Run NetworkSystem here
+					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 				}
 				else if (o.getClass() == String.class) {
-					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
+					GameScreen.networkSystem.update(0f);
 					
 					System.out.println(GameScreen.allEntities);
 					oos.writeObject(GameScreen.allEntities);
@@ -94,6 +89,11 @@ public class NetworkHostUpdateHandler extends Thread {
 				else {
 					//System.out.println("Receiving other datatype from " + socket.getRemoteAddress());
 				}
+			}
+			catch(SocketException e)
+			{
+				//Handle disconnect
+				networkHost.removePlayer(socket);
 			}
 			catch(Exception e)
 			{

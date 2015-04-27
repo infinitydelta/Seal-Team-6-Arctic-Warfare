@@ -81,10 +81,7 @@ public class NetworkClient extends Thread {
 
 				if (o.getClass() == CopyOnWriteArraySet.class) {
 					//System.out.println("Receiving (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
-					
-					//Run NetworkSystem here
-					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
-					
+						
 					
 					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
 						boolean entityExists = false;
@@ -112,16 +109,16 @@ public class NetworkClient extends Thread {
 							}
 						}
 					}
-					
 					//System.out.println(GameScreen.myEntities);
+					//oos.reset();
 					oos.writeObject(GameScreen.myEntities);
 					oos.flush();
 					oos.reset();
-				}
-				else if (o.getClass() == String.class) {
-					//System.out.println("Receiving string: " + (String)o);
 					
 					//Run NetworkSystem here
+					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
+				}
+				else if (o.getClass() == String.class) {
 					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 					
 					System.out.println(GameScreen.myEntities);

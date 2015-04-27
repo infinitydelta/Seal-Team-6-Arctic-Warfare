@@ -30,14 +30,13 @@ public class NetworkHostConnectHandler extends Thread {
 			{
 				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 				HashMap<String, Object> initializationData = new HashMap<String, Object>();
-				initializationData.put("playerNum", networkHost.numPlayers);
+				initializationData.put("playerNum", networkHost.addPlayer(socket));
 				initializationData.put("mapSeed", networkHost.mapSeed);
 				
 				oos.writeObject(initializationData);
 				oos.flush();
 				oos.reset();
 				NetworkHostUpdateHandler networkHostUpdateHandler = new NetworkHostUpdateHandler(networkHost, socket, oos);
-				networkHost.numPlayers++;
 			}
 			catch(Exception e)
 			{

@@ -2,6 +2,7 @@ package com.mygdx.game.networking;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
@@ -28,7 +29,8 @@ public class NetworkHost {
 	public NetworkHostConnectHandler networkHostConnectHandler;
 	public NetworkHostUpdateHandler networkHostUpdateHandler;
 	
-	public int numPlayers = 1;
+	public static int numPlayers = 1;
+	public static ConcurrentHashMap<Socket, Integer> playersConnected = new ConcurrentHashMap<Socket, Integer>();
 	
 	public NetworkHost(GameScreen gScreen) {
 		this.gScreen = gScreen;
@@ -52,5 +54,14 @@ public class NetworkHost {
 		networkHostConnectHandler = new NetworkHostConnectHandler(this);
 		
 		gScreen.initialized = true;
+	}
+	
+	public int addPlayer(Socket newSocket) {
+		playersConnected.put(newSocket, numPlayers++);
+		return numPlayers-1;
+	}
+	
+	public void removePlayer(Socket newSocket) {
+		playersConnected.remove(newSocket);
 	}
 }

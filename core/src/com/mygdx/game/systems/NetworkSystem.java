@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.components.MovementComponent;
 import com.mygdx.game.components.NetworkComponent;
@@ -29,6 +28,7 @@ public class NetworkSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+    		
         PositionComponent pos = pm.get(entity);
         MovementComponent move = mm.get(entity);
         NetworkComponent network = nm.get(entity);
@@ -65,18 +65,12 @@ public class NetworkSystem extends IteratingSystem {
         else {
         	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
         		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-
-                    //move.body.setLinearVelocity(move.xVel, move.yVel);
         			move.xVel = (Float)entity2.get("xVel");
                     move.yVel = (Float)entity2.get("yVel");
         			pos.x = (Float)entity2.get("xPos");
         			pos.y = (Float)entity2.get("yPos");
-                    //while (GameScreen.world.isLocked()) {}
-                    //if (!GameScreen.world.isLocked())
-        			synchronized (GameScreen.world)
-                    {
+        			synchronized (GameScreen.world) {
                         move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
-
                     }
         		}
         	}
