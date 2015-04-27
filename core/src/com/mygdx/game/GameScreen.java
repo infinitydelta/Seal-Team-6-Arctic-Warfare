@@ -50,7 +50,7 @@ public class GameScreen implements Screen
 
 	static final int CAM_WIDTH = 20;
 	
-	static final int CAM_SIZE = 20;
+	static final int CAM_SIZE = 50;
 
 	//MainGame game;
 	OrthographicCamera camera;
@@ -97,6 +97,11 @@ public class GameScreen implements Screen
 	static final float physicsTimeStep = 1/60f;
 
 	public boolean initialized = false;
+
+
+	//gameplay levels
+	int level = 0;
+
 		
 	
 	public GameScreen(boolean host, String ip, int port)
@@ -190,6 +195,8 @@ public class GameScreen implements Screen
 		stage.addActor(playerUsername);
 
 		createBox2d();
+
+		//DungeonGenerator.generateDungeon(this);
 		//Entity play = Factory.createPlayer(pos.x - 1, pos.y, 1);
 		//Entity weaponz = Factory.createWeapon();
 		//weaponz.add(new WeaponComponent(weaponz));
@@ -227,7 +234,7 @@ public class GameScreen implements Screen
 		stage.act(delta);
 		stage.draw(); //ui
 
-		//debugRenderer.render(world, camera.combined);
+		debugRenderer.render(world, camera.combined);
 		synchronized (GameScreen.world)
 		{
 			world.step(delta, 6, 2);

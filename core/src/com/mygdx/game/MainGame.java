@@ -38,14 +38,6 @@ public class MainGame extends Game {
 	LoginScreen loginScreen;
 	//GameScreen gameScreen;
 	
-	static Texture kenny;
-	static Texture bg_tile;
-	public static Texture whiteball;
-	static Texture objects;
-	public static Texture sandTiles;
-
-	public static Animation runAnimation;
-	public static Animation idleAnmation;
 
 	@Override
 	public void create () 

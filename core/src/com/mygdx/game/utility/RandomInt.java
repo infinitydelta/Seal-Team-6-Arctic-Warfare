@@ -16,6 +16,14 @@ public class RandomInt {
 
     public static int Range(int low, int high)
     {
-        return rand.nextInt(high - low) + low;
+        if (low == high) return low;
+        if (low > high)
+        {
+            return Range(high + 1, low + 1);
+        }
+        else
+        {
+            return rand.nextInt(high - low) + low;
+        }
     }
 }

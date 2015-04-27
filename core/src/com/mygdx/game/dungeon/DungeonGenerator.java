@@ -426,7 +426,20 @@ public class DungeonGenerator {
                 {
                     Factory.createFakeWall(i, j);
                 }
+                //quick fix for no walls
+                if (i == 0 || i == mapSize-1 || j == 0 || j == mapSize-1)
+                {
+                    //Factory.createWall(i,j, 1);
+                }
             }
+        }
+        for (int i = 0; i < mapSize; i++)
+        {
+            Factory.createWall(i,0, 1);
+            Factory.createWall(i,mapSize-1, 1);
+
+            Factory.createWall(0, i, 1);
+            Factory.createWall(mapSize-1, i,1);
         }
 
         for (int x = 1; x < mapSize-1; x++)
