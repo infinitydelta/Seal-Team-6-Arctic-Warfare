@@ -10,9 +10,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -56,7 +58,7 @@ public class GameScreen implements Screen
 
 	static final int CAM_WIDTH = 20;
 	
-	static final int CAM_SIZE = 50;
+	static final int CAM_SIZE = 20;
 
 	//MainGame game;
 	OrthographicCamera camera;
@@ -173,7 +175,7 @@ public class GameScreen implements Screen
 		
 		//create seal entity
 		if (host) {
-			for (int i = 0; i<20; i++) {
+			for (int i = 0; i<100; i++) {
 				pos = DungeonGenerator.getSpawnPosition();
 				Entity seal = Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
 			}
@@ -201,6 +203,10 @@ public class GameScreen implements Screen
 		stage.addActor(playerUsername);
 
 		createBox2d();
+
+		Music music = Factory.paris;
+		music.play();
+		music.setLooping(true);
 
 		//DungeonGenerator.generateDungeon(this);
 		//Entity play = Factory.createPlayer(pos.x - 1, pos.y, 1);
@@ -231,6 +237,7 @@ public class GameScreen implements Screen
 		Vector2 pos = camPos();
 		float x = MathUtils.lerp(camera.position.x, pos.x, 7f * delta);
 		float y = MathUtils.lerp(camera.position.y, pos.y, 7f * delta);
+
 		camera.position.set(x, y, 0);
 
 		camera.update();
@@ -240,7 +247,7 @@ public class GameScreen implements Screen
 		stage.act(delta);
 		stage.draw(); //ui
 
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 		synchronized (GameScreen.world)
 		{
 			world.step(delta, 6, 2);

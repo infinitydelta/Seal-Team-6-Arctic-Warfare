@@ -20,14 +20,14 @@ import java.util.ArrayList;
 public class DungeonGenerator {
 
 
-    public static int mapSize = 64;
+    public static int mapSize = 128;
     static Vector2 center;
     public static int[][] map;
 
     public static Room[] rooms;
-    public static int numRooms = 10;
-    public static int roomSizeMin = 5;
-    public static int roomSizeMax = 15;
+    public static int numRooms = 30;
+    public static int roomSizeMin = 10;
+    public static int roomSizeMax = 25;
 
     public static int squashTimes = 1;
 

@@ -81,7 +81,7 @@ public class WeaponComponent extends Component implements Pool.Poolable
     	if(!reloading && firetimer > 1/fireRate)
     	{
     		Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
-            Factory.expl19.play();
+            Factory.expl19.play(.3f);
             firetimer = 0;
             currentclip--;
             wgc.fire();

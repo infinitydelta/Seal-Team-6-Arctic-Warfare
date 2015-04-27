@@ -3,6 +3,7 @@ package com.mygdx.game.utility;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.badlogic.gdx.audio.Music;
 import javafx.scene.shape.Line;
 
 import com.badlogic.ashley.core.Entity;
@@ -93,6 +94,7 @@ public class Factory {
     public static Animation bulletDestroyAnim;
 
     public static Sound expl19;
+    public static Music paris;
 
     public static void loadAssets()
     {
@@ -141,6 +143,8 @@ public class Factory {
         
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
+        paris = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Hotline Miami OST - Paris.mp3"));
+
         //animation
         Texture walk = new Texture("minimalObjects_32x32Tiles.png");
         TextureRegion[][] temp = TextureRegion.split(walk, 32, 32); //rows = 4; num cols = 3
