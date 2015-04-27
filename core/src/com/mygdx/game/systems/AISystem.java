@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.mygdx.game.GameScreen;
 import com.mygdx.game.components.*;
 import com.mygdx.game.utility.ComparableVector2;
 import com.badlogic.gdx.math.Vector3;
@@ -82,6 +83,11 @@ public class AISystem extends IteratingSystem {
             float yr = (rand.nextFloat() * ai.speed * 4) - ai.speed * 2;
             dir.set(xr, yr);
         }
+
+        if(ai.health<=0){
+            ai.dead = true;
+        }
+
         if (!ai.dead){
             for (int i = 0; i < players.size(); i++) {
                 float px = players.get(i).getComponent(PositionComponent.class).x;
@@ -127,6 +133,7 @@ public class AISystem extends IteratingSystem {
     }else{
             if(ai.lastDead != ai.dead) {
                 visual.setAnimation(Factory.seal_die_anim);
+                GameScreen.toBeDeleted.add(entity);
             }
         }
 

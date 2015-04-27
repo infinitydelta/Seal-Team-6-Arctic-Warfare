@@ -43,13 +43,13 @@ public class MyContactListener implements ContactListener {
         }
         if (etA.type == ('b') && etB.type == 'e')
         {
-           etB.e.getComponent(AIControllerComponent.class).dead = true;
-            GameScreen.toBeDeleted.add(etB.e);
+           etB.e.getComponent(AIControllerComponent.class).health--;
+            GameScreen.toBeDeleted.add(etA.e);
         }
         if (etA.type == ('e') && etB.type == 'b')
         {
-            etA.e.getComponent(AIControllerComponent.class).dead = true;
-            GameScreen.toBeDeleted.add(etA.e);
+            etA.e.getComponent(AIControllerComponent.class).health--;
+            GameScreen.toBeDeleted.add(etB.e);
         }
     }
 
