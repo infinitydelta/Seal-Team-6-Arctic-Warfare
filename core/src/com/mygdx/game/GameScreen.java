@@ -28,7 +28,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.components.*;
+import com.mygdx.game.components.HealthGUIComponent;
+import com.mygdx.game.components.MovementComponent;
+import com.mygdx.game.components.NetworkComponent;
+import com.mygdx.game.components.PlayerComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.WeaponComponent;
+import com.mygdx.game.components.WeaponGUIComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
@@ -96,7 +102,7 @@ public class GameScreen implements Screen
 	float deltatimesink;
 	static final float physicsTimeStep = 1/60f;
 
-	public boolean initialized = false;
+	public static boolean initialized = false;
 
 
 	//gameplay levels

@@ -1,10 +1,5 @@
 package com.mygdx.game.networking;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +10,6 @@ import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.dungeon.DungeonGenerator;
-import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.utility.RandomInt;
 
 public class NetworkHost {
@@ -27,7 +21,6 @@ public class NetworkHost {
 	public final long mapSeed;
 	
 	public NetworkHostConnectHandler networkHostConnectHandler;
-	public NetworkHostUpdateHandler networkHostUpdateHandler;
 	
 	public static int numPlayers = 1;
 	public static ConcurrentHashMap<Socket, Integer> playersConnected = new ConcurrentHashMap<Socket, Integer>();
