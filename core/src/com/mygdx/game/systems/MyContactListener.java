@@ -33,7 +33,6 @@ public class MyContactListener implements ContactListener {
         	nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
-        	GameScreen.toBeDeleted.add(etA.e);
         }
         if(etB.type == 'b' && etA.type == 'w')
         {
@@ -43,7 +42,6 @@ public class MyContactListener implements ContactListener {
         	nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
-        	GameScreen.toBeDeleted.add(etB.e);
         }
         if (etA.type == ('b') && etB.type == 'e')
         {
@@ -56,7 +54,6 @@ public class MyContactListener implements ContactListener {
         	nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
-        	GameScreen.toBeDeleted.add(etA.e);
         }
         if (etA.type == ('e') && etB.type == 'b')
         {
@@ -69,7 +66,6 @@ public class MyContactListener implements ContactListener {
             nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
-        	GameScreen.toBeDeleted.add(etB.e);
         }
     }
 

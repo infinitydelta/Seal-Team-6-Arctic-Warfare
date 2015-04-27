@@ -46,6 +46,10 @@ public class NetworkSystem extends IteratingSystem {
         boolean deleteEntity = false;
         boolean entityExistsInNetwork = false;
         
+        if (network.isDead) {
+        	deleteEntity = true;
+        }
+        
         if (GameScreen.toBeDeleted.contains(entity)) {
         	deleteEntity = true;
         }
@@ -88,7 +92,7 @@ public class NetworkSystem extends IteratingSystem {
     	if (!deleteEntity)
     		GameScreen.allEntities.add(newEntityData);
     	if (!entityExistsInNetwork) {
-    		GameScreen.toBeDeleted.add(entity);
+    		deleteEntity = true;
     	}
     	if (deleteEntity) {
     		GameScreen.toBeDeleted.add(entity);
