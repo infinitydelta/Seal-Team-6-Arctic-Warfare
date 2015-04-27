@@ -1,6 +1,7 @@
 package com.mygdx.game.utility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.scene.shape.Line;
 
@@ -270,11 +271,33 @@ public class Factory {
         
         if (id == null) {
         	id = player.getId();
+        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
+        	if (GameScreen.networkPlayerNum == 0) {
+    			newEntData.put("type", "player");
+    			newEntData.put("playerNum", playerNum);
+    			newEntData.put("ownerID", id);
+    			newEntData.put("xPos", x);
+    			newEntData.put("yPos", y);
+    			newEntData.put("xVel", 0f);
+    			newEntData.put("yVel", 0f);
+    			//GameScreen.allEntities.add(newEntData);
+            }
+            //GameScreen.myEntities.add(newEntData);
         }
         player.add(new NetworkComponent("player", playerNum, id, p, m));
 
 
         GameScreen.pooledEngine.addEntity(player);
+        
+        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+		newEntData.put("type", "player");
+		newEntData.put("playerNum", playerNum);
+		newEntData.put("ownerID", id);
+		newEntData.put("xPos", x);
+		newEntData.put("yPos", y);
+		newEntData.put("xVel", 0f);
+		newEntData.put("yVel", 0f);
+		GameScreen.allEntities.add(newEntData);
 
         return player;
     }
@@ -299,12 +322,34 @@ public class Factory {
         
         if (id == null) {
         	id = seal.getId();
+        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
+        	if (GameScreen.networkPlayerNum == 0) {
+    			newEntData.put("type", "seal");
+    			newEntData.put("playerNum", playerNum);
+    			newEntData.put("ownerID", id);
+    			newEntData.put("xPos", x);
+    			newEntData.put("yPos", y);
+    			newEntData.put("xVel", 0f);
+    			newEntData.put("yVel", 0f);
+    			//GameScreen.allEntities.add(newEntData);
+            }
+            //GameScreen.myEntities.add(newEntData);
         }
         seal.add(new NetworkComponent("seal", playerNum, id, p, m));
 
 
         GameScreen.pooledEngine.addEntity(seal);
 
+        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+		newEntData.put("type", "seal");
+		newEntData.put("playerNum", playerNum);
+		newEntData.put("ownerID", id);
+		newEntData.put("xPos", x);
+		newEntData.put("yPos", y);
+		newEntData.put("xVel", 0f);
+		newEntData.put("yVel", 0f);
+		GameScreen.allEntities.add(newEntData);
+        
         return seal;
     }
 
@@ -332,7 +377,15 @@ public class Factory {
         }
         networkPlayer.add(new NetworkComponent("player", playerNum, id, p, m));
 
-
+        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+		newEntData.put("type", "player");
+		newEntData.put("playerNum", playerNum);
+		newEntData.put("ownerID", id);
+		newEntData.put("xPos", x);
+		newEntData.put("yPos", y);
+		newEntData.put("xVel", 0f);
+		newEntData.put("yVel", 0f);
+		GameScreen.allEntities.add(newEntData);
 
         return networkPlayer;
     }
@@ -368,23 +421,38 @@ public class Factory {
         float xVel = (float) Math.cos(angle) * vel;
         float yVel = (float) Math.sin(angle) * vel;
         short bullet_col = ENEMY_COL | WALL;
-        CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');
-        MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
-        bullet.add(m);
-        //add visual
-        TextureRegion b = new TextureRegion(playerbullet, 0, 0, 16, 16);
-        VisualComponent vc = new VisualComponent(b);
-
-        vc.rotation = ((float)Math.toDegrees(angle));
-        //vc.sprite.setScale(.8f);
-        bullet.add(vc);
-        //
-
-        if (id == null) {
-        	id = bullet.getId();
+        synchronized (GameScreen.world) {
+        	CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, PLAYER_PROJ_COL, bullet_col, p, bullet, 'b');
+	        MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
+	        bullet.add(m);
+	        //add visual
+	        TextureRegion b = new TextureRegion(playerbullet, 0, 0, 16, 16);
+	        VisualComponent vc = new VisualComponent(b);
+	
+	        vc.rotation = ((float)Math.toDegrees(angle));
+	        //vc.sprite.setScale(.8f);
+	        bullet.add(vc);
+	        //
+	
+	        if (id == null) {
+	        	id = bullet.getId();
+	        }
+	        bullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
+	        GameScreen.pooledEngine.addEntity(bullet);
+	        
+	        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+	        newEntData.put("type", "bullet");
+			newEntData.put("playerNum", playerNum);
+			newEntData.put("ownerID", id);
+			newEntData.put("xPos", x);
+			newEntData.put("yPos", y);
+			newEntData.put("xVel", 0f);
+			newEntData.put("yVel", 0f);
+			GameScreen.allEntities.add(newEntData);
+			if (GameScreen.networkPlayerNum == playerNum) {
+				GameScreen.myEntities.add(newEntData);
+			}
         }
-        bullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
-        GameScreen.pooledEngine.addEntity(bullet);
         return bullet;
         //rectangle.dispose();
         //circle.dispose();

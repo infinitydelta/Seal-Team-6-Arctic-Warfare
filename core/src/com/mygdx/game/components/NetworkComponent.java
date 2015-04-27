@@ -15,6 +15,7 @@ public class NetworkComponent extends Component {
     public String type;
     public float xPos, yPos;
     public float xVel, yVel;
+    public Boolean isDead = false;
 
 
     public NetworkComponent(String type, Integer playerNum, long id, PositionComponent pos, MovementComponent move)

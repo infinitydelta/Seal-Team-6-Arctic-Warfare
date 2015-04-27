@@ -175,7 +175,7 @@ public class GameScreen implements Screen
 		if (host) {
 			for (int i = 0; i<20; i++) {
 				pos = DungeonGenerator.getSpawnPosition();
-				Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
+				Entity seal = Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
 			}
 		}
 		

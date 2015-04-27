@@ -41,7 +41,6 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     public PlayerComponent(String name, Entity player, int color)
     {
         this.name = name;
-        System.out.println(name);
         this.player = player;
         this.color = color;
         position = player.getComponent(PositionComponent.class);

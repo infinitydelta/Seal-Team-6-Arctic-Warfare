@@ -44,6 +44,7 @@ public class NetworkSystem extends IteratingSystem {
         
         boolean myEntityFound = false;
         boolean deleteEntity = false;
+        boolean entityExistsInNetwork = false;
         
         if (GameScreen.toBeDeleted.contains(entity)) {
         	deleteEntity = true;
@@ -81,10 +82,17 @@ public class NetworkSystem extends IteratingSystem {
     			GameScreen.allEntities.remove(entity2);
     			if (!deleteEntity)
     				GameScreen.allEntities.add(newEntityData);
+    			entityExistsInNetwork = true;
     		}
     	}
     	if (!deleteEntity)
     		GameScreen.allEntities.add(newEntityData);
+    	if (!entityExistsInNetwork) {
+    		GameScreen.toBeDeleted.add(entity);
+    	}
+    	if (deleteEntity) {
+    		GameScreen.toBeDeleted.add(entity);
+    	}
     	//Unconditionally replaces this entity in allEntities
     	
         /*if (GameScreen.networkPlayerNum == 0) {
