@@ -49,6 +49,8 @@ public class LoginScreen implements Screen{
 		passwordLabel = new Label("PASSWORD:",uiSkin);
 		usernameField = new TextField("",uiSkin);
 		passwordField = new TextField("",uiSkin);
+		passwordField.setPasswordMode(true);
+		passwordField.setPasswordCharacter('*');
 		table=new Table();
 	}
 	
@@ -109,7 +111,6 @@ public class LoginScreen implements Screen{
 
 			}
 		});
-
 		table.add(usernameLabel);
 		table.add(usernameField).row();
 		table.add(passwordLabel);
