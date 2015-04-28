@@ -51,5 +51,13 @@ public class WeaponGUIComponent extends Component
 		}
 		currentAmmo = maxAmmo;
 	}
+	public void empty()
+	{
+		for(int i = 0; i < currentAmmo; i++)
+		{
+			ammoElements.get(i).setVisible(false);
+		}
+		currentAmmo = 0;
+	}
 
 }

@@ -80,6 +80,10 @@ public class InputHandler implements InputProcessor {
         {
             playerComponent.down = true;
         }
+        if(keycode == Input.Keys.R)
+        {
+        	playerComponent.reload = true;
+        }
 
         return false;
     }
@@ -102,6 +106,10 @@ public class InputHandler implements InputProcessor {
         if (keycode == Input.Keys.S)
         {
             playerComponent.down = false;
+        }
+        if (keycode == Input.Keys.R)
+        {
+        	playerComponent.reload = false;
         }
         return false;
     }

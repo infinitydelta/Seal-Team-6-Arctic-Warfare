@@ -26,7 +26,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     PositionComponent weaponPosition;
     
 
-    public boolean up = false, down = false, left = false, right = false;
+    public boolean up = false, down = false, left = false, right = false, reload = false;
     private boolean moveX = false, moveY = false;
     private float root2 = (float) Math.sqrt(2);
     int health = 10;
@@ -110,6 +110,10 @@ public class PlayerComponent extends Component implements Pool.Poolable {
         {
             weaponPosition.x = position.x;
             weaponPosition.y = position.y;
+        }
+        if(reload && weaponComponent != null)
+        {
+        	weaponComponent.reloading = true;
         }
 
     }

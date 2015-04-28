@@ -53,12 +53,13 @@ public class WeaponComponent extends Component implements Pool.Poolable
     }
     public void update(float deltatime)
     {
-    	if(currentclip == 0)
+    	if(currentclip == 0 && reloading == false)
     	{
     		reloading = true;
     	}
     	if(reloading)
     	{
+    		wgc.empty();
     		if(reloadtimer < reloadtime)
     		{
     			reloadtimer += deltatime;
