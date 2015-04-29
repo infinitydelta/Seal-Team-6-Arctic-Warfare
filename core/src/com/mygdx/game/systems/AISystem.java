@@ -81,11 +81,7 @@ public class AISystem extends IteratingSystem {
                     ai.xTarIndex = (int) px;
                     ai.yTarIndex = (int) py;
 
-                    if (dx > 0) {
-                        if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
-                    } else {
-                        if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
-                    }
+
                     if (!ai.mode) {
                         dir.set(ai.speed * dx, ai.speed * dy);
                     } else {
