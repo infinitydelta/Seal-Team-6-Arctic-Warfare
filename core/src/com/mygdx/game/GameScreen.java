@@ -41,6 +41,7 @@ import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
 import com.mygdx.game.systems.AISystem;
+import com.mygdx.game.systems.EnemySystem;
 import com.mygdx.game.systems.InputHandler;
 import com.mygdx.game.systems.MovementSystem;
 import com.mygdx.game.systems.MyContactListener;
@@ -148,6 +149,7 @@ public class GameScreen implements Screen
 		networkSystem.setProcessing(false);
 		pooledEngine.addSystem(networkSystem);
 		pooledEngine.addSystem(new WeaponSystem());
+		pooledEngine.addSystem(new EnemySystem());
 		if (host) {
 			pooledEngine.addSystem(new AISystem());
 			pooledEngine.getSystem(AISystem.class).setPlayers(pooledEngine);
@@ -182,8 +184,7 @@ public class GameScreen implements Screen
 		}
 		
 		//create weapon entity
-		weapon = Factory.createWeapon();
-		player.getComponent(PlayerComponent.class).addWeapon(weapon);
+		weapon = player.getComponent(PlayerComponent.class).weapon;
 		WeaponGUIComponent wgc = new WeaponGUIComponent(stage, weapon.getComponent(WeaponComponent.class).getMagSize());
 		weapon.add(wgc);
 		weapon.getComponent(WeaponComponent.class).setGUIComponent(wgc);

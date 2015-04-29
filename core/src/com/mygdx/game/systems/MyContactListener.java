@@ -53,6 +53,7 @@ public class MyContactListener implements ContactListener {
                 {
                     ds.getComponent(VisualComponent.class).sprite.setFlip(true, false);
                 }
+                GameScreen.pooledEngine.removeEntity(etB.e.getComponent(EnemyComponent.class).weapon);
                 GameScreen.toBeDeleted.add(etB.e);
 
             }
@@ -77,6 +78,7 @@ public class MyContactListener implements ContactListener {
                 {
                     ds.getComponent(VisualComponent.class).sprite.setFlip(true, false);
                 }
+                GameScreen.pooledEngine.removeEntity(etA.e.getComponent(EnemyComponent.class).weapon);
                 GameScreen.toBeDeleted.add(etA.e);
 
             }
