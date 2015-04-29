@@ -9,15 +9,18 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.steer.behaviors.Alignment;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.mygdx.game.utility.Factory;
 
 public class MenuScreen implements Screen
 {
@@ -38,6 +41,8 @@ public class MenuScreen implements Screen
 	TextField joinportfield;
 	TextField hostportfield;
 	TextField joinipfield;
+	
+	Image menuBGImage;
 
 	Table table;
 
@@ -69,6 +74,8 @@ public class MenuScreen implements Screen
 		hostportfield = new TextField("7777", uiSkin);
 		joinipfield = new TextField("localhost", uiSkin);
 		joinportfield = new TextField("7777", uiSkin);
+		
+		menuBGImage = new Image(Factory.menuBG);
 
 		table = new Table();
 		
@@ -86,6 +93,9 @@ public class MenuScreen implements Screen
 	}
 	public void show()
 	{
+		menuBGImage.setPosition(0, 0);
+		stage.addActor(menuBGImage);
+		
 		hostButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y)
 			{
@@ -111,6 +121,8 @@ public class MenuScreen implements Screen
 
 		table.setFillParent(true);
 		stage.addActor(table);
+		
+		
 		
 		Gdx.input.setInputProcessor(stage);
 	}

@@ -92,6 +92,8 @@ public class Factory {
     
     public static Texture bulletDestroy;
     public static Animation bulletDestroyAnim;
+    
+    public static Texture menuBG;
 
     public static Sound expl19;
     public static Music paris;
@@ -121,6 +123,7 @@ public class Factory {
         hfront = new Texture("red.png");
         hback = new Texture("hback.png");
         bulletDestroy = new Texture("bulletdestroy.png");
+        menuBG = new Texture("intro_screen.png");
         
         //colored pengus
         red_penguin_walk = new Texture("redPenguinWalk.png");
