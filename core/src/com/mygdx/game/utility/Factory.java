@@ -104,7 +104,11 @@ public class Factory {
     public static Texture menuBG;
 
     public static Sound expl19;
+
     public static Sound reload;
+
+    public static Sound hithurt8;
+
     public static Music paris;
 
     public static void loadAssets()
@@ -161,7 +165,11 @@ public class Factory {
         
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
+
         reload = Gdx.audio.newSound(Gdx.files.internal("Sounds/m1_garand_ping.mp3"));
+
+        hithurt8 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Hit_Hurt8.wav"));
+
         paris = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Hotline Miami OST - Paris.mp3"));
 
         //animation
@@ -561,11 +569,11 @@ public class Factory {
 	        {
 	        	id = ebullet.getId();
 	        }
-	        ebullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
+	        ebullet.add(new NetworkComponent("enemybullet", playerNum, id, p, m));
 	        GameScreen.pooledEngine.addEntity(ebullet);
 	        
 	        HashMap<String, Object> newEntData = new HashMap<String, Object>();
-	        newEntData.put("type", "bullet");
+	        newEntData.put("type", "enemybullet");
 			newEntData.put("playerNum", playerNum);
 			newEntData.put("ownerID", id);
 			newEntData.put("xPos", x);

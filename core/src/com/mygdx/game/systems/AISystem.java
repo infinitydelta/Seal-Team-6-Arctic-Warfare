@@ -83,7 +83,7 @@ public class AISystem extends IteratingSystem {
                     enemy.weapon.getComponent(WeaponComponent.class).fire(rot);
                     ai.xTarIndex = (int) px;
                     ai.yTarIndex = (int) py;
-                    
+      
                     VisualComponent weapvc = enemy.weapon.getComponent(VisualComponent.class);
                     if (dx < 0) {
                         if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);

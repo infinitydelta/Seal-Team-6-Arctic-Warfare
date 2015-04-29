@@ -40,6 +40,7 @@ import com.mygdx.game.components.WeaponGUIComponent;
 import com.mygdx.game.dungeon.DungeonGenerator;
 import com.mygdx.game.networking.NetworkClient;
 import com.mygdx.game.networking.NetworkHost;
+import com.mygdx.game.systems.*;
 import com.mygdx.game.systems.AISystem;
 import com.mygdx.game.systems.EnemySystem;
 import com.mygdx.game.systems.InputHandler;
@@ -132,7 +133,7 @@ public class GameScreen implements Screen
 		uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
 		//change mouse cursor to picture
 		Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
-		Gdx.input.setCursorImage(pm, pm.getWidth()/2, pm.getHeight()/2);
+		Gdx.input.setCursorImage(pm, pm.getWidth() / 2, pm.getHeight() / 2);
 		pm.dispose();
 		
 		//box2d
@@ -146,6 +147,8 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
+
+
 		networkSystem.setProcessing(false);
 		pooledEngine.addSystem(networkSystem);
 		pooledEngine.addSystem(new WeaponSystem());
@@ -154,6 +157,8 @@ public class GameScreen implements Screen
 			pooledEngine.addSystem(new AISystem());
 			pooledEngine.getSystem(AISystem.class).setPlayers(pooledEngine);
 		}
+		pooledEngine.addSystem(new EnemySystem());
+		pooledEngine.getSystem(EnemySystem.class).setPlayers(pooledEngine);
 		toBeDeleted = new LinkedList<Entity>();
 		
 

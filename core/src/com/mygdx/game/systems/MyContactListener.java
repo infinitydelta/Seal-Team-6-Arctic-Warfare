@@ -91,6 +91,33 @@ public class MyContactListener implements ContactListener {
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etB.e);
         }
+        
+        if (etA.type == ('b') && etB.type == 'p')
+        {
+           etB.e.getComponent(PlayerComponent.class).takeDamage(1);
+
+            //GameScreen.toBeDeleted.add(etA.e);
+            
+            VisualComponent vc = etA.e.getComponent(VisualComponent.class);
+        	PositionComponent pc = etA.e.getComponent(PositionComponent.class);
+        	NetworkComponent nc = etA.e.getComponent(NetworkComponent.class);
+        	nc.isDead = true;
+        	float rot = vc.rotation;
+        	Factory.createEnemyBulletDestroyed(pc.x, pc.y, rot);
+        	GameScreen.toBeDeleted.add(etA.e);
+        }
+        if (etA.type == ('p') && etB.type == 'b')
+        {
+            etA.e.getComponent(PlayerComponent.class).takeDamage(1);;
+            
+            VisualComponent vc = etB.e.getComponent(VisualComponent.class);
+            PositionComponent pc = etB.e.getComponent(PositionComponent.class);
+            NetworkComponent nc = etB.e.getComponent(NetworkComponent.class);
+            nc.isDead = true;
+        	float rot = vc.rotation;
+        	Factory.createEnemyBulletDestroyed(pc.x, pc.y, rot);
+        	GameScreen.toBeDeleted.add(etB.e);
+        }
     }
 
     @Override
