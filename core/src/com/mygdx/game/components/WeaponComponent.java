@@ -57,9 +57,12 @@ public class WeaponComponent extends Component implements Pool.Poolable
     	if(currentclip == 0 && reloading == false)
     	{
     		reloading = true;
-    	}
+            Factory.reload.play();
+            //Factory.createMag(entity.getComponent(PositionComponent.class).x, entity.getComponent(PositionComponent.class).y);
+        }
     	if(reloading)
     	{
+
     		if(wgc != null) wgc.empty();
     		if(reloadtimer < reloadtime)
     		{

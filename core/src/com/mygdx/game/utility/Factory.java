@@ -2,6 +2,7 @@ package com.mygdx.game.utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import com.badlogic.gdx.audio.Music;
 
@@ -90,6 +91,7 @@ public class Factory {
     public static Texture heart;
     public static Texture hfront;
     public static Texture hback;
+    public static Texture mag;
 
     public static Animation runAnimation;
     public static Animation idleAnmation;
@@ -102,6 +104,7 @@ public class Factory {
     public static Texture menuBG;
 
     public static Sound expl19;
+    public static Sound reload;
     public static Music paris;
 
     public static void loadAssets()
@@ -134,7 +137,9 @@ public class Factory {
         enemyBulletDestroy = new Texture("enemybulletdestroy.png");
         
         menuBG = new Texture("intro_screen.png");
-        
+        mag = new Texture("mag.png");
+
+
         //colored pengus
         red_penguin_walk = new Texture("redPenguinWalk.png");
         red_penguin_idle = new Texture("redPenguinIdle.png");
@@ -156,6 +161,7 @@ public class Factory {
         
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
+        reload = Gdx.audio.newSound(Gdx.files.internal("Sounds/m1_garand_ping.mp3"));
         paris = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Hotline Miami OST - Paris.mp3"));
 
         //animation
@@ -574,6 +580,26 @@ public class Factory {
         return ebullet;
         //rectangle.dispose();
         //circle.dispose();
+    }
+
+    public static Entity createMag(float x, float y)
+    {
+        Entity mag = GameScreen.pooledEngine.createEntity();
+        float angle = RandomInt.Range(0, 360);
+        angle = (float) Math.toRadians(angle);
+        PositionComponent p = new PositionComponent(x, y, angle);
+        mag.add(p);
+        VisualComponent v = new VisualComponent(new TextureRegion(Factory.mag));
+        mag.add(v);
+        PolygonShape rect = new PolygonShape();
+        rect.setAsBox(.1f, .05f);
+        CollisionComponent c = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, rect, PLAYER_PROJ_COL, WALL, p, mag, 'm');
+        MovementComponent m = new MovementComponent(c, GameScreen.world, (float)Math.cos(angle), (float) Math.sin(angle), 0);
+        //m.body.applyAngularImpulse(100, true);
+        //m.body.applyLinearImpulse((float)Math.cos(angle), (float) Math.sin(angle), 0, 0, true);
+        mag.add(m);
+        GameScreen.pooledEngine.addEntity(mag);
+        return mag;
     }
 
     public static Entity createGround(float x, float y, int type)

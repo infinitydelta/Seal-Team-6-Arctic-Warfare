@@ -82,7 +82,8 @@ public class InputHandler implements InputProcessor {
         }
         if(keycode == Input.Keys.R)
         {
-        	playerComponent.reload = true;
+            Factory.reload.play();
+            playerComponent.reload = true;
         }
 
         return false;
