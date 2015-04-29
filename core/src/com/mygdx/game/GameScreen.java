@@ -175,7 +175,7 @@ public class GameScreen implements Screen
 		
 		//create seal entity
 		if (host) {
-			for (int i = 0; i<100; i++) {
+			for (int i = 0; i<10; i++) {
 				pos = DungeonGenerator.getSpawnPosition();
 				Entity seal = Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
 			}
@@ -278,6 +278,7 @@ public class GameScreen implements Screen
 			try
 			{
 				//Remove entity from network entity holders
+				
 				NetworkComponent nwComp = e.getComponent(NetworkComponent.class);
 				for (HashMap<String, Object> entity2 : myEntities) {
 					if (nwComp.playerNum.equals(entity2.get("playerNum")) && nwComp.ownerID.equals(entity2.get("ownerID"))) {
@@ -293,8 +294,7 @@ public class GameScreen implements Screen
 				{
 					world.destroyBody(e.getComponent(MovementComponent.class).body);
 					pooledEngine.removeEntity(e);
-				}
-				
+				}				
 				//e.getComponent(MovementComponent.class).body.setUserData(null);
 				//e.getComponent(MovementComponent.class).body = null;
 			} catch (Exception ex) {

@@ -46,8 +46,8 @@ public class NetworkSystem extends IteratingSystem {
         boolean deleteEntity = false;
         boolean entityExistsInNetwork = false;
         
-        if (GameScreen.toBeDeleted.contains(entity)) {
-        	deleteEntity = true;
+        if (!GameScreen.allEntities.contains(entity)) {
+        	//deleteEntity = true;
         }
         
         if (network.playerNum.equals(GameScreen.networkPlayerNum)) {

@@ -86,6 +86,7 @@ public class NetworkClientInput extends Thread {
 									Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 								}
 								else if (entity.get("type").equals("bullet")) {
+									System.out.println("Creating Bullet");
 									Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
 								}
 								else if (entity.get("type").equals("seal")) {
