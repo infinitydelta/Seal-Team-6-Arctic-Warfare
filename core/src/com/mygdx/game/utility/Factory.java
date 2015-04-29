@@ -557,11 +557,11 @@ public class Factory {
 	        {
 	        	id = ebullet.getId();
 	        }
-	        ebullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
+	        ebullet.add(new NetworkComponent("enemybullet", playerNum, id, p, m));
 	        GameScreen.pooledEngine.addEntity(ebullet);
 	        
 	        HashMap<String, Object> newEntData = new HashMap<String, Object>();
-	        newEntData.put("type", "bullet");
+	        newEntData.put("type", "enemybullet");
 			newEntData.put("playerNum", playerNum);
 			newEntData.put("ownerID", id);
 			newEntData.put("xPos", x);

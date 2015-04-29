@@ -126,7 +126,7 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     public void takeDamage(int amt)
     {
     	health = Math.max(0, health-amt);
-    	player.getComponent(HealthGUIComponent.class).setValue(health);
+    	if(player.getComponent(HealthGUIComponent.class)!=null)player.getComponent(HealthGUIComponent.class).setValue(health);
     	Factory.hithurt8.play();
     }
     
