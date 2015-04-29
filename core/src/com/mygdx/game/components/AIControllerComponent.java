@@ -16,9 +16,7 @@ public class AIControllerComponent extends Component implements Pool.Poolable {
     public float lastdx;
     public boolean mode = true; //true = attack, false = flee
     public boolean randWalk; //true = on, false = off
-    public int health = 3;
-    public boolean dead = false;
-    public boolean lastDead = false;
+
 
     public AIControllerComponent(Float speed) {
 		this.speed = speed;

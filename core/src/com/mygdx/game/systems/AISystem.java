@@ -25,6 +25,7 @@ public class AISystem extends IteratingSystem {
     private ComponentMapper<AIControllerComponent> aim = ComponentMapper.getFor(AIControllerComponent.class);
     private ComponentMapper<MovementComponent> cm = ComponentMapper.getFor(MovementComponent.class);
     private ComponentMapper<VisualComponent> vm = ComponentMapper.getFor(VisualComponent.class);
+    private ComponentMapper<EnemyComponent> em = ComponentMapper.getFor(EnemyComponent.class);
     HashMap<ComparableVector2,ComparableVector2> paths;
 
     float timeElapsed =0;
@@ -44,36 +45,11 @@ public class AISystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
 
-
-        /*
-        if(timeElapsed>4) {
-            timeElapsed=0;
-            ai.xIndex = (int) position.x;
-            ai.yIndex = (int) position.y;
-            ai.xTarIndex = (int) players.get(0).getComponent(PositionComponent.class).x;
-            ai.yTarIndex = (int) players.get(0).getComponent(PositionComponent.class).y;
-            paths.clear();
-            GenPath(new ComparableVector2(ai.xIndex, ai.yIndex), new ComparableVector2(ai.xTarIndex, ai.yTarIndex));
-            //ComparableVector2 dir = new ComparableVector2();
-            nextPos = paths.get(new ComparableVector2(ai.xIndex, ai.yIndex));
-        }
-
-        System.out.println(nextPos);
-        if(ai.xIndex>nextPos.x){
-            dir.set(-1,0);
-        }else if(ai.xIndex<nextPos.x){
-            dir.set(1,0);
-        }else if(ai.yIndex>nextPos.y){
-            dir.set(0,-1);
-        }else{
-            dir.set(0,1);
-        }
-        */
-
         AIControllerComponent ai = aim.get(entity);
         PositionComponent position = pm.get(entity);
         MovementComponent collision = cm.get(entity);
         VisualComponent visual = vm.get(entity);
+        EnemyComponent enemy = em.get(entity);
 
         timeElapsed += deltaTime;
         if (timeElapsed > 4) {
@@ -85,11 +61,7 @@ public class AISystem extends IteratingSystem {
             dir.set(xr, yr);
         }
 
-        if(ai.health<=0){
-            ai.dead = true;
-        }
-
-        if (!ai.dead){
+        if (enemy.health>0) {
             for (int i = 0; i < players.size(); i++) {
                 float px = players.get(i).getComponent(PositionComponent.class).x;
                 float py = players.get(i).getComponent(PositionComponent.class).y;
@@ -98,7 +70,7 @@ public class AISystem extends IteratingSystem {
                 float dx = px - position.x;
                 float dy = py - position.y;
                 if (dx * dx + dy * dy < 50) {
-                    if(players.get(i).getComponent(PlayerComponent.class).weaponComponent != null) {
+                    if (players.get(i).getComponent(PlayerComponent.class).weaponComponent != null) {
                         int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
                         //System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
                         if (fear < 10 && players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer == 0) {
@@ -131,20 +103,7 @@ public class AISystem extends IteratingSystem {
                 }
                 ai.lastdx = dx;
             }
-    }else{
-            if(ai.lastDead != ai.dead) {
-                //visual.setAnimation(Factory.seal_die_anim);
-            	Entity ds = Factory.createDeadSeal(position.x, position.y);
-            	if(visual.sprite.isFlipX())
-            	{
-            		ds.getComponent(VisualComponent.class).sprite.setFlip(true, false);
-            	}
-                GameScreen.toBeDeleted.add(entity);
-                
-            }
         }
-
-        ai.lastDead = ai.dead;
     }
 
 

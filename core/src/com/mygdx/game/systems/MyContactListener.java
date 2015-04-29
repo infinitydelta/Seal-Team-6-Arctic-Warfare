@@ -1,14 +1,12 @@
 package com.mygdx.game.systems;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.GameScreen;
-import com.mygdx.game.components.AIControllerComponent;
-import com.mygdx.game.components.NetworkComponent;
-import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.components.*;
 import com.mygdx.game.utility.EntityType;
 import com.mygdx.game.utility.Factory;
 
@@ -47,7 +45,18 @@ public class MyContactListener implements ContactListener {
         }
         if (etA.type == ('b') && etB.type == 'e')
         {
-           etB.e.getComponent(AIControllerComponent.class).health--;
+           etB.e.getComponent(EnemyComponent.class).health--;
+            if(etB.e.getComponent(EnemyComponent.class).health<=0) {
+                //visual.setAnimation(Factory.seal_die_anim);
+                Entity ds = Factory.createDeadSeal(etB.e.getComponent(PositionComponent.class).x, etB.e.getComponent(PositionComponent.class).y);
+                if(etB.e.getComponent(VisualComponent.class).sprite.isFlipX())
+                {
+                    ds.getComponent(VisualComponent.class).sprite.setFlip(true, false);
+                }
+                GameScreen.toBeDeleted.add(etB.e);
+
+            }
+
             //GameScreen.toBeDeleted.add(etA.e);
             
             VisualComponent vc = etA.e.getComponent(VisualComponent.class);
@@ -60,8 +69,17 @@ public class MyContactListener implements ContactListener {
         }
         if (etA.type == ('e') && etB.type == 'b')
         {
-            etA.e.getComponent(AIControllerComponent.class).health--;
-            GameScreen.toBeDeleted.add(etB.e);
+            etA.e.getComponent(EnemyComponent.class).health--;
+            if(etA.e.getComponent(EnemyComponent.class).health<=0) {
+                //visual.setAnimation(Factory.seal_die_anim);
+                Entity ds = Factory.createDeadSeal(etA.e.getComponent(PositionComponent.class).x, etA.e.getComponent(PositionComponent.class).y);
+                if(etA.e.getComponent(VisualComponent.class).sprite.isFlipX())
+                {
+                    ds.getComponent(VisualComponent.class).sprite.setFlip(true, false);
+                }
+                GameScreen.toBeDeleted.add(etA.e);
+
+            }
             
             VisualComponent vc = etB.e.getComponent(VisualComponent.class);
             PositionComponent pc = etB.e.getComponent(PositionComponent.class);

@@ -322,8 +322,9 @@ public class Factory {
         CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, ENEMY_COL, seal_col, p, seal, 'e');
 
         MovementComponent m = new MovementComponent(col, GameScreen.world, 0, 0, 0);
-        seal.add(m);
 
+        seal.add(m);
+        seal.add(new EnemyComponent());
         seal.add(new VisualComponent(seal_idle_anim));
         seal.add(new AIControllerComponent(-0.5f));
         
