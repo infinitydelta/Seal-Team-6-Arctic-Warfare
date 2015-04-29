@@ -69,7 +69,9 @@ public class AISystem extends IteratingSystem {
                 ai.yIndex = (int) position.y;
                 float dx = px - position.x;
                 float dy = py - position.y;
-                if (dx * dx + dy * dy < 50) {
+                float rot = (float) Math.atan2(dy + players.get(i).getComponent(MovementComponent.class).body.getLinearVelocity().y * .25f, dx + .25f * players.get(i).getComponent(MovementComponent.class).body.getLinearVelocity().x);
+                enemy.weapon.getComponent(VisualComponent.class).rotation = (float)Math.toDegrees(rot);
+                if (dx * dx + dy * dy < 75) {
                     if (players.get(i).getComponent(PlayerComponent.class).weaponComponent != null) {
                         int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
                         //System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
@@ -78,10 +80,18 @@ public class AISystem extends IteratingSystem {
                         }
                     }
                     visual.setAnimation(Factory.seal_walk_anim);
+                    enemy.weapon.getComponent(WeaponComponent.class).fire(rot);
                     ai.xTarIndex = (int) px;
                     ai.yTarIndex = (int) py;
-
-
+      
+                    VisualComponent weapvc = enemy.weapon.getComponent(VisualComponent.class);
+                    if (dx < 0) {
+                        if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+                        if (!weapvc.sprite.isFlipY()) weapvc.sprite.flip(false, true);
+                    } else {
+                        if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+                        if (weapvc.sprite.isFlipY()) weapvc.sprite.flip(false, true);
+                    }
                     if (!ai.mode) {
                         dir.set(ai.speed * dx, ai.speed * dy);
                     } else {

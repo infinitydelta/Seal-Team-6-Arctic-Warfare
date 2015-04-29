@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.audio.Music;
+
 import javafx.scene.shape.Line;
 
 import com.badlogic.ashley.core.Entity;
@@ -21,6 +22,7 @@ import com.mygdx.game.LoginScreen;
 import com.mygdx.game.MainGame;
 import com.mygdx.game.components.*;
 import com.mygdx.game.utility.RandomInt;
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
 
 /**
@@ -80,7 +82,9 @@ public class Factory {
     public static Texture whiteball;
     public static Texture objects;
     public static Texture gun1;
+    public static Texture gun2;
     public static Texture playerbullet;
+    public static Texture enemybullet;
     public static Texture worldTiles;
     public static Texture ammoElement;
     public static Texture heart;
@@ -92,10 +96,13 @@ public class Factory {
     
     public static Texture bulletDestroy;
     public static Animation bulletDestroyAnim;
+    public static Texture enemyBulletDestroy;
+    public static Animation enemyBulletDestroyAnim;
     
     public static Texture menuBG;
 
     public static Sound expl19;
+    public static Sound hithurt8;
     public static Music paris;
 
     public static void loadAssets()
@@ -110,7 +117,9 @@ public class Factory {
         whiteball = new Texture("white ball.png");
         objects = new Texture("objects.png");
         gun1 = new Texture("gun1.png");
+        gun2 = new Texture("gun2.png");
         playerbullet = new Texture("bullet.png");
+        enemybullet = new Texture("enemybullet.png");
         worldTiles = new Texture("map2.png");
         penguin_walk = new Texture("penguinWalk.png");
         penguin_idle = new Texture("penguinIdle.png");
@@ -123,6 +132,8 @@ public class Factory {
         hfront = new Texture("red.png");
         hback = new Texture("hback.png");
         bulletDestroy = new Texture("bulletdestroy.png");
+        enemyBulletDestroy = new Texture("enemybulletdestroy.png");
+        
         menuBG = new Texture("intro_screen.png");
         
         //colored pengus
@@ -146,6 +157,7 @@ public class Factory {
         
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
+        hithurt8 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Hit_Hurt8.wav"));
         paris = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Hotline Miami OST - Paris.mp3"));
 
         //animation
@@ -163,6 +175,15 @@ public class Factory {
         }
         bulletDestroyAnim = new Animation(1/60f, bulletframes);
         bulletDestroyAnim.setPlayMode(PlayMode.NORMAL);
+        
+        TextureRegion[] enemybulletframes = new TextureRegion[8];
+        TextureRegion[][] enemybulletTemp = TextureRegion.split(enemyBulletDestroy, 16, 16);
+        for(int i = 0; i < 8; i++)
+        {
+        	enemybulletframes[i] = enemybulletTemp[0][i];
+        }
+        enemyBulletDestroyAnim = new Animation(1/60f, enemybulletframes);
+        enemyBulletDestroyAnim.setPlayMode(PlayMode.NORMAL);
 
         //penguin animations
         penguin_idle_anim = makePenguIdleAnim(penguin_idle);
@@ -292,9 +313,13 @@ public class Factory {
             //GameScreen.myEntities.add(newEntData);
         }
         player.add(new NetworkComponent("player", playerNum, id, p, m));
+        
+        Entity weapon = Factory.createWeapon(1, playerNum, id);
+        player.getComponent(PlayerComponent.class).addWeapon(weapon);
 
 
         GameScreen.pooledEngine.addEntity(player);
+        GameScreen.pooledEngine.addEntity(weapon);
         
         HashMap<String, Object> newEntData = new HashMap<String, Object>();
 		newEntData.put("type", "player");
@@ -326,7 +351,7 @@ public class Factory {
         seal.add(m);
         seal.add(new EnemyComponent());
         seal.add(new VisualComponent(seal_idle_anim));
-        seal.add(new AIControllerComponent(-0.5f));
+        seal.add(new AIControllerComponent(-2f));
         
         if (id == null) {
         	id = seal.getId();
@@ -344,9 +369,12 @@ public class Factory {
             //GameScreen.myEntities.add(newEntData);
         }
         seal.add(new NetworkComponent("seal", playerNum, id, p, m));
-
-
+        
+        Entity weapon = Factory.createWeapon(2, playerNum, id);
+        seal.getComponent(EnemyComponent.class).weapon = weapon;
+        
         GameScreen.pooledEngine.addEntity(seal);
+        GameScreen.pooledEngine.addEntity(weapon);
 
         HashMap<String, Object> newEntData = new HashMap<String, Object>();
 		newEntData.put("type", "seal");
@@ -384,6 +412,9 @@ public class Factory {
         	id = networkPlayer.getId();
         }
         networkPlayer.add(new NetworkComponent("player", playerNum, id, p, m));
+        
+        Entity weapon = Factory.createWeapon(1, playerNum, id);
+        networkPlayer.getComponent(PlayerComponent.class).addWeapon(weapon);
 
         HashMap<String, Object> newEntData = new HashMap<String, Object>();
 		newEntData.put("type", "player");
@@ -398,20 +429,55 @@ public class Factory {
         return networkPlayer;
     }
 
-    public static Entity createWeapon()
+    public static Entity createWeapon(int type, Integer playerNum, Long id)
     {
 
         Entity weapon = GameScreen.pooledEngine.createEntity();
-        TextureRegion weap = new TextureRegion(gun1, 0 * 32, 0 * 32, 32, 32);
-        weapon.add(new PositionComponent(0, 0));
-        weapon.add(new VisualComponent(weap));
-        int max = 20;
-        if(LoginScreen.guest)
+        PositionComponent pc = new PositionComponent(0, 0);
+        weapon.add(pc);
+        
+        switch(type)
         {
-        	max = 10;
+        case 1:
+	        TextureRegion weap = new TextureRegion(gun1, 0 * 32, 0 * 32, 32, 32);
+	        
+	        weapon.add(new VisualComponent(weap));
+	        int max = 20;
+	        if(LoginScreen.guest)
+	        {
+        		max = 10;
+        	}
+        	weapon.add(new WeaponComponent(weapon, max, 8f, .8f, type));
+        	break;
+        case 2:
+        	TextureRegion weap2 = new TextureRegion(gun2, 0 * 32, 0 * 32, 32, 32);
+	        weapon.add(new VisualComponent(weap2));
+        	weapon.add(new WeaponComponent(weapon, 10, 6f, 1f, type));
+        	break;
+        default:
+        	TextureRegion weapd = new TextureRegion(gun1, 0 * 32, 0 * 32, 32, 32);
+	        
+	        weapon.add(new VisualComponent(weapd));
+	        int maxd = 20;
+	        if(LoginScreen.guest)
+	        {
+        		max = 10;
+        	}
+        	weapon.add(new WeaponComponent(weapon, maxd, 8f, 1f, type));
+        	break;
         }
-        weapon.add(new WeaponComponent(weapon, max));
-        GameScreen.pooledEngine.addEntity(weapon);
+        
+        //GameScreen.pooledEngine.addEntity(weapon);
+        
+        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+		newEntData.put("type", "weapon");
+		newEntData.put("playerNum", playerNum);
+		newEntData.put("ownerID", id);
+		newEntData.put("xPos", pc.x);
+		newEntData.put("yPos", pc.y);
+		newEntData.put("xVel", 0f);
+		newEntData.put("yVel", 0f);
+		GameScreen.allEntities.add(newEntData);
 
         return weapon;
 
@@ -422,8 +488,6 @@ public class Factory {
         Entity bullet = GameScreen.pooledEngine.createEntity();
         PositionComponent p = new PositionComponent(x, y, angle);
         bullet.add(p);
-        PolygonShape rectangle = new PolygonShape();
-        rectangle.setAsBox(.2f, .1f);
         CircleShape circle = new CircleShape();
         circle.setRadius(.2f);
         float xVel = (float) Math.cos(angle) * vel;
@@ -462,6 +526,54 @@ public class Factory {
 			}
         }
         return bullet;
+        //rectangle.dispose();
+        //circle.dispose();
+    }
+    
+    public static Entity createEnemyBullet(float x, float y, float angle, float vel, Integer playerNum, Long id)
+    {
+        Entity ebullet = GameScreen.pooledEngine.createEntity();
+        PositionComponent p = new PositionComponent(x, y, angle);
+        ebullet.add(p);
+        CircleShape circle = new CircleShape();
+        circle.setRadius(.2f);
+        float xVel = (float) Math.cos(angle) * vel;
+        float yVel = (float) Math.sin(angle) * vel;
+        short bullet_col = PLAYER_COL | WALL;
+        synchronized (GameScreen.world) {
+        	CollisionComponent col = new CollisionComponent(GameScreen.world, BodyDef.BodyType.DynamicBody, circle, ENEMY_PROJ_COL, bullet_col, p, ebullet, 'b');
+	        MovementComponent m = new MovementComponent(col, GameScreen.world, xVel, yVel, 0);
+	        ebullet.add(m);
+	        //add visual
+	        TextureRegion b = new TextureRegion(enemybullet, 0, 0, 16, 16);
+	        VisualComponent vc = new VisualComponent(b);
+	
+	        vc.rotation = ((float)Math.toDegrees(angle));
+	        //vc.sprite.setScale(.8f);
+	        ebullet.add(vc);
+	        //
+	
+	        if (id == null) 
+	        {
+	        	id = ebullet.getId();
+	        }
+	        ebullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
+	        GameScreen.pooledEngine.addEntity(ebullet);
+	        
+	        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+	        newEntData.put("type", "bullet");
+			newEntData.put("playerNum", playerNum);
+			newEntData.put("ownerID", id);
+			newEntData.put("xPos", x);
+			newEntData.put("yPos", y);
+			newEntData.put("xVel", 0f);
+			newEntData.put("yVel", 0f);
+			GameScreen.allEntities.add(newEntData);
+			if (GameScreen.networkPlayerNum == playerNum) {
+				GameScreen.myEntities.add(newEntData);
+			}
+        }
+        return ebullet;
         //rectangle.dispose();
         //circle.dispose();
     }
@@ -615,6 +727,26 @@ public class Factory {
     	
     	return bulletDestroyed;
     }
+    public static Entity createEnemyBulletDestroyed(float x, float y, float rotation)
+    {
+    	Entity bulletDestroyed = new Entity();
+    	
+    	PositionComponent p = new PositionComponent(x, y);
+    	bulletDestroyed.add(p);
+    	
+    	VisualComponent vc = new VisualComponent(Factory.enemyBulletDestroyAnim);
+    	vc.animated = true;
+    	vc.rotation = rotation;
+    	vc.destroyAfterPlay = true;
+    	vc.stateTime = 0f;
+    	vc.animation.setPlayMode(PlayMode.NORMAL);
+    	vc.sprite.setOriginCenter();
+    	bulletDestroyed.add(vc);
+    	GameScreen.pooledEngine.addEntity(bulletDestroyed);
+    	
+    	return bulletDestroyed;
+    }
+    
     public static Entity createDeadSeal(float x, float y)
     {
     	Entity deadSeal = new Entity();

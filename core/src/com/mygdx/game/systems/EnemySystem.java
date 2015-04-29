@@ -27,6 +27,13 @@ public class EnemySystem extends IteratingSystem {
         PositionComponent position = pm.get(entity);
         VisualComponent visual = vm.get(entity);
         MovementComponent collision = cm.get(entity);
+	
+	PositionComponent weaponPosition = em.get(entity).weapon.getComponent(PositionComponent.class);
+	if (weaponPosition != null)
+	{
+	     weaponPosition.x = position.x;
+	     weaponPosition.y = position.y;
+	}
 
         for (int i = 0; i < players.size(); i++) {
             float px = players.get(i).getComponent(PositionComponent.class).x;

@@ -28,21 +28,22 @@ public class WeaponComponent extends Component implements Pool.Poolable
     //bullet properties
     public float bulletVelocity;
     public float force;
-    Entity bullet;
+    int bullettype;
     
     WeaponGUIComponent wgc;
 
-    public WeaponComponent(Entity entity, int max)
+    public WeaponComponent(Entity entity, int max, float firerate, float reload, int bullettype)
     {
         automatic = false;
         reloading = false;
         this.entity = entity;
-        fireRate = 8;
-        reloadtime = 1f;
+        fireRate = firerate;
+        reloadtime = reload;
         magSize = max;
         currentclip = magSize;
         firetimer = 0;
         reloadtimer = 0;
+        this.bullettype = bullettype;
         
     }
 
@@ -59,7 +60,7 @@ public class WeaponComponent extends Component implements Pool.Poolable
     	}
     	if(reloading)
     	{
-    		wgc.empty();
+    		if(wgc != null) wgc.empty();
     		if(reloadtimer < reloadtime)
     		{
     			reloadtimer += deltatime;
@@ -69,7 +70,7 @@ public class WeaponComponent extends Component implements Pool.Poolable
 				reloading = false;
 				reloadtimer = 0;
 				currentclip = magSize;
-				wgc.reload();
+				if(wgc != null) wgc.reload();
 			}
     	}
     	else if(firetimer < 1/fireRate)
@@ -81,11 +82,22 @@ public class WeaponComponent extends Component implements Pool.Poolable
     {
     	if(!reloading && firetimer > 1/fireRate)
     	{
-    		Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
+    		switch (bullettype) 
+    		{
+			case 1:
+				Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
+				break;
+			case 2:
+				Factory.createEnemyBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 15f, GameScreen.networkPlayerNum, null);
+				break;
+			default:
+				Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
+				break;
+			}
             Factory.expl19.play(.3f);
             firetimer = 0;
             currentclip--;
-            wgc.fire();
+            if(wgc != null) wgc.fire();
     	}
     }
     public void setGUIComponent(WeaponGUIComponent wgc)
