@@ -349,7 +349,7 @@ public class Factory {
         seal.add(m);
         seal.add(new EnemyComponent());
         seal.add(new VisualComponent(seal_idle_anim));
-        seal.add(new AIControllerComponent(-0.5f));
+        seal.add(new AIControllerComponent(-2f));
         
         if (id == null) {
         	id = seal.getId();
@@ -450,8 +450,7 @@ public class Factory {
         case 2:
         	TextureRegion weap2 = new TextureRegion(gun2, 0 * 32, 0 * 32, 32, 32);
 	        weapon.add(new VisualComponent(weap2));
-	        int max2 = 3;
-        	weapon.add(new WeaponComponent(weapon, max2, 6f, 1f, type));
+        	weapon.add(new WeaponComponent(weapon, 10, 6f, 1f, type));
         	break;
         default:
         	TextureRegion weapd = new TextureRegion(gun1, 0 * 32, 0 * 32, 32, 32);

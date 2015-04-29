@@ -88,7 +88,7 @@ public class WeaponComponent extends Component implements Pool.Poolable
 				Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
 				break;
 			case 2:
-				Factory.createEnemyBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
+				Factory.createEnemyBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 15f, GameScreen.networkPlayerNum, null);
 				break;
 			default:
 				Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
