@@ -69,6 +69,8 @@ public class AISystem extends IteratingSystem {
                 ai.yIndex = (int) position.y;
                 float dx = px - position.x;
                 float dy = py - position.y;
+                float rot = (float) Math.toDegrees(Math.atan2(dy, dx));
+                enemy.weapon.getComponent(VisualComponent.class).rotation = rot;
                 if (dx * dx + dy * dy < 50) {
                     if (players.get(i).getComponent(PlayerComponent.class).weaponComponent != null) {
                         int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
@@ -80,11 +82,14 @@ public class AISystem extends IteratingSystem {
                     visual.setAnimation(Factory.seal_walk_anim);
                     ai.xTarIndex = (int) px;
                     ai.yTarIndex = (int) py;
-
-                    if (dx > 0) {
-                        if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
-                    } else {
+                    
+                    VisualComponent weapvc = enemy.weapon.getComponent(VisualComponent.class);
+                    if (dx < 0) {
                         if (visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+                        if (!weapvc.sprite.isFlipY()) weapvc.sprite.flip(false, true);
+                    } else {
+                        if (!visual.sprite.isFlipX()) visual.sprite.flip(true, false);
+                        if (weapvc.sprite.isFlipY()) weapvc.sprite.flip(false, true);
                     }
                     if (!ai.mode) {
                         dir.set(ai.speed * dx, ai.speed * dy);

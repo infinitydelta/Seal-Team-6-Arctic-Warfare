@@ -445,7 +445,7 @@ public class Factory {
 	        {
         		max = 10;
         	}
-        	weapon.add(new WeaponComponent(weapon, max, 8f, 1f, type));
+        	weapon.add(new WeaponComponent(weapon, max, 8f, .8f, type));
         	break;
         case 2:
         	TextureRegion weap2 = new TextureRegion(gun2, 0 * 32, 0 * 32, 32, 32);
@@ -470,7 +470,6 @@ public class Factory {
         
         HashMap<String, Object> newEntData = new HashMap<String, Object>();
 		newEntData.put("type", "weapon");
-		newEntData.put("weaponType", type);
 		newEntData.put("playerNum", playerNum);
 		newEntData.put("ownerID", id);
 		newEntData.put("xPos", pc.x);
