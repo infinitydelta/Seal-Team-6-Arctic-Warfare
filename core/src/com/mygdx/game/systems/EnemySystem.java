@@ -16,6 +16,7 @@ public class EnemySystem extends IteratingSystem {
     private ComponentMapper<VisualComponent> vm = ComponentMapper.getFor(VisualComponent.class);
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<MovementComponent> cm = ComponentMapper.getFor(MovementComponent.class);
+    private ComponentMapper<EnemyComponent> em = ComponentMapper.getFor(EnemyComponent.class);
 
     public EnemySystem() {
         super(Family.getFor(EnemyComponent.class));
@@ -27,7 +28,7 @@ public class EnemySystem extends IteratingSystem {
         PositionComponent position = pm.get(entity);
         VisualComponent visual = vm.get(entity);
         MovementComponent collision = cm.get(entity);
-	
+
 	PositionComponent weaponPosition = em.get(entity).weapon.getComponent(PositionComponent.class);
 	if (weaponPosition != null)
 	{
