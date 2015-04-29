@@ -102,6 +102,7 @@ public class Factory {
     public static Texture menuBG;
 
     public static Sound expl19;
+    public static Sound hithurt8;
     public static Music paris;
 
     public static void loadAssets()
@@ -156,6 +157,7 @@ public class Factory {
         
         //sound?
         expl19 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Explosion19.wav"));
+        hithurt8 = Gdx.audio.newSound(Gdx.files.internal("Sounds/Hit_Hurt8.wav"));
         paris = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Hotline Miami OST - Paris.mp3"));
 
         //animation
