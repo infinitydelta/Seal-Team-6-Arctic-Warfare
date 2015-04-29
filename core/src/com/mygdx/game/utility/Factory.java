@@ -2,25 +2,30 @@ package com.mygdx.game.utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.badlogic.gdx.audio.Music;
-import javafx.scene.shape.Line;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.LoginScreen;
-import com.mygdx.game.MainGame;
-import com.mygdx.game.components.*;
-import com.mygdx.game.utility.RandomInt;
+import com.mygdx.game.components.AIControllerComponent;
+import com.mygdx.game.components.CollisionComponent;
+import com.mygdx.game.components.EnemyComponent;
+import com.mygdx.game.components.MovementComponent;
+import com.mygdx.game.components.NetworkComponent;
+import com.mygdx.game.components.PlayerComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.VisualComponent;
+import com.mygdx.game.components.WeaponComponent;
 
 
 /**
@@ -278,25 +283,14 @@ public class Factory {
         
         if (id == null) {
         	id = player.getId();
-        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
-        	if (GameScreen.networkPlayerNum == 0) {
-    			newEntData.put("type", "player");
-    			newEntData.put("playerNum", playerNum);
-    			newEntData.put("ownerID", id);
-    			newEntData.put("xPos", x);
-    			newEntData.put("yPos", y);
-    			newEntData.put("xVel", 0f);
-    			newEntData.put("yVel", 0f);
-    			//GameScreen.allEntities.add(newEntData);
-            }
-            //GameScreen.myEntities.add(newEntData);
         }
+        
         player.add(new NetworkComponent("player", playerNum, id, p, m));
 
 
         GameScreen.pooledEngine.addEntity(player);
         
-        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+        ConcurrentHashMap<String, Object> newEntData = new ConcurrentHashMap<String, Object>();
 		newEntData.put("type", "player");
 		newEntData.put("playerNum", playerNum);
 		newEntData.put("ownerID", id);
@@ -305,6 +299,8 @@ public class Factory {
 		newEntData.put("xVel", 0f);
 		newEntData.put("yVel", 0f);
 		GameScreen.allEntities.add(newEntData);
+		if (playerNum == GameScreen.networkPlayerNum)
+			GameScreen.myEntities.add(newEntData);
 
         return player;
     }
@@ -330,25 +326,13 @@ public class Factory {
         
         if (id == null) {
         	id = seal.getId();
-        	HashMap<String, Object> newEntData = new HashMap<String, Object>();
-        	if (GameScreen.networkPlayerNum == 0) {
-    			newEntData.put("type", "seal");
-    			newEntData.put("playerNum", playerNum);
-    			newEntData.put("ownerID", id);
-    			newEntData.put("xPos", x);
-    			newEntData.put("yPos", y);
-    			newEntData.put("xVel", 0f);
-    			newEntData.put("yVel", 0f);
-    			//GameScreen.allEntities.add(newEntData);
-            }
-            //GameScreen.myEntities.add(newEntData);
         }
         seal.add(new NetworkComponent("seal", playerNum, id, p, m));
 
 
         GameScreen.pooledEngine.addEntity(seal);
 
-        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+        ConcurrentHashMap<String, Object> newEntData = new ConcurrentHashMap<String, Object>();
 		newEntData.put("type", "seal");
 		newEntData.put("playerNum", playerNum);
 		newEntData.put("ownerID", id);
@@ -357,6 +341,8 @@ public class Factory {
 		newEntData.put("xVel", 0f);
 		newEntData.put("yVel", 0f);
 		GameScreen.allEntities.add(newEntData);
+		if (playerNum == GameScreen.networkPlayerNum)
+			GameScreen.myEntities.add(newEntData);
         
         return seal;
     }
@@ -385,7 +371,7 @@ public class Factory {
         }
         networkPlayer.add(new NetworkComponent("player", playerNum, id, p, m));
 
-        HashMap<String, Object> newEntData = new HashMap<String, Object>();
+        ConcurrentHashMap<String, Object> newEntData = new ConcurrentHashMap<String, Object>();
 		newEntData.put("type", "player");
 		newEntData.put("playerNum", playerNum);
 		newEntData.put("ownerID", id);
@@ -394,6 +380,8 @@ public class Factory {
 		newEntData.put("xVel", 0f);
 		newEntData.put("yVel", 0f);
 		GameScreen.allEntities.add(newEntData);
+		if (playerNum == GameScreen.networkPlayerNum)
+			GameScreen.myEntities.add(newEntData);
 
         return networkPlayer;
     }
@@ -448,8 +436,8 @@ public class Factory {
 	        bullet.add(new NetworkComponent("bullet", playerNum, id, p, m));
 	        GameScreen.pooledEngine.addEntity(bullet);
 	        
-	        HashMap<String, Object> newEntData = new HashMap<String, Object>();
-	        newEntData.put("type", "bullet");
+	        ConcurrentHashMap<String, Object> newEntData = new ConcurrentHashMap<String, Object>();
+			newEntData.put("type", "bullet");
 			newEntData.put("playerNum", playerNum);
 			newEntData.put("ownerID", id);
 			newEntData.put("xPos", x);
@@ -457,9 +445,8 @@ public class Factory {
 			newEntData.put("xVel", 0f);
 			newEntData.put("yVel", 0f);
 			GameScreen.allEntities.add(newEntData);
-			if (GameScreen.networkPlayerNum == playerNum) {
+			if (playerNum == GameScreen.networkPlayerNum)
 				GameScreen.myEntities.add(newEntData);
-			}
         }
         return bullet;
         //rectangle.dispose();

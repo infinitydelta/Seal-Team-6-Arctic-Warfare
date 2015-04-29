@@ -1,7 +1,7 @@
 package com.mygdx.game.networking;
 
 import java.io.ObjectInputStream;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.gdx.Gdx;
@@ -39,11 +39,11 @@ public class NetworkClientInput extends Thread {
 		try {
 			Object o = null;
 			o = ois.readObject();
-			if (o.getClass() == HashMap.class) {
+			if (o.getClass() == ConcurrentHashMap.class) {
 				System.out.println("Receiving Hashmap");
 				
-				GameScreen.networkPlayerNum = (Integer)((HashMap<String, Object>)o).get("playerNum");
-				long mapSeed = (Long)((HashMap<String, Object>)o).get("mapSeed");
+				GameScreen.networkPlayerNum = (Integer)((ConcurrentHashMap<String, Object>)o).get("playerNum");
+				long mapSeed = (Long)((ConcurrentHashMap<String, Object>)o).get("mapSeed");
 				RandomInt.setSeed(mapSeed);
 				DungeonGenerator.generateDungeon(gScreen);
 				
@@ -59,42 +59,52 @@ public class NetworkClientInput extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				Object o = null;
-				try {
-					o = ois.readObject();
-				}
-				catch (Exception e) {System.out.println("Exception in NetworkClient line 87:" + e.getMessage());}
-
+				Object o = ois.readObject();
 				if (o.getClass() == CopyOnWriteArraySet.class) {
 					//System.out.println("Receiving (" + ((CopyOnWriteArraySet<HashMap<String, Object>>)o).size() + "):" + o.toString());
 					
-					for (HashMap<String, Object> entity : (CopyOnWriteArraySet<HashMap<String, Object>>)o) {
-						boolean entityExists = false;
-						for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
-		            		if (entity2.get("playerNum").equals(entity.get("playerNum")) && entity2.get("ownerID").equals(entity.get("ownerID"))) {
-		            			//Entity received exists in allEntries, so replace its values
-		            			GameScreen.allEntities.remove(entity2);
-		            			GameScreen.allEntities.add(entity);
-		            			entityExists = true;
-		            		}
-		            	}
-						
-						if (!entityExists) {
-							//Create the entity
-							synchronized (GameScreen.world) {
-								if (entity.get("type").equals("player")) {
-									Factory.createPlayer((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
-								}
-								else if (entity.get("type").equals("bullet")) {
-									System.out.println("Creating Bullet");
-									Factory.createBullet((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Float) entity.get("xVel"), (Float) entity.get("yVel"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
-								}
-								else if (entity.get("type").equals("seal")) {
-									Factory.createSeal((Float) entity.get("xPos"), (Float) entity.get("yPos"), (Integer)entity.get("playerNum"), (Long) entity.get("ownerID"));
+					CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> oCasted = ((CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>)o);
+					
+					//Remove any entities that arent mine from allEntities, and clone all of these entities to oldEntities
+					CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> oldEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
+					for(ConcurrentHashMap<String, Object> allEnt : GameScreen.allEntities ) {
+						if (!(allEnt.get("playerNum")).equals(GameScreen.networkPlayerNum)) {
+							ConcurrentHashMap<String, Object> allEntClone = allEnt;
+							oldEntities.add(allEntClone);
+							GameScreen.allEntities.remove(allEnt);
+						}
+					}
+					
+					//Add all incoming entities that arent mine to allEntities
+					for(ConcurrentHashMap<String, Object> incEnt : oCasted ) {
+						if (!(incEnt.get("playerNum")).equals(GameScreen.networkPlayerNum))
+							GameScreen.allEntities.add(incEnt);
+					}
+					
+					//Create an instance of every allEntity that is not in oldEntity but doesnt belong to me
+					for(ConcurrentHashMap<String, Object> allEnt : GameScreen.allEntities ) {
+						boolean oldEntExists = false;
+						for(ConcurrentHashMap<String, Object> oldEnt : oldEntities ) {
+							if (allEnt.get("playerNum").equals(oldEnt.get("playerNum")) && allEnt.get("ownerID").equals(oldEnt.get("ownerID")))
+								oldEntExists = true;
+						}
+						if (!oldEntExists) {
+							if (!allEnt.get("playerNum").equals(GameScreen.networkPlayerNum)) {
+								synchronized (GameScreen.world) {
+									if (allEnt.get("type").equals("player")) {
+										Factory.createPlayer((Float) allEnt.get("xPos"), (Float) allEnt.get("yPos"), (Integer)allEnt.get("playerNum"), (Long) allEnt.get("ownerID"));
+									}
+									else if (allEnt.get("type").equals("bullet")) {
+										Factory.createBullet((Float) allEnt.get("xPos"), (Float) allEnt.get("yPos"), (Float) allEnt.get("xVel"), (Float) allEnt.get("yVel"), (Integer)allEnt.get("playerNum"), (Long) allEnt.get("ownerID"));
+									}
+									else if (allEnt.get("type").equals("seal")) {
+										Factory.createSeal((Float) allEnt.get("xPos"), (Float) allEnt.get("yPos"), (Integer)allEnt.get("playerNum"), (Long) allEnt.get("ownerID"));
+									}
 								}
 							}
 						}
 					}
+					
 					//Run NetworkSystem here
 					GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 				}

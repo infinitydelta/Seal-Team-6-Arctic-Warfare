@@ -23,6 +23,7 @@ public class NetworkHost {
 	public NetworkHostConnectHandler networkHostConnectHandler;
 	
 	public static int numPlayers = 1;
+	
 	public static ConcurrentHashMap<Socket, Integer> playersConnected = new ConcurrentHashMap<Socket, Integer>();
 	
 	public NetworkHost(GameScreen gScreen) {

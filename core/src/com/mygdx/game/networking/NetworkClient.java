@@ -1,8 +1,5 @@
 package com.mygdx.game.networking;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.net.Socket;
@@ -13,9 +10,6 @@ public class NetworkClient {
 	public GameScreen gScreen;
 	public NetworkClientInput netCliInput;
 	public NetworkClientOutput netCliOutput;
-	
-	ObjectInputStream ois;
-	ObjectOutputStream oos;
 	
 	public NetworkClient(GameScreen gScreen) {
 		this.gScreen = gScreen;
@@ -29,5 +23,6 @@ public class NetworkClient {
 		NetworkClientInput netCliInput = new NetworkClientInput(gScreen, socket);
 		while (!gScreen.initialized) {};
 		NetworkClientOutput netCliOutput = new NetworkClientOutput(gScreen, socket);
+		//NetworkClientPingpong netCliPp = new NetworkClientPingpong(gScreen, socket);
 	}
 }

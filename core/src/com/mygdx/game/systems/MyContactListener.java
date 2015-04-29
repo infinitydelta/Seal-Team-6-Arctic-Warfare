@@ -71,7 +71,6 @@ public class MyContactListener implements ContactListener {
         {
             etA.e.getComponent(EnemyComponent.class).health--;
             if(etA.e.getComponent(EnemyComponent.class).health<=0) {
-                //visual.setAnimation(Factory.seal_die_anim);
                 Entity ds = Factory.createDeadSeal(etA.e.getComponent(PositionComponent.class).x, etA.e.getComponent(PositionComponent.class).y);
                 if(etA.e.getComponent(VisualComponent.class).sprite.isFlipX())
                 {

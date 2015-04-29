@@ -2,6 +2,7 @@
 package com.mygdx.game.systems;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -27,13 +28,12 @@ public class NetworkSystem extends IteratingSystem {
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-    		
+    protected synchronized void processEntity(Entity entity, float deltaTime) {	//Updates myEntities, instances with properties of allEntites, and flags objects not in allEntities for local deletion
         PositionComponent pos = pm.get(entity);
         MovementComponent move = mm.get(entity);
         NetworkComponent network = nm.get(entity);
         
-        HashMap<String, Object> newEntityData = new HashMap<String, Object>();
+        ConcurrentHashMap<String, Object> newEntityData = new ConcurrentHashMap<String, Object>();
         newEntityData.put("type", network.type);
         newEntityData.put("playerNum", network.playerNum);
         newEntityData.put("ownerID", network.ownerID);
@@ -42,62 +42,47 @@ public class NetworkSystem extends IteratingSystem {
         newEntityData.put("xVel", move.xVel);
         newEntityData.put("yVel", move.yVel);
         
-        boolean myEntityFound = false;
-        boolean deleteEntity = false;
-        boolean entityExistsInNetwork = false;
         
-        if (!GameScreen.allEntities.contains(entity)) {
-        	//deleteEntity = true;
-        }
-        
-        if (network.playerNum.equals(GameScreen.networkPlayerNum)) {
-    		for (HashMap<String, Object> entity2 : GameScreen.myEntities) {
-        		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-        			GameScreen.myEntities.remove(entity2);
-        			if (!deleteEntity)
-        				GameScreen.myEntities.add(newEntityData);
-        			myEntityFound = true;
+        if (network.playerNum.equals(GameScreen.networkPlayerNum)) {	//This belong to myEntities
+    		for (ConcurrentHashMap<String, Object> myEnt : GameScreen.myEntities) {	
+        		if (myEnt.get("playerNum").equals(GameScreen.networkPlayerNum) && myEnt.get("ownerID").equals(newEntityData.get("ownerID"))) {	//Find this entity in myEntities
+        			GameScreen.myEntities.remove(myEnt);	//Remove it from myEntities
+        			for (ConcurrentHashMap<String, Object> allEnt : GameScreen.allEntities) {	//Find it in allEntities as well to delete it there too
+        				if (allEnt.get("playerNum").equals(GameScreen.networkPlayerNum) && allEnt.get("ownerID").equals(newEntityData.get("ownerID")))
+        					GameScreen.allEntities.remove(allEnt);	//Remove it from allEntities as well
+        			}
         		}
         	}
-    		if (!deleteEntity)
-    			GameScreen.myEntities.add(newEntityData);
-    		//Populate and replace myEntities with newEntities
+    		GameScreen.myEntities.add(newEntityData);	//And replace it with a new copy
+    		GameScreen.allEntities.add(newEntityData);	//And replace it with a new copy
         }
-        else {
-        	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
-        		if (entity2.get("playerNum").equals(network.playerNum) && entity2.get("ownerID").equals(network.ownerID)) {
-        			move.xVel = (Float)entity2.get("xVel");
-                    move.yVel = (Float)entity2.get("yVel");
-        			pos.x = (Float)entity2.get("xPos");
-        			pos.y = (Float)entity2.get("yPos");
+        else {	//This doesnt belong in myEntities, so we should update our local copies to match the correct attributes
+        	for (ConcurrentHashMap<String, Object> allEnt : GameScreen.allEntities) {	//This doesnt belong to me
+        		if (allEnt.get("playerNum").equals(network.playerNum) && allEnt.get("ownerID").equals(network.ownerID)) {	//Find this entity in allEntities, and update its attributes
+        			move.xVel = (Float)allEnt.get("xVel");
+                    move.yVel = (Float)allEnt.get("yVel");
+        			pos.x = (Float)allEnt.get("xPos");
+        			pos.y = (Float)allEnt.get("yPos");
         			synchronized (GameScreen.world) {
                         move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
                     }
         		}
         	}
-        	//Update each entity with networkComponent with its corresponding allEntities value
         }
-    	for (HashMap<String, Object> entity2 : GameScreen.allEntities) {
-    		if (entity2.get("playerNum").equals(newEntityData.get("playerNum")) && entity2.get("ownerID").equals(newEntityData.get("ownerID"))) {
-    			GameScreen.allEntities.remove(entity2);
-    			if (!deleteEntity)
-    				GameScreen.allEntities.add(newEntityData);
-    			entityExistsInNetwork = true;
+        boolean entityShouldExist = false;
+    	for (ConcurrentHashMap<String, Object> allEnt : GameScreen.allEntities) {
+    		if (allEnt.get("playerNum").equals(newEntityData.get("playerNum")) && allEnt.get("ownerID").equals(newEntityData.get("ownerID"))) {	//Find this entity in allEntities
+    			if (GameScreen.networkPlayerNum == 0) {	//If we are the host, we should update allEntities to match this data
+	    			GameScreen.allEntities.remove(allEnt);	//Remove it from allEntities
+					GameScreen.allEntities.add(newEntityData);	//Replace it with new data
+    			}
+    			entityShouldExist = true;
     		}
     	}
-    	if (!deleteEntity)
-    		GameScreen.allEntities.add(newEntityData);
-    	if (!entityExistsInNetwork) {
-    		GameScreen.toBeDeleted.add(entity);
+    	if (!entityShouldExist) {
+    		if (!network.type.equals("player")) {
+    			GameScreen.toBeDeleted.add(entity);
+    		}
     	}
-    	if (deleteEntity) {
-    		GameScreen.toBeDeleted.add(entity);
-    	}
-    	//Unconditionally replaces this entity in allEntities
-    	
-        /*if (GameScreen.networkPlayerNum == 0) {
-	        System.out.println("All ents: " + GameScreen.allEntities.size());
-	        System.out.println("My ents: " + GameScreen.myEntities.size());
-        }*/
     }
 }

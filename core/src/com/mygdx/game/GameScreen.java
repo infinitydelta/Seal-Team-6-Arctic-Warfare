@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.badlogic.ashley.core.Entity;
@@ -14,7 +15,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -95,8 +95,8 @@ public class GameScreen implements Screen
 	
 	public static int networkPlayerNum;
 	
-	public static CopyOnWriteArraySet<HashMap<String, Object>> myEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
-    public static CopyOnWriteArraySet<HashMap<String, Object>> allEntities = new CopyOnWriteArraySet<HashMap<String, Object>>();
+	public static CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> myEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
+    public static CopyOnWriteArraySet<ConcurrentHashMap<String, Object>> allEntities = new CopyOnWriteArraySet<ConcurrentHashMap<String, Object>>();
     
     public static NetworkSystem networkSystem = new NetworkSystem();
 
@@ -145,13 +145,13 @@ public class GameScreen implements Screen
 		pooledEngine.addSystem(new PlayerSystem());
 		pooledEngine.addSystem(new MovementSystem());
 		pooledEngine.addSystem(new RenderingSystem(camera));
-		networkSystem.setProcessing(false);
-		pooledEngine.addSystem(networkSystem);
 		pooledEngine.addSystem(new WeaponSystem());
 		if (host) {
 			pooledEngine.addSystem(new AISystem());
 			pooledEngine.getSystem(AISystem.class).setPlayers(pooledEngine);
 		}
+		networkSystem.setProcessing(false);
+		pooledEngine.addSystem(networkSystem);
 		toBeDeleted = new LinkedList<Entity>();
 		
 
@@ -175,7 +175,7 @@ public class GameScreen implements Screen
 		
 		//create seal entity
 		if (host) {
-			for (int i = 0; i<10; i++) {
+			for (int i = 0; i<0; i++) {
 				pos = DungeonGenerator.getSpawnPosition();
 				Entity seal = Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
 			}
@@ -214,8 +214,6 @@ public class GameScreen implements Screen
 		//weaponz.add(new WeaponComponent(weaponz));
 		//play.getComponent(PlayerComponent.class).addWeapon(weaponz);
 		deltatimesink = 0.0f;
-
-
 	}
 
 	Vector2 camPos()
@@ -280,12 +278,16 @@ public class GameScreen implements Screen
 				//Remove entity from network entity holders
 				
 				NetworkComponent nwComp = e.getComponent(NetworkComponent.class);
-				for (HashMap<String, Object> entity2 : myEntities) {
-					if (nwComp.playerNum.equals(entity2.get("playerNum")) && nwComp.ownerID.equals(entity2.get("ownerID"))) {
-						if (entity2.get("playerNum").equals(networkPlayerNum)) {
-							allEntities.remove(entity2);
-							myEntities.remove(entity2);
+				for (ConcurrentHashMap<String, Object> myEnt : myEntities) {
+					if (nwComp.playerNum.equals(myEnt.get("playerNum")) && nwComp.ownerID.equals(myEnt.get("ownerID"))) {	//Find this entity in myEntities
+						if (myEnt.get("playerNum").equals(networkPlayerNum)) {	//If this belongs to me, delete it
+							myEntities.remove(myEnt);
 						}
+					}
+				}
+				for (ConcurrentHashMap<String, Object> allEnt : allEntities) {
+					if (nwComp.playerNum.equals(allEnt.get("playerNum")) && nwComp.ownerID.equals(allEnt.get("ownerID"))) {	//Find this entity in allEntities
+						allEntities.remove(allEnt);	//Delete it
 					}
 				}
 				//e.removeAll();

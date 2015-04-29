@@ -33,11 +33,14 @@ public class NetworkClientOutput extends Thread {
 	public void run() {
 		while (true) {
 			try {
+				//Run NetworkSystem here to update myEntities
 				//GameScreen.networkSystem.update(Gdx.graphics.getDeltaTime());
 				
-				oos.writeObject(GameScreen.myEntities);
-				oos.flush();
-				oos.reset();
+				//if (!GameScreen.myEntities.isEmpty()) {
+					oos.writeObject(GameScreen.myEntities);
+					oos.flush();
+					oos.reset();
+				//}
 			}
 			catch (Exception e) {
 				System.out.println("Exception in client output code run:" + e.getMessage());
