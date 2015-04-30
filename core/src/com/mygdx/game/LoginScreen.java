@@ -13,11 +13,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.mygdx.game.utility.Factory;
 
 public class LoginScreen implements Screen{
 
@@ -35,6 +37,8 @@ public class LoginScreen implements Screen{
 	Socket s;
 	public static String username;
 
+	Image bg;
+	
 	Table table;
 	
 	LoginScreen(MainGame game){
@@ -52,9 +56,12 @@ public class LoginScreen implements Screen{
 		passwordField.setPasswordMode(true);
 		passwordField.setPasswordCharacter('*');
 		table=new Table();
+		bg = new Image(Factory.menuBG);
 	}
 	
 	public void show() {
+		bg.setPosition(0, 0);
+		stage.addActor(bg);
 		loginButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				if(usernameField.getText()!=""&& passwordField.getText()!=""){
