@@ -28,7 +28,7 @@ public class MyContactListener implements ContactListener {
         	VisualComponent vc = etA.e.getComponent(VisualComponent.class);
         	PositionComponent pc = etA.e.getComponent(PositionComponent.class);
         	NetworkComponent nc = etA.e.getComponent(NetworkComponent.class);
-        	nc.isDead = true;
+        	if(nc != null) nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etA.e);
@@ -64,7 +64,7 @@ public class MyContactListener implements ContactListener {
             VisualComponent vc = etA.e.getComponent(VisualComponent.class);
         	PositionComponent pc = etA.e.getComponent(PositionComponent.class);
         	NetworkComponent nc = etA.e.getComponent(NetworkComponent.class);
-        	nc.isDead = true;
+        	if(nc != null)  nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etA.e);
@@ -88,7 +88,7 @@ public class MyContactListener implements ContactListener {
             VisualComponent vc = etB.e.getComponent(VisualComponent.class);
             PositionComponent pc = etB.e.getComponent(PositionComponent.class);
             NetworkComponent nc = etB.e.getComponent(NetworkComponent.class);
-            nc.isDead = true;
+            if(nc != null)  nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etB.e);
@@ -103,7 +103,7 @@ public class MyContactListener implements ContactListener {
             VisualComponent vc = etA.e.getComponent(VisualComponent.class);
         	PositionComponent pc = etA.e.getComponent(PositionComponent.class);
         	NetworkComponent nc = etA.e.getComponent(NetworkComponent.class);
-        	nc.isDead = true;
+        	if(nc != null) nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createEnemyBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etA.e);
@@ -115,7 +115,7 @@ public class MyContactListener implements ContactListener {
             VisualComponent vc = etB.e.getComponent(VisualComponent.class);
             PositionComponent pc = etB.e.getComponent(PositionComponent.class);
             NetworkComponent nc = etB.e.getComponent(NetworkComponent.class);
-            nc.isDead = true;
+            if(nc != null)  nc.isDead = true;
         	float rot = vc.rotation;
         	Factory.createEnemyBulletDestroyed(pc.x, pc.y, rot);
         	GameScreen.toBeDeleted.add(etB.e);

@@ -29,8 +29,8 @@ public class PlayerComponent extends Component implements Pool.Poolable {
     public boolean up = false, down = false, left = false, right = false, reload = false;
     private boolean moveX = false, moveY = false;
     private float root2 = (float) Math.sqrt(2);
-    int health = 10;
-    public int maxHealth = 10;
+    int health = 50;
+    public int maxHealth = 50;
 
 
     //gameplay values

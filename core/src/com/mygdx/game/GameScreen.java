@@ -182,7 +182,7 @@ public class GameScreen implements Screen
 		
 		//create seal entity
 		if (host) {
-			for (int i = 0; i<10; i++) {
+			for (int i = 0; i<30; i++) {
 				//doesnt really work
 				Vector2 enemySpawn = DungeonGenerator.getFarPosition(pos, 10);
 				Entity seal = Factory.createSeal(enemySpawn.x, enemySpawn.y, networkPlayerNum, null);
