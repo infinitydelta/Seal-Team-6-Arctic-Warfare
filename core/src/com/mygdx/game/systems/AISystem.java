@@ -71,7 +71,7 @@ public class AISystem extends IteratingSystem {
                 float dy = py - position.y;
                 float rot = (float) Math.atan2(dy + players.get(i).getComponent(MovementComponent.class).body.getLinearVelocity().y * .25f, dx + .25f * players.get(i).getComponent(MovementComponent.class).body.getLinearVelocity().x);
                 enemy.weapon.getComponent(VisualComponent.class).rotation = (float)Math.toDegrees(rot);
-                if (dx * dx + dy * dy < 75) {
+                if (dx * dx + dy * dy < 95) {
                     if (players.get(i).getComponent(PlayerComponent.class).weaponComponent != null) {
                         int fear = players.get(i).getComponent(PlayerComponent.class).weaponComponent.currentclip;
                         //System.out.println(players.get(i).getComponent(PlayerComponent.class).weaponComponent.firetimer);
