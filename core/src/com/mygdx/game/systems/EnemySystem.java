@@ -42,7 +42,7 @@ public class EnemySystem extends IteratingSystem {
             float dy = py - position.y;
             float dx = px - position.x;
             //System.out.println("Player "+players.get(i).getId() +" : "+Math.abs(px+collision.body.getLinearVelocity().x-position.x)+" - "+Math.abs(dx) );
-            if ((dx * dx + dy * dy < 50)) {
+            if ((dx * dx + dy * dy < 75)) {
                 //System.out.println("Player "+players.get(i).getId() +" : "+(Math.abs(px+collision.body.getLinearVelocity().x-position.x)<Math.abs(dx))+" - "+Math.abs(px+collision.body.getLinearVelocity().x-position.x)+" - "+Math.abs(dx));
                 //System.out.println(collision.body.getLinearVelocity().x);
                 if (collision.body.getLinearVelocity().x > 0) {

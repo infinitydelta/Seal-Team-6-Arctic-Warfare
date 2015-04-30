@@ -435,11 +435,11 @@ public class DungeonGenerator {
         }
         for (int i = 0; i < mapSize; i++)
         {
-            Factory.createWall(i,0, 1);
-            Factory.createWall(i,mapSize-1, 1);
+            Factory.createWall(i,0, 5);
+            Factory.createWall(i,mapSize-1, 5);
 
-            Factory.createWall(0, i, 1);
-            Factory.createWall(mapSize-1, i,1);
+            Factory.createWall(0, i, 5);
+            Factory.createWall(mapSize-1, i,5);
         }
 
         for (int x = 1; x < mapSize-1; x++)
@@ -584,6 +584,31 @@ public class DungeonGenerator {
         int x = RandomInt.Range(rooms[roomNum].x + 1, (int) (rooms[roomNum].x + rooms[roomNum].width));
         int y = RandomInt.Range(rooms[roomNum].y + 1, (int)(rooms[roomNum].y + rooms[roomNum].height));
         System.out.println("spawn position:" + x + ", " + y);
+        return new Vector2(x, y);
+    }
+
+    public static Vector2 getFarPosition(Vector2 start, float distance)
+    {
+        ArrayList<Integer> farAwayRooms = new ArrayList<Integer>();
+        for (int i = 0; i < numRooms; i++)
+        {
+            float distSquared = (start.x+rooms[i].center.x) * (start.x+rooms[i].center.x) + (start.y+rooms[i].center.y)*(start.y+rooms[i].center.y);
+            if (distSquared > distance * distance)
+            {
+                farAwayRooms.add(i);
+            }
+            /*
+            if (Vector2.Distance(playerSpawn, rooms[i].center) > mapSize / 3)
+            {
+                farAwayRooms.add(i);
+            }*/
+        }
+
+        int index = RandomInt.Range(0, farAwayRooms.size() - 1);
+        int roomNum = farAwayRooms.get(index);
+        int x = RandomInt.Range(rooms[roomNum].x + 2, (int)(rooms[roomNum].x + rooms[roomNum].width - 1));
+        int y = RandomInt.Range(rooms[roomNum].y + 2, (int)(rooms[roomNum].y + rooms[roomNum].height - 1));
+        //print("portal spawn position:" + x + ", " + y);
         return new Vector2(x, y);
     }
 

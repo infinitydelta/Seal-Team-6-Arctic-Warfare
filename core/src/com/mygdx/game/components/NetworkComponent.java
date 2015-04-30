@@ -28,5 +28,7 @@ public class NetworkComponent extends Component {
         yPos = pos.y;
         xVel = move.xVel;
         yVel = move.yVel;
+        this.isDead = false;
     }
+
 }

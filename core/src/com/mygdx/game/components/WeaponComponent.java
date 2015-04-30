@@ -81,6 +81,23 @@ public class WeaponComponent extends Component implements Pool.Poolable
     		firetimer += deltatime;
     	}
     }
+
+    public void fireShotgun(float angleInRad)
+    {
+        if(!reloading && firetimer > 1/fireRate) {
+            float coneAngle = (float) Math.toRadians(45 * (float) currentclip / magSize);
+            float angleBetweenShots = coneAngle / currentclip;
+            for (int i = 0; i < currentclip; i++) {
+                Factory.createBullet(entity.getComponent(PositionComponent.class).x, entity.getComponent(PositionComponent.class).y, angleInRad - coneAngle / 2 + angleBetweenShots * i, 30f, GameScreen.networkPlayerNum, null);
+                if (wgc != null) wgc.fire();
+            }
+            Factory.expl19.play(1.2f);
+            firetimer = 0;
+            currentclip = 0;
+            //if(wgc != null) wgc.fire();
+        }
+    }
+
     public void fire(float angleInRad)
     {
     	if(!reloading && firetimer > 1/fireRate)
@@ -93,11 +110,12 @@ public class WeaponComponent extends Component implements Pool.Poolable
 			case 2:
 				Factory.createEnemyBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 15f, GameScreen.networkPlayerNum, null);
 				break;
+
 			default:
 				Factory.createBullet(entity.getComponent(PositionComponent.class).x  , entity.getComponent(PositionComponent.class).y, angleInRad, 30f, GameScreen.networkPlayerNum, null);
 				break;
 			}
-            Factory.expl19.play(.3f);
+            Factory.expl19.play(.2f);
             firetimer = 0;
             currentclip--;
             if(wgc != null) wgc.fire();

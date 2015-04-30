@@ -183,8 +183,9 @@ public class GameScreen implements Screen
 		//create seal entity
 		if (host) {
 			for (int i = 0; i<10; i++) {
-				pos = DungeonGenerator.getSpawnPosition();
-				Entity seal = Factory.createSeal((int)pos.x, (int) pos.y, networkPlayerNum, null);
+				//doesnt really work
+				Vector2 enemySpawn = DungeonGenerator.getFarPosition(pos, 10);
+				Entity seal = Factory.createSeal(enemySpawn.x, enemySpawn.y, networkPlayerNum, null);
 			}
 		}
 		
@@ -360,6 +361,7 @@ public class GameScreen implements Screen
 
 	public void newLevel()
 	{
+
 		for (Entity tile : map)
 		{
 			pooledEngine.removeEntity(tile);

@@ -46,6 +46,7 @@ public class MyContactListener implements ContactListener {
         if (etA.type == ('b') && etB.type == 'e')
         {
            etB.e.getComponent(EnemyComponent.class).health--;
+            Factory.hithurt8.play();
             if(etB.e.getComponent(EnemyComponent.class).health<=0) {
                 //visual.setAnimation(Factory.seal_die_anim);
                 Entity ds = Factory.createDeadSeal(etB.e.getComponent(PositionComponent.class).x, etB.e.getComponent(PositionComponent.class).y);
@@ -71,6 +72,7 @@ public class MyContactListener implements ContactListener {
         if (etA.type == ('e') && etB.type == 'b')
         {
             etA.e.getComponent(EnemyComponent.class).health--;
+            Factory.hithurt8.play();
             if(etA.e.getComponent(EnemyComponent.class).health<=0) {
                 //visual.setAnimation(Factory.seal_die_anim);
                 Entity ds = Factory.createDeadSeal(etA.e.getComponent(PositionComponent.class).x, etA.e.getComponent(PositionComponent.class).y);

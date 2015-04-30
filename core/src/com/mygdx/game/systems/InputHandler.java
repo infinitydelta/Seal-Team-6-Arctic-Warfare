@@ -137,6 +137,10 @@ public class InputHandler implements InputProcessor {
         //right click
         else if (button == 1)
         {
+            float angle = (float) (Math.atan2(clickPos.y - (playerPosition.y + .5f), clickPos.x - (playerPosition.x + .5f)));
+
+            playerComponent.weaponComponent.fireShotgun(angle);
+
             //game.newLevel();
         }
 

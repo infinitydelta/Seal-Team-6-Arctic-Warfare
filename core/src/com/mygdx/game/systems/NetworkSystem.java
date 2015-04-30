@@ -8,9 +8,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.GameScreen;
-import com.mygdx.game.components.MovementComponent;
-import com.mygdx.game.components.NetworkComponent;
-import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.*;
 
 /**
  * Created by KS on 4/25/2015.
@@ -70,6 +68,11 @@ public class NetworkSystem extends IteratingSystem {
                     move.yVel = (Float)entity2.get("yVel");
         			pos.x = (Float)entity2.get("xPos");
         			pos.y = (Float)entity2.get("yPos");
+					if (entity.getComponent(PlayerComponent.class) != null)
+					{
+						//entity.getComponent(PlayerComponent.class).weapon.getComponent(VisualComponent.class).rotation = r;
+					}
+					//else if (entity.getComponent(EnemyCom))
         			synchronized (GameScreen.world) {
                         move.body.setTransform(pos.x + .5f, pos.y + .5f, 0);
                     }

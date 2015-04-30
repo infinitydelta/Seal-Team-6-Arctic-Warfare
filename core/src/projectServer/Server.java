@@ -1,13 +1,6 @@
 package projectServer;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -53,6 +46,7 @@ public class Server {
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
+			File file = new File("Users.txt");
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

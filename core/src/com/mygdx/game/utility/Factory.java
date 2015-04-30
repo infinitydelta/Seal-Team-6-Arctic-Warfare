@@ -363,7 +363,7 @@ public class Factory {
         seal.add(m);
         seal.add(new EnemyComponent());
         seal.add(new VisualComponent(seal_idle_anim));
-        seal.add(new AIControllerComponent(-2f));
+        seal.add(new AIControllerComponent(-1.5f));
         
         if (id == null) {
         	id = seal.getId();
